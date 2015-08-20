@@ -1,7 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<color name="And_Travels_TitleBar">#007CC8</color>
-    
+	<color name="and_travels_titlebar">#007CC8</color>
+    <color name="tabcard_background">#EFEFEF</color>
+	
+	
+	
     <color name="white">#FFFFFF</color>
  <!-- 白色 -->
     <color name="ivory">#FFFFF0</color>

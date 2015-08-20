@@ -7,4 +7,11 @@
         <item>上海</item>
     </string-array>
 
+     <string-array name="tab_cards">
+        <item>旅游导览</item>
+        <item>旅游导览</item>
+        <item>设置</item>
+        <item>个人中心</item>
+    </string-array>
+    
 </resources>
