@@ -43,6 +43,10 @@ public class ContainerActivity extends FragmentActivity {
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			mArrayList = new ArrayList<Fragment>();
+			for(int i=0;i<getItemsCount();i++){
+				Fragment fragment = new LvYouDaoLan();
+				mArrayList.add(fragment);
+			}
 			
 			Resources res =getResources();
 			tab_cards=res.getStringArray(R.array.tab_cards);
@@ -52,22 +56,7 @@ public class ContainerActivity extends FragmentActivity {
 
 		@Override
 		protected Fragment getFragmentAt(int pos) {
-
-			Fragment fragment = null;
-
-			try {
-				fragment = mArrayList.get(pos);
-			} catch (Exception e) {
-			}
-
-			if (fragment == null) {
-				fragment = new TestFragment();
-				((TestFragment) fragment).setID(id++);
-
-				mArrayList.add(fragment);
-			}
-
-			return fragment;
+			return mArrayList.get(pos);
 		}
 
 		@Override

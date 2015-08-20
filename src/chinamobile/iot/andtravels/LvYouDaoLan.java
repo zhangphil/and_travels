@@ -11,6 +11,8 @@ public class LvYouDaoLan extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		return null;
+		View view=inflater.inflate(R.layout.lvyoudaohang, null);
+		
+		return view;
 	}
 }
