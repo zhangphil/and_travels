@@ -40,7 +40,13 @@ public class ContainerActivity extends FragmentActivity {
 			super.onCreate(savedInstanceState);
 			mArrayList = new ArrayList<Fragment>();
 			for(int i=0;i<getItemsCount();i++){
-				Fragment fragment = new LvYouDaoLan();
+				Fragment fragment =null;
+				
+				if(i==0)
+					fragment = new LvYouDaoLan();
+				else
+					fragment =new Fragment();
+				
 				mArrayList.add(fragment);
 			}
 			

@@ -10,14 +10,54 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:orientation="vertical" >
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/viewpager_head"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/circleIndicatorView_TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center"
+                    android:layout_weight="0.618"
+                    android:gravity="left"
+                    android:singleLine="true"
+                    android:text="成都，一个来了不想走的城市\n\n气候宜人，风景迷人"
+                    android:textColor="#FF0000" />
+
+                <chinamobile.iot.andtravels.CircleIndicatorView
+                    android:id="@+id/circleIndicatorView"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center" />
+            </FrameLayout>
         </LinearLayout>
 
-        <ListView
-            android:id="@+id/listView"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-        </ListView>
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <View
+                android:id="@+id/view1"
+                android:layout_width="match_parent"
+                android:layout_height="30dip" />
+
+            <ListView
+                android:id="@+id/listView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+            </ListView>
+        </LinearLayout>
     </LinearLayout>
 
     <FrameLayout
@@ -27,8 +67,8 @@
         android:layout_marginRight="5dip" >
 
         <ImageView
-            android:layout_width="25dip"
-            android:layout_height="25dip"
+            android:layout_width="50dip"
+            android:layout_height="50dip"
             android:gravity="center"
             android:src="@drawable/head" />
     </FrameLayout>
