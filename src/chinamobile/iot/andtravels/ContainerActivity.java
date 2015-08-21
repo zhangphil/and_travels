@@ -3,15 +3,12 @@ package chinamobile.iot.andtravels;
 import java.util.ArrayList;
 
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,7 +29,6 @@ public class ContainerActivity extends FragmentActivity {
 	public static class MyViewPagerTabHost extends ViewPagerTabHost{
 
 		private ArrayList<Fragment> mArrayList;
-		private int id = 0;
 		private	String[] tab_cards;
 		private	LayoutInflater mLayoutInflater;
 		
@@ -90,35 +86,6 @@ public class ContainerActivity extends FragmentActivity {
 		public void onOnTabIndicatorUnSelected(View view,int pos) {
 			ImageView iv=(ImageView) view.findViewById(R.id.imageView);
 			iv.setImageResource(icon_unselected[pos]);
-		}
-	}
-
-	//
-	// 仅仅用于测试的Fragment，在ViewPager中加载
-	//
-	public static class TestFragment extends Fragment {
-
-		private int id;
-
-		public void setID(int id) {
-			this.id = id;
-		}
-
-		public int getID() {
-			return id;
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-			TextView tv = new TextView(getActivity());
-			String str = "序号: " + getID();
-			tv.setTextColor(Color.LTGRAY);
-			tv.setText(str);
-			tv.setTextSize(50);
-			tv.setGravity(Gravity.CENTER);
-
-			return tv;
 		}
 	}
 }
