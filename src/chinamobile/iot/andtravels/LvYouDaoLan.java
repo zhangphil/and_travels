@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +34,7 @@ public class LvYouDaoLan extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		mArrayList = new ArrayList<HashMap<String, Object>>();
 		for (int i = 0; i < 10; i++) {
 			Fragment fragment = new TestFragment();
@@ -68,7 +69,8 @@ public class LvYouDaoLan extends Fragment {
 		});
 
 		final TextView circleIndicatorView_TextView = (TextView) view.findViewById(R.id.circleIndicatorView_TextView);
-		final CircleIndicatorView mCircleIndicatorView = (CircleIndicatorView) view.findViewById(R.id.circleIndicatorView);
+		final CircleIndicatorView mCircleIndicatorView = (CircleIndicatorView) view
+				.findViewById(R.id.circleIndicatorView);
 		handler = new Handler() {
 			public void handleMessage(Message msg) {
 				super.handleMessage(msg);
@@ -77,10 +79,12 @@ public class LvYouDaoLan extends Fragment {
 					mCircleIndicatorView.setCircleCount(mPagerAdapter.getCount());
 					mCircleIndicatorView.setCircleSelectedPosition(mViewPager.getCurrentItem());
 					mCircleIndicatorView.setSelectedCircleRadius(7);
-					mCircleIndicatorView.setCircleUnSelectedColor(Color.BLUE);
+					mCircleIndicatorView.setCircleUnSelectedColor(Color.RED);
+					mCircleIndicatorView.setCircleUnSelectedColor(Color.GREEN);
 					mCircleIndicatorView.drawCircleView();
 
-					circleIndicatorView_TextView.setText(mViewPager.getCurrentItem()+" 张图片的介绍");
+					String s= "<br>成都，一个来了不想走的城市</br>气候宜人，风景迷人 "+mViewPager.getCurrentItem();
+					circleIndicatorView_TextView.setText(Html.fromHtml(s));
 
 					break;
 				}

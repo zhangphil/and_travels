@@ -18,13 +18,15 @@
                 android:layout_height="match_parent" />
 
             <TextView
+                
                 android:id="@+id/circleIndicatorView_TextView"
-                android:layout_width="wrap_content"
+                android:layout_width="250dip"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left|center"
-                android:singleLine="true"
-                android:text="成都，一个来了不想走的城市\n\n气候宜人，风景迷人"
-                android:textColor="#FF0000" />
+                android:textColor="@android:color/white"
+                android:background="@android:color/black"
+                android:alpha="0.5"
+                android:layout_marginLeft="10dip"/>
 
             <chinamobile.iot.andtravels.CircleIndicatorView
                 android:id="@+id/circleIndicatorView"

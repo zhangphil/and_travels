@@ -38,14 +38,14 @@ public class MainActivity extends ActionBarActivity {
 				android.R.id.text1, city);
 		lv.setAdapter(adapter);
 
-		final Activity mActivity=this;
-		
+		final Activity mActivity = this;
+
 		LinearLayout mLinearLayout = (LinearLayout) findViewById(R.id.chooseCity);
 		mLinearLayout.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent=new Intent(mActivity,ContainerActivity.class);
+				Intent intent = new Intent(mActivity, ContainerActivity.class);
 				mActivity.startActivity(intent);
 			}
 		});
