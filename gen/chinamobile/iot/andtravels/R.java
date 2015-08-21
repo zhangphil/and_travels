@@ -2452,7 +2452,7 @@ containing a value of this type.
         public static final int action_mode_bar=0x7f09003b;
         public static final int action_mode_bar_stub=0x7f09003a;
         public static final int action_mode_close_button=0x7f090023;
-        public static final int action_settings=0x7f090061;
+        public static final int action_settings=0x7f090062;
         public static final int activity_chooser_view_content=0x7f090024;
         public static final int alertTitle=0x7f09002e;
         public static final int always=0x7f090019;
@@ -2480,13 +2480,14 @@ containing a value of this type.
         public static final int icon=0x7f090029;
         public static final int ifRoom=0x7f09001b;
         public static final int image=0x7f090026;
-        public static final int imageView=0x7f090050;
-        public static final int indicator_LinearLayout=0x7f090060;
+        public static final int imageView=0x7f09005e;
+        public static final int indicator_LinearLayout=0x7f090061;
         public static final int info=0x7f09005c;
         public static final int line1=0x7f090056;
         public static final int line3=0x7f09005a;
         public static final int listMode=0x7f09000a;
         public static final int listView=0x7f09004e;
+        public static final int listView1=0x7f090050;
         public static final int list_item=0x7f090028;
         public static final int media_actions=0x7f090054;
         public static final int middle=0x7f090020;
@@ -2525,14 +2526,14 @@ containing a value of this type.
         public static final int text=0x7f09005b;
         public static final int text2=0x7f090059;
         public static final int textSpacerNoButtons=0x7f090031;
-        public static final int textView=0x7f09005e;
+        public static final int textView=0x7f09005f;
         public static final int time=0x7f090057;
         public static final int title=0x7f09002a;
         public static final int title_template=0x7f09002d;
         public static final int topPanel=0x7f09002c;
         public static final int up=0x7f090001;
         public static final int useLogo=0x7f090013;
-        public static final int viewpager=0x7f09005f;
+        public static final int viewpager=0x7f090060;
         public static final int withText=0x7f09001d;
         public static final int wrap_content=0x7f090009;
     }

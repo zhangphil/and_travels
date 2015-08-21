@@ -1,27 +1,38 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
-     <ImageView
-        android:id="@+id/imageView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" 
-        android:src="@drawable/ic_launcher" />
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
 
-    <FrameLayout 
-        android:layout_gravity="right|center"
-        android:layout_marginRight="5dip"
+       <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+        
+           </LinearLayout>
+           
+        <ListView
+            android:id="@+id/listView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </ListView>
+
+    </LinearLayout>
+
+    <FrameLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|center"
+        android:layout_marginRight="5dip" >
 
         <ImageView
             android:layout_width="25dip"
-    		android:layout_height="25dip"
-    		android:src="@drawable/head"
+            android:layout_height="25dip"
             android:gravity="center"
-            android:text="5"
-            android:textSize="15dip"
-            android:textStyle="bold"/>
+            android:src="@drawable/head" />
     </FrameLayout>
 
 </FrameLayout>
