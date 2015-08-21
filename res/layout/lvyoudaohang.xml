@@ -7,39 +7,31 @@
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical" >
+            android:layout_weight="1" >
 
-            <FrameLayout
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewpager_head"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="match_parent" />
 
-                <android.support.v4.view.ViewPager
-                    android:id="@+id/viewpager_head"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/circleIndicatorView_TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center"
+                android:singleLine="true"
+                android:text="成都，一个来了不想走的城市\n\n气候宜人，风景迷人"
+                android:textColor="#FF0000" />
 
-                <TextView
-                    android:id="@+id/circleIndicatorView_TextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left|center"
-                    android:layout_weight="0.618"
-                    android:gravity="left"
-                    android:singleLine="true"
-                    android:text="成都，一个来了不想走的城市\n\n气候宜人，风景迷人"
-                    android:textColor="#FF0000" />
-
-                <chinamobile.iot.andtravels.CircleIndicatorView
-                    android:id="@+id/circleIndicatorView"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|center" />
-            </FrameLayout>
-        </LinearLayout>
+            <chinamobile.iot.andtravels.CircleIndicatorView
+                android:id="@+id/circleIndicatorView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom" />
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

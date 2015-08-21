@@ -93,15 +93,15 @@ public class CircleIndicatorView extends View {
         int h=this.getHeight();
         
         //因为是自右往左绘制小圆圈，需要转化pos的位置。
-      int translate_pos=getCircleCount()-getCircleSelectedPosition()-1;
+      //int translate_pos=getCircleCount()-getCircleSelectedPosition()-1;
        
       //如果居中绘制则使用start_x，但需要依次递加x坐标轴位置值。
-      //int start_x=(w-(CIRCLE_GAP*(getCircleCount()-1)))/2;
+      int start_x=(w-(getCirlceGap()*(getCircleCount()-1)))/2;
         
         for(int i=0;i<getCircleCount();i++){
         	int r=getNormalCircleRadius();
         	
-        	if(i==translate_pos){
+        	if(i==getCircleSelectedPosition()){
         		r=getSelectedCircleRadius();
         		p.setColor(getCircleSelectedColor());
         	}
@@ -112,7 +112,10 @@ public class CircleIndicatorView extends View {
         	
         	//自右向左绘制。从最右边往左边绘制小球
         	//如果从该自定制的View左边绘制，直接将 x=0即可。
-        	canvas.drawCircle(w-i*getCirlceGap()-getPadding(), h/2, r, p);
+        	
+        	//从右边开始绘制w-i*getCirlceGap()-getPadding()
+        	
+        	canvas.drawCircle(start_x+i*getCirlceGap()+getPadding(), h/2, r, p);
         }
     } 
 }  
