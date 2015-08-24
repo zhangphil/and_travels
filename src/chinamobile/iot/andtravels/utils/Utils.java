@@ -9,11 +9,11 @@ import android.media.ThumbnailUtils;
 public class Utils {
 
 	/**
-	 * 模拟键盘事件方法
+	 * 模拟系统按键。
 	 * 
 	 * @param keyCode
 	 */
-	public static void actionKey(final int keyCode) {
+	public static void onKeyEvent(final int keyCode) {
 		new Thread() {
 			public void run() {
 				try {

@@ -129,7 +129,7 @@ public class LvYouDaoLan extends Fragment {
 	}
 	
 	private	void	back(){
-		Utils.actionKey(KeyEvent.KEYCODE_BACK);
+		Utils.onKeyEvent(KeyEvent.KEYCODE_BACK);
 	}
 
 	private void add(Fragment fragment) {

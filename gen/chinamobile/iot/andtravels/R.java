@@ -2307,6 +2307,12 @@ containing a value of this type.
          (such as screen margins) for screens with more than 820dp of available width. This
          would include 7" and 10" devices in landscape (~960dp and ~1280dp respectively).
     
+ Default screen margins, per the Android Design guidelines. 
+
+         Example customization of dimensions originally defined in res/values/dimens.xml
+         (such as screen margins) for screens with more than 820dp of available width. This
+         would include 7" and 10" devices in landscape (~960dp and ~1280dp respectively).
+    
          */
         public static final int activity_horizontal_margin=0x7f070048;
         public static final int activity_vertical_margin=0x7f070049;
@@ -2436,13 +2442,14 @@ containing a value of this type.
         public static final int head=0x7f02004a;
         public static final int homepage=0x7f02004b;
         public static final int ic_launcher=0x7f02004c;
-        public static final int loc=0x7f02004d;
-        public static final int location=0x7f02004e;
-        public static final int notification_template_icon_bg=0x7f020053;
-        public static final int pin=0x7f02004f;
-        public static final int qingyanggong=0x7f020050;
-        public static final int spot=0x7f020051;
-        public static final int spotplace_home=0x7f020052;
+        public static final int icon_marka=0x7f02004d;
+        public static final int loc=0x7f02004e;
+        public static final int location=0x7f02004f;
+        public static final int notification_template_icon_bg=0x7f020054;
+        public static final int pin=0x7f020050;
+        public static final int qingyanggong=0x7f020051;
+        public static final int spot=0x7f020052;
+        public static final int spotplace_home=0x7f020053;
     }
     public static final class id {
         public static final int action0=0x7f090059;
@@ -2460,12 +2467,13 @@ containing a value of this type.
         public static final int action_mode_bar=0x7f09003b;
         public static final int action_mode_bar_stub=0x7f09003a;
         public static final int action_mode_close_button=0x7f090023;
-        public static final int action_settings=0x7f09006d;
+        public static final int action_settings=0x7f09006e;
         public static final int activity_chooser_view_content=0x7f090024;
         public static final int alertTitle=0x7f09002e;
         public static final int always=0x7f090019;
         public static final int back_ImageView=0x7f090053;
         public static final int beginning=0x7f09001e;
+        public static final int bmapView=0x7f090069;
         public static final int buttonPanel=0x7f090034;
         public static final int cancel_action=0x7f09005a;
         public static final int checkbox=0x7f090036;
@@ -2490,9 +2498,9 @@ containing a value of this type.
         public static final int icon=0x7f090029;
         public static final int ifRoom=0x7f09001b;
         public static final int image=0x7f090026;
-        public static final int imageView=0x7f090069;
+        public static final int imageView=0x7f09006a;
         public static final int imageViewPlace=0x7f090054;
-        public static final int indicator_LinearLayout=0x7f09006c;
+        public static final int indicator_LinearLayout=0x7f09006d;
         public static final int info=0x7f090064;
         public static final int line1=0x7f09005e;
         public static final int line3=0x7f090062;
@@ -2538,7 +2546,7 @@ containing a value of this type.
         public static final int text=0x7f090063;
         public static final int text2=0x7f090061;
         public static final int textSpacerNoButtons=0x7f090031;
-        public static final int textView=0x7f09006a;
+        public static final int textView=0x7f09006b;
         public static final int textView2=0x7f090058;
         public static final int textViewDistance=0x7f090056;
         public static final int textView_Collect=0x7f090066;
@@ -2551,7 +2559,7 @@ containing a value of this type.
         public static final int up=0x7f090001;
         public static final int useLogo=0x7f090013;
         public static final int view1=0x7f090052;
-        public static final int viewpager=0x7f09006b;
+        public static final int viewpager=0x7f09006c;
         public static final int viewpager_head=0x7f090050;
         public static final int withText=0x7f09001d;
         public static final int wrap_content=0x7f090009;
@@ -2702,10 +2710,10 @@ containing a value of this type.
         /**  Content description for the Toolbar icon used to collapse an expanded action mode. [CHAR LIMIT=NONE] 
          */
         public static final int abc_toolbar_collapse_description=0x7f0a0004;
-        public static final int action_settings=0x7f0a0015;
-        public static final int app_name=0x7f0a0013;
-        public static final int hello_world=0x7f0a0014;
-        public static final int lvyoudaolan=0x7f0a0012;
+        public static final int action_settings=0x7f0a0014;
+        public static final int app_name=0x7f0a0012;
+        public static final int hello_world=0x7f0a0013;
+        public static final int lvyoudaolan=0x7f0a0015;
         /**  Text to use when the number in a notification info is too large
          (greater than status_bar_notification_info_maxnum, defined in
          values/config.xml) and must be truncated. May need to be localized
@@ -2740,9 +2748,31 @@ containing a value of this type.
         res/values-v11/styles.xml on API 14+ devices.
     
  API 14 theme customizations can go here. 
+
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    
+
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        
+
+        Base application theme for API 11+. This theme completely replaces
+        AppBaseTheme from res/values/styles.xml on API 11+ devices.
+    
+ API 11 theme customizations can go here. 
+
+        Base application theme for API 14+. This theme completely replaces
+        AppBaseTheme from BOTH res/values/styles.xml and
+        res/values-v11/styles.xml on API 14+ devices.
+    
+ API 14 theme customizations can go here. 
          */
         public static final int AppBaseTheme=0x7f0b012e;
         /**  Application theme. 
+ All customizations that are NOT specific to a particular API-level can go here. 
+ Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f0b012f;

@@ -32,8 +32,8 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:gravity="right"
                 android:layout_height="60dip"
+                android:gravity="right"
                 android:orientation="horizontal" >
 
                 <TextView
@@ -42,14 +42,14 @@
                     android:layout_height="wrap_content"
                     android:drawableTop="@drawable/collect"
                     android:text="收藏" />
-                
+
                 <TextView
                     android:id="@+id/textView_Favorite"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableTop="@drawable/favorite"
                     android:text="点赞" />
-                
+
                 <TextView
                     android:id="@+id/textView_Comment"
                     android:layout_width="wrap_content"
@@ -58,11 +58,11 @@
                     android:text="评论" />
             </LinearLayout>
 
-            <ListView
-                android:id="@+id/listView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" >
-            </ListView>
+            <com.baidu.mapapi.map.MapView
+                android:id="@+id/bmapView"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:clickable="true" />
         </LinearLayout>
     </LinearLayout>
 

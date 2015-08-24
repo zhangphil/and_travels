@@ -3,7 +3,20 @@ package chinamobile.iot.andtravels;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import android.app.Activity;
+import com.baidu.mapapi.SDKInitializer;
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.MapStatusUpdate;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MarkerOptions;
+import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.geocode.GeoCodeOption;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,11 +30,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 import android.widget.ImageView.ScaleType;
+
 import chinamobile.iot.andtravels.utils.Utils;
 
-public class SpotPlaceActivity extends	FragmentActivity{
-	
+public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoderResultListener {
+
 	private MyFragmentPagerAdapter mPagerAdapter;
 	private ViewPager mViewPager;
 
@@ -31,28 +46,36 @@ public class SpotPlaceActivity extends	FragmentActivity{
 	private ArrayList<HashMap<String, Object>> mArrayList = null;
 	private final String FRAGMENT = "fragment_tag";
 
+	private GeoCoder mSearch = null;
+	private BaiduMap mBaiduMap = null;
+	private MapView mMapView = null;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		View view=this.getLayoutInflater().inflate(R.layout.spot_place, null);
+
+		SDKInitializer.initialize(getApplicationContext());
+
+		View view = this.getLayoutInflater().inflate(R.layout.spot_place, null);
 		setContentView(view);
-		
+
+		baiduMap();
+
 		ImageView backImageView = (ImageView) view.findViewById(R.id.back_ImageView);
 		backImageView.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				back();
 			}
 		});
-		
+
 		mArrayList = new ArrayList<HashMap<String, Object>>();
 		for (int i = 0; i < 4; i++) {
 			Fragment fragment = new ImageFragment();
 			add(fragment);
 		}
-		
+
 		mViewPager = (ViewPager) view.findViewById(R.id.viewpager_head);
 		mPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
 		mViewPager.setAdapter(mPagerAdapter);
@@ -73,7 +96,7 @@ public class SpotPlaceActivity extends	FragmentActivity{
 
 			}
 		});
-		
+
 		final CircleIndicatorView mCircleIndicatorView = (CircleIndicatorView) view
 				.findViewById(R.id.circleIndicatorView);
 		handler = new Handler() {
@@ -83,19 +106,91 @@ public class SpotPlaceActivity extends	FragmentActivity{
 				case MESSAGE_WHAT_CHANGED:
 					mCircleIndicatorView.setCircleCount(mPagerAdapter.getCount());
 					mCircleIndicatorView.setCircleSelectedPosition(mViewPager.getCurrentItem());
-					//mCircleIndicatorView.setSelectedCircleRadius(7);
+					// mCircleIndicatorView.setSelectedCircleRadius(7);
 					mCircleIndicatorView.drawCircleView();
-					
+
 					break;
 				}
 			};
 		};
+
 	}
-	
-	private	void	back(){
-		Utils.actionKey(KeyEvent.KEYCODE_BACK);
+
+	private void baiduMap() {
+
+		// 地图初始化
+		mMapView = (MapView) findViewById(R.id.bmapView);
+		mBaiduMap = mMapView.getMap();
+
+		// 初始化搜索模块，注册事件监听
+		mSearch = GeoCoder.newInstance();
+		mSearch.setOnGetGeoCodeResultListener(this);
+
+		// 不晓得为啥，反正必须不能太快调用百度地图的定位搜索功能，
+		// 需要先暂停几秒钟才可以正常工作
+		// 如果直接调用，则返回为空值。
+		Handler handler = new Handler();
+		handler.postDelayed(new Runnable() {
+
+			@Override
+			public void run() {
+				locationTo();
+			}
+		}, 3000);
 	}
-	
+
+	private void locationTo() {
+		mSearch.geocode(new GeoCodeOption().city("成都").address("宽窄巷子"));
+	}
+
+	@Override
+	protected void onPause() {
+		mMapView.onPause();
+		super.onPause();
+	}
+
+	@Override
+	protected void onResume() {
+		mMapView.onResume();
+		super.onResume();
+	}
+
+	@Override
+	protected void onDestroy() {
+		mMapView.onDestroy();
+		mSearch.destroy();
+		super.onDestroy();
+	}
+
+	@Override
+	public void onGetGeoCodeResult(GeoCodeResult result) {
+		if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
+			Toast.makeText(this, "抱歉，未能找到结果", Toast.LENGTH_LONG).show();
+			return;
+		}
+
+		mBaiduMap.clear();
+		mBaiduMap.addOverlay(new MarkerOptions().position(result.getLocation())
+				.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_marka)));
+
+		MapStatusUpdate mMapStatusUpdate = MapStatusUpdateFactory.newLatLngZoom(result.getLocation(), 17.0f);
+		mBaiduMap.setMapStatus(mMapStatusUpdate);
+
+		// mBaiduMap.animateMapStatus(mMapStatusUpdate,5000);
+		// String strInfo = String.format("纬度：%f 经度：%f",
+		// result.getLocation().latitude, result.getLocation().longitude);
+		// Toast.makeText(GeoCoderDemo.this, strInfo, Toast.LENGTH_LONG).show();
+	}
+
+	@Override
+	public void onGetReverseGeoCodeResult(ReverseGeoCodeResult arg0) {
+
+	}
+
+	private void back() {
+		Utils.onKeyEvent(KeyEvent.KEYCODE_BACK);
+	}
+
 	private void add(Fragment fragment) {
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -106,12 +201,12 @@ public class SpotPlaceActivity extends	FragmentActivity{
 
 		mArrayList.add(map);
 	}
-	
+
 	private void set(int pos) {
 		mViewPager.setCurrentItem(pos, true);
 		handler.sendEmptyMessage(MESSAGE_WHAT_CHANGED);
 	}
-	
+
 	private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
 
 		public MyFragmentPagerAdapter(FragmentManager fm) {
@@ -139,15 +234,15 @@ public class SpotPlaceActivity extends	FragmentActivity{
 			handler.sendEmptyMessage(MESSAGE_WHAT_CHANGED);
 		}
 	}
-	
-	private	class	ImageFragment	extends	Fragment{
+
+	private class ImageFragment extends Fragment {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			
-			ImageView iv=new ImageView(getContext());
+
+			ImageView iv = new ImageView(getContext());
 			iv.setImageResource(R.drawable.spotplace_home);
 			iv.setScaleType(ScaleType.CENTER_CROP);
-			return	iv;
+			return iv;
 		}
 	}
 }
