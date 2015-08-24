@@ -31,6 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.ZoomControls;
 import android.widget.ImageView.ScaleType;
 
 import chinamobile.iot.andtravels.utils.Utils;
@@ -114,6 +115,10 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 			};
 		};
 
+		// 初始化选择第一项
+		if (mPagerAdapter.getCount() > 0) {
+			set(0);
+		}
 	}
 
 	private void baiduMap() {
@@ -121,6 +126,18 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 		// 地图初始化
 		mMapView = (MapView) findViewById(R.id.bmapView);
 		mBaiduMap = mMapView.getMap();
+
+		// 隐藏百度的LOGO
+		View child = mMapView.getChildAt(1);
+		if (child != null && (child instanceof ImageView || child instanceof ZoomControls)) {
+			child.setVisibility(View.INVISIBLE);
+		}
+
+		// 不显示地图上比例尺
+		mMapView.showScaleControl(false);
+
+		// 不显示缩放按钮控制栏
+		mMapView.showZoomControls(false);
 
 		// 初始化搜索模块，注册事件监听
 		mSearch = GeoCoder.newInstance();

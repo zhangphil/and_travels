@@ -129,7 +129,7 @@ public class CircleIndicatorView extends View {
 
 			// 从右边开始绘制w-i*getCirlceGap()-getPadding()
 
-			canvas.drawCircle(start_x + i * getCirlceGap() + getPadding(), h-getSelectedCircleRadius()*3, r, p);
+			canvas.drawCircle(start_x + i * getCirlceGap() + getPadding(), h - getSelectedCircleRadius() * 3, r, p);
 		}
 	}
 }

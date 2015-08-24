@@ -34,7 +34,7 @@ public class LvYouDaoLan extends Fragment {
 
 	private ArrayList<HashMap<String, Object>> mArrayList = null;
 	private final String FRAGMENT = "fragment_tag";
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -45,15 +45,15 @@ public class LvYouDaoLan extends Fragment {
 			add(fragment);
 		}
 	}
-	
-	private	class	ImageFragment	extends	Fragment{
+
+	private class ImageFragment extends Fragment {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			
-			ImageView iv=new ImageView(getContext());
+
+			ImageView iv = new ImageView(getContext());
 			iv.setImageResource(R.drawable.homepage);
 			iv.setScaleType(ScaleType.CENTER_CROP);
-			return	iv;
+			return iv;
 		}
 	}
 
@@ -64,13 +64,13 @@ public class LvYouDaoLan extends Fragment {
 
 		ImageView backImageView = (ImageView) view.findViewById(R.id.back_ImageView);
 		backImageView.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				back();
 			}
 		});
-		
+
 		mViewPager = (ViewPager) view.findViewById(R.id.viewpager_head);
 		mPagerAdapter = new MyFragmentPagerAdapter(getFragmentManager());
 		mViewPager.setAdapter(mPagerAdapter);
@@ -102,7 +102,7 @@ public class LvYouDaoLan extends Fragment {
 					mCircleIndicatorView.setCircleCount(mPagerAdapter.getCount());
 					mCircleIndicatorView.setCircleSelectedPosition(mViewPager.getCurrentItem());
 					mCircleIndicatorView.drawCircleView();
-					
+
 					break;
 				}
 			};
@@ -116,19 +116,20 @@ public class LvYouDaoLan extends Fragment {
 		ListView lv = (ListView) view.findViewById(R.id.listView);
 		ArrayAdapter mArrayAdapter = new MyArrayAdapter(this.getContext(), -1);
 		lv.setAdapter(mArrayAdapter);
-		final Context mContext=this.getContext();
-		lv.setOnItemClickListener(new OnItemClickListener(){
+		final Context mContext = this.getContext();
+		lv.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Intent intent=new Intent(mContext,SpotPlaceActivity.class);
+				Intent intent = new Intent(mContext, SpotPlaceActivity.class);
 				startActivity(intent);
-			}});
+			}
+		});
 
 		return view;
 	}
-	
-	private	void	back(){
+
+	private void back() {
 		Utils.onKeyEvent(KeyEvent.KEYCODE_BACK);
 	}
 
@@ -176,7 +177,6 @@ public class LvYouDaoLan extends Fragment {
 		}
 	}
 
-
 	private class MyArrayAdapter extends ArrayAdapter {
 
 		private LayoutInflater mLayoutInflater;
@@ -193,7 +193,7 @@ public class LvYouDaoLan extends Fragment {
 				convertView = mLayoutInflater.inflate(R.layout.lvyoudaolan_item, null);
 
 			ImageView imageViewPlace = (ImageView) convertView.findViewById(R.id.imageViewPlace);
-			imageViewPlace.setImageBitmap(Utils.getResize(getContext(),R.drawable.qingyanggong, 2));
+			imageViewPlace.setImageBitmap(Utils.getResize(getContext(), R.drawable.qingyanggong, 2));
 
 			return convertView;
 		}

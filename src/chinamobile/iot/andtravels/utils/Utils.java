@@ -26,8 +26,7 @@ public class Utils {
 		}.start();
 	}
 
-	
-	public	static Bitmap getResize(Context context,int resId, int resize) {
+	public static Bitmap getResize(Context context, int resId, int resize) {
 		Bitmap sourceBitmap = BitmapFactory.decodeResource(context.getResources(), resId);
 
 		// 获得原始bitmap的高和宽，下面将对原始Bitmap等比例缩放成缩略图加载。
