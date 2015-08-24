@@ -17,6 +17,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
+            <!--  
             <TextView
                 
                 android:id="@+id/circleIndicatorView_TextView"
@@ -27,6 +28,8 @@
                 android:background="@android:color/black"
                 android:alpha="0.5"
                 android:layout_marginLeft="10dip"/>
+                
+                -->
 
             <chinamobile.iot.andtravels.CircleIndicatorView
                 android:id="@+id/circleIndicatorView"
@@ -44,7 +47,7 @@
             <View
                 android:id="@+id/view1"
                 android:layout_width="match_parent"
-                android:layout_height="30dip" />
+                android:layout_height="20dip" />
 
             <ListView
                 android:id="@+id/listView"
@@ -66,5 +69,16 @@
             android:gravity="center"
             android:src="@drawable/head" />
     </FrameLayout>
+    
+    
+    <ImageView
+        android:padding="3dip"
+        android:adjustViewBounds="true"
+            android:maxHeight="30dip"
+            android:maxWidth="30dip"
+            android:id="@+id/back_ImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/back" />
 
 </FrameLayout>

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,13 +12,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.text.Html;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.ListView;
-import android.widget.TextView;
+import chinamobile.iot.andtravels.utils.Utils;
 
 public class LvYouDaoLan extends Fragment {
 
@@ -30,15 +34,26 @@ public class LvYouDaoLan extends Fragment {
 
 	private ArrayList<HashMap<String, Object>> mArrayList = null;
 	private final String FRAGMENT = "fragment_tag";
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		mArrayList = new ArrayList<HashMap<String, Object>>();
-		for (int i = 0; i < 10; i++) {
-			Fragment fragment = new TestFragment();
+		for (int i = 0; i < 4; i++) {
+			Fragment fragment = new ImageFragment();
 			add(fragment);
+		}
+	}
+	
+	private	class	ImageFragment	extends	Fragment{
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			
+			ImageView iv=new ImageView(getContext());
+			iv.setImageResource(R.drawable.homepage);
+			iv.setScaleType(ScaleType.CENTER_CROP);
+			return	iv;
 		}
 	}
 
@@ -47,6 +62,15 @@ public class LvYouDaoLan extends Fragment {
 
 		View view = inflater.inflate(R.layout.lvyoudaohang, null);
 
+		ImageView backImageView = (ImageView) view.findViewById(R.id.back_ImageView);
+		backImageView.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				back();
+			}
+		});
+		
 		mViewPager = (ViewPager) view.findViewById(R.id.viewpager_head);
 		mPagerAdapter = new MyFragmentPagerAdapter(getFragmentManager());
 		mViewPager.setAdapter(mPagerAdapter);
@@ -68,7 +92,6 @@ public class LvYouDaoLan extends Fragment {
 			}
 		});
 
-		final TextView circleIndicatorView_TextView = (TextView) view.findViewById(R.id.circleIndicatorView_TextView);
 		final CircleIndicatorView mCircleIndicatorView = (CircleIndicatorView) view
 				.findViewById(R.id.circleIndicatorView);
 		handler = new Handler() {
@@ -78,14 +101,8 @@ public class LvYouDaoLan extends Fragment {
 				case MESSAGE_WHAT_CHANGED:
 					mCircleIndicatorView.setCircleCount(mPagerAdapter.getCount());
 					mCircleIndicatorView.setCircleSelectedPosition(mViewPager.getCurrentItem());
-					mCircleIndicatorView.setSelectedCircleRadius(7);
-					mCircleIndicatorView.setCircleUnSelectedColor(Color.RED);
-					mCircleIndicatorView.setCircleUnSelectedColor(Color.GREEN);
 					mCircleIndicatorView.drawCircleView();
-
-					String s= "<br>成都，一个来了不想走的城市</br>气候宜人，风景迷人 "+mViewPager.getCurrentItem();
-					circleIndicatorView_TextView.setText(Html.fromHtml(s));
-
+					
 					break;
 				}
 			};
@@ -99,8 +116,20 @@ public class LvYouDaoLan extends Fragment {
 		ListView lv = (ListView) view.findViewById(R.id.listView);
 		ArrayAdapter mArrayAdapter = new MyArrayAdapter(this.getContext(), -1);
 		lv.setAdapter(mArrayAdapter);
+		final Context mContext=this.getContext();
+		lv.setOnItemClickListener(new OnItemClickListener(){
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Intent intent=new Intent(mContext,SpotPlaceActivity.class);
+				startActivity(intent);
+			}});
 
 		return view;
+	}
+	
+	private	void	back(){
+		Utils.actionKey(KeyEvent.KEYCODE_BACK);
 	}
 
 	private void add(Fragment fragment) {
@@ -147,26 +176,6 @@ public class LvYouDaoLan extends Fragment {
 		}
 	}
 
-	//
-	// 仅仅用于测试的Fragment，在ViewPager中加载
-	//
-	public static class TestFragment extends Fragment {
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-			TextView tv = new TextView(getActivity());
-
-			String str = "";
-			for (int i = 0; i < 500; i++)
-				str = str + i + "--";
-
-			tv.setTextColor(Color.LTGRAY);
-			tv.setText(str);
-
-			return tv;
-		}
-	}
 
 	private class MyArrayAdapter extends ArrayAdapter {
 
@@ -182,6 +191,9 @@ public class LvYouDaoLan extends Fragment {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			if (convertView == null)
 				convertView = mLayoutInflater.inflate(R.layout.lvyoudaolan_item, null);
+
+			ImageView imageViewPlace = (ImageView) convertView.findViewById(R.id.imageViewPlace);
+			imageViewPlace.setImageBitmap(Utils.getResize(getContext(),R.drawable.qingyanggong, 2));
 
 			return convertView;
 		}

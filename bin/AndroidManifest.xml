@@ -27,6 +27,10 @@
             android:name=".ContainerActivity">
         </activity>
         
+         <activity
+            android:name=".SpotPlaceActivity">
+        </activity>
+        
     </application>
 
 </manifest>

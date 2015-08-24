@@ -33,7 +33,7 @@ public class CircleIndicatorView extends View {
 		return padding;
 	}
 
-	private int circle_normal_radius = 5; // 普通小球半径
+	private int circle_normal_radius = 6; // 普通小球半径
 
 	public void setNormalCircleRadius(int radius) {
 		this.circle_normal_radius = radius;
@@ -43,7 +43,7 @@ public class CircleIndicatorView extends View {
 		return circle_normal_radius;
 	}
 
-	private int circle_selected_radius = 5; // 被选择的小球半径
+	private int circle_selected_radius = 8; // 被选择的小球半径
 
 	public void setSelectedCircleRadius(int radius) {
 		this.circle_selected_radius = radius;
@@ -77,7 +77,7 @@ public class CircleIndicatorView extends View {
 		this.invalidate();
 	}
 
-	private int circleSelectedColor = Color.RED;
+	private int circleSelectedColor = 0xFF007CC8;
 
 	public void setCircleSelectedColor(int color) {
 		circleSelectedColor = color;
@@ -87,7 +87,7 @@ public class CircleIndicatorView extends View {
 		return circleSelectedColor;
 	}
 
-	private int circleUnSelectedColor = Color.LTGRAY;
+	private int circleUnSelectedColor = 0xFFEFEFEF;
 
 	public void setCircleUnSelectedColor(int color) {
 		circleUnSelectedColor = color;
@@ -129,7 +129,7 @@ public class CircleIndicatorView extends View {
 
 			// 从右边开始绘制w-i*getCirlceGap()-getPadding()
 
-			canvas.drawCircle(start_x + i * getCirlceGap() + getPadding(), h-getSelectedCircleRadius(), r, p);
+			canvas.drawCircle(start_x + i * getCirlceGap() + getPadding(), h-getSelectedCircleRadius()*3, r, p);
 		}
 	}
 }
