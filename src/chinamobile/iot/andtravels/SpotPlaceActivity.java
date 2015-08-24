@@ -136,7 +136,7 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 		// 不显示地图上比例尺
 		mMapView.showScaleControl(false);
 
-		// 不显示缩放按钮控制栏
+		// 不显示地图缩放控件（按钮控制栏）
 		mMapView.showZoomControls(false);
 
 		// 初始化搜索模块，注册事件监听
