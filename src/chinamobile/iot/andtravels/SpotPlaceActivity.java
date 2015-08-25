@@ -5,17 +5,13 @@ import java.util.HashMap;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.BaiduMap.OnMapStatusChangeListener;
 import com.baidu.mapapi.map.BaiduMap.OnMarkerClickListener;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
-import com.baidu.mapapi.map.InfoWindow;
-import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
-import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.geocode.GeoCodeOption;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
@@ -25,8 +21,6 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Point;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -53,6 +47,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
 import chinamobile.iot.andtravels.utils.Utils;
 
 public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoderResultListener {
@@ -267,14 +262,15 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 					setBaiduMapFullScreen(true);
 				}
 
-				if (FULL_SCREEN){	
+				if (FULL_SCREEN) {
 					pop();
-					//newpop();
 				}
 
 				return false;
 			}
 		});
+
+		// newpop();
 
 		MapStatusUpdate mMapStatusUpdate = MapStatusUpdateFactory.newLatLngZoom(result.getLocation(), 17.0f);
 		mBaiduMap.setMapStatus(mMapStatusUpdate);
@@ -283,66 +279,65 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 		// String strInfo = String.format("纬度：%f 经度：%f",
 		// result.getLocation().latitude, result.getLocation().longitude);
 		// Toast.makeText(GeoCoderDemo.this, strInfo, Toast.LENGTH_LONG).show();
-	
-		newpop();
 	}
 
 	@Override
 	public void onGetReverseGeoCodeResult(ReverseGeoCodeResult arg0) {
 
 	}
-	
-	private	void	newpop(){
-		
-		
-		mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener() {
 
-			@Override
-			public boolean onMarkerClick(Marker marker) {
-		
-			View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.popupwindow, null);
-			final LatLng ll = marker.getPosition();
-			Point p = mBaiduMap.getProjection().toScreenLocation(ll);
-			p.y -= 47;
-			LatLng llInfo = mBaiduMap.getProjection().fromScreenLocation(p);
-			InfoWindow mInfoWindow = new InfoWindow(view, llInfo, 10);
-			MapStatusUpdate m = MapStatusUpdateFactory.newLatLng(ll);
-			mBaiduMap.setMapStatus(m);
-			mBaiduMap.showInfoWindow(mInfoWindow);
-			return true;
-			}
-			});
-
-			
-			mBaiduMap.setOnMapStatusChangeListener(new OnMapStatusChangeListener() {
-
-			@Override
-
-			public void onMapStatusChangeStart(MapStatus arg0) {
-			mBaiduMap.hideInfoWindow();
-
-			}
-
-			@Override
-
-			public void onMapStatusChangeFinish(MapStatus arg0) {
-
-			}
-
-
-
-			@Override
-
-			public void onMapStatusChange(MapStatus arg0) {
-
-			}
-
-			});
-
-		
-		
-		
-	}
+	/*
+	 * private void newpop() {
+	 * 
+	 * mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener() {
+	 * 
+	 * @Override public boolean onMarkerClick(Marker marker) {
+	 * 
+	 * View view =
+	 * LayoutInflater.from(getApplicationContext()).inflate(R.layout.
+	 * popupwindow, null);
+	 * 
+	 * String[] spots = { "宽巷子", "窄巷子", "井巷子", "其他" }; final int[] imgs = {
+	 * R.drawable.homepage, R.drawable.qingyanggong, R.drawable.spotplace_home,
+	 * R.drawable.ic_launcher }; final ImageView imageViewDisplay = (ImageView)
+	 * view.findViewById(R.id.imageViewDisplay); ListView lv = (ListView)
+	 * view.findViewById(R.id.listView); ArrayAdapter adapter = new
+	 * MyArrayAdapter(getApplicationContext(), -1, spots);
+	 * lv.setAdapter(adapter); lv.setOnItemClickListener(new
+	 * OnItemClickListener() {
+	 * 
+	 * @Override public void onItemClick(AdapterView<?> parent, View view, int
+	 * position, long id) { imageViewDisplay.setImageResource(imgs[position]); }
+	 * });
+	 * 
+	 * ImageView playImageView = (ImageView)
+	 * view.findViewById(R.id.playerImageView);
+	 * 
+	 * final LatLng ll = marker.getPosition(); Point p =
+	 * mBaiduMap.getProjection().toScreenLocation(ll); p.y -= 47; LatLng llInfo
+	 * = mBaiduMap.getProjection().fromScreenLocation(p); InfoWindow mInfoWindow
+	 * = new InfoWindow(view, llInfo, 100); MapStatusUpdate m =
+	 * MapStatusUpdateFactory.newLatLng(ll); mBaiduMap.setMapStatus(m);
+	 * mBaiduMap.showInfoWindow(mInfoWindow);
+	 * 
+	 * 
+	 * if (!FULL_SCREEN) { setBaiduMapFullScreen(true); }
+	 * 
+	 * return false; } });
+	 * 
+	 * mBaiduMap.setOnMapStatusChangeListener(new OnMapStatusChangeListener() {
+	 * 
+	 * @Override public void onMapStatusChangeStart(MapStatus arg0) {
+	 * //mBaiduMap.hideInfoWindow(); }
+	 * 
+	 * @Override public void onMapStatusChangeFinish(MapStatus arg0) {
+	 * 
+	 * }
+	 * 
+	 * @Override public void onMapStatusChange(MapStatus arg0) {
+	 * 
+	 * } }); }
+	 */
 
 	private void back() {
 		Utils.onKeyEvent(KeyEvent.KEYCODE_BACK);
@@ -393,6 +388,11 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 	}
 
 	private class ImageFragment extends Fragment {
+
+		public ImageFragment() {
+			super();
+		}
+
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -403,7 +403,6 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 		}
 	}
 
-	
 	private void pop() {
 		int blank_w = 100, hight = 400;
 		DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
@@ -415,24 +414,25 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 		v.setAlpha(128);// 半透明
 
 		String[] spots = { "宽巷子", "窄巷子", "井巷子", "其他" };
-		final int[] imgs={R.drawable.homepage,R.drawable.qingyanggong,R.drawable.spotplace_home,R.drawable.ic_launcher};
-		final ImageView imageViewDisplay=(ImageView) v.findViewById(R.id.imageViewDisplay);
+		final int[] imgs = { R.drawable.homepage, R.drawable.qingyanggong, R.drawable.spotplace_home,
+				R.drawable.ic_launcher };
+		final ImageView imageViewDisplay = (ImageView) v.findViewById(R.id.imageViewDisplay);
 		ListView lv = (ListView) v.findViewById(R.id.listView);
 		ArrayAdapter adapter = new MyArrayAdapter(this, -1, spots);
 		lv.setAdapter(adapter);
-		lv.setOnItemClickListener(new OnItemClickListener(){
+		lv.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				imageViewDisplay.setImageResource(imgs[position]);
-			}});
-		
-		ImageView playImageView=(ImageView)v.findViewById(R.id.playerImageView);
-		
+			}
+		});
+
+		ImageView playImageView = (ImageView) v.findViewById(R.id.playerImageView);
 
 		PopupWindow popWindow = new PopupWindow(this);
-		//ColorDrawable dw = new ColorDrawable(-00000);
-		//popWindow.setBackgroundDrawable(dw);
+		// ColorDrawable dw = new ColorDrawable(-00000);
+		// popWindow.setBackgroundDrawable(dw);
 		popWindow.setFocusable(true);
 		popWindow.setTouchable(true);// PopupWindow可触摸
 		popWindow.setOutsideTouchable(true); // 设置非PopupWindow区域可触摸
@@ -447,28 +447,28 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 
 	private class MyArrayAdapter extends ArrayAdapter {
 
-		private	String[] data;
-		private	LayoutInflater mLayoutInflater;
-		
+		private String[] data;
+		private LayoutInflater mLayoutInflater;
+
 		public MyArrayAdapter(Context context, int resource, String[] objects) {
 			super(context, resource, objects);
-			data=objects;
-			mLayoutInflater=LayoutInflater.from(context);
+			data = objects;
+			mLayoutInflater = LayoutInflater.from(context);
 		}
 
 		@Override
-		public	View	getView(int position,View convertView,ViewGroup parent){
-			if(convertView==null)
-				convertView=mLayoutInflater.inflate(android.R.layout.simple_list_item_1, null);
-			TextView text=(TextView) convertView.findViewById(android.R.id.text1);
-			text.setText((position+1)+" "+getItem(position));
+		public View getView(int position, View convertView, ViewGroup parent) {
+			if (convertView == null)
+				convertView = mLayoutInflater.inflate(android.R.layout.simple_list_item_1, null);
+			TextView text = (TextView) convertView.findViewById(android.R.id.text1);
+			text.setText((position + 1) + " " + getItem(position));
 			text.setTextColor(Color.WHITE);
-			
-			return	convertView;
+
+			return convertView;
 		}
-		
+
 		@Override
-		public	String	getItem(int pos){
+		public String getItem(int pos) {
 			return data[pos];
 		}
 
