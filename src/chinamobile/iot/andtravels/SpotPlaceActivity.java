@@ -5,13 +5,17 @@ import java.util.HashMap;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BaiduMap.OnMapStatusChangeListener;
 import com.baidu.mapapi.map.BaiduMap.OnMarkerClickListener;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.InfoWindow;
+import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
+import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.geocode.GeoCodeOption;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
@@ -21,6 +25,7 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -262,8 +267,10 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 					setBaiduMapFullScreen(true);
 				}
 
-				if (FULL_SCREEN)
+				if (FULL_SCREEN){	
 					pop();
+					//newpop();
+				}
 
 				return false;
 			}
@@ -276,11 +283,65 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 		// String strInfo = String.format("纬度：%f 经度：%f",
 		// result.getLocation().latitude, result.getLocation().longitude);
 		// Toast.makeText(GeoCoderDemo.this, strInfo, Toast.LENGTH_LONG).show();
+	
+		newpop();
 	}
 
 	@Override
 	public void onGetReverseGeoCodeResult(ReverseGeoCodeResult arg0) {
 
+	}
+	
+	private	void	newpop(){
+		
+		
+		mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener() {
+
+			@Override
+			public boolean onMarkerClick(Marker marker) {
+		
+			View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.popupwindow, null);
+			final LatLng ll = marker.getPosition();
+			Point p = mBaiduMap.getProjection().toScreenLocation(ll);
+			p.y -= 47;
+			LatLng llInfo = mBaiduMap.getProjection().fromScreenLocation(p);
+			InfoWindow mInfoWindow = new InfoWindow(view, llInfo, 10);
+			MapStatusUpdate m = MapStatusUpdateFactory.newLatLng(ll);
+			mBaiduMap.setMapStatus(m);
+			mBaiduMap.showInfoWindow(mInfoWindow);
+			return true;
+			}
+			});
+
+			
+			mBaiduMap.setOnMapStatusChangeListener(new OnMapStatusChangeListener() {
+
+			@Override
+
+			public void onMapStatusChangeStart(MapStatus arg0) {
+			mBaiduMap.hideInfoWindow();
+
+			}
+
+			@Override
+
+			public void onMapStatusChangeFinish(MapStatus arg0) {
+
+			}
+
+
+
+			@Override
+
+			public void onMapStatusChange(MapStatus arg0) {
+
+			}
+
+			});
+
+		
+		
+		
 	}
 
 	private void back() {
@@ -342,6 +403,7 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 		}
 	}
 
+	
 	private void pop() {
 		int blank_w = 100, hight = 400;
 		DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
