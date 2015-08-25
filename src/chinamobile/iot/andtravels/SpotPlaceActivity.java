@@ -5,10 +5,12 @@ import java.util.HashMap;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BaiduMap.OnMarkerClickListener;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.geocode.GeoCodeOption;
@@ -29,11 +31,12 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ZoomControls;
 import android.widget.ImageView.ScaleType;
-
+import android.widget.LinearLayout;
 import chinamobile.iot.andtravels.utils.Utils;
 
 public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoderResultListener {
@@ -51,25 +54,19 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 	private BaiduMap mBaiduMap = null;
 	private MapView mMapView = null;
 
+	private View containerView;
+	private boolean FULL_SCREEN = false;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		SDKInitializer.initialize(getApplicationContext());
 
-		View view = this.getLayoutInflater().inflate(R.layout.spot_place, null);
-		setContentView(view);
+		containerView = this.getLayoutInflater().inflate(R.layout.spot_place, null);
+		setContentView(containerView);
 
 		baiduMap();
-
-		ImageView backImageView = (ImageView) view.findViewById(R.id.back_ImageView);
-		backImageView.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				back();
-			}
-		});
 
 		mArrayList = new ArrayList<HashMap<String, Object>>();
 		for (int i = 0; i < 4; i++) {
@@ -77,7 +74,7 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 			add(fragment);
 		}
 
-		mViewPager = (ViewPager) view.findViewById(R.id.viewpager_head);
+		mViewPager = (ViewPager) containerView.findViewById(R.id.viewpager_head);
 		mPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
 		mViewPager.setAdapter(mPagerAdapter);
 		mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -98,7 +95,7 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 			}
 		});
 
-		final CircleIndicatorView mCircleIndicatorView = (CircleIndicatorView) view
+		final CircleIndicatorView mCircleIndicatorView = (CircleIndicatorView) containerView
 				.findViewById(R.id.circleIndicatorView);
 		handler = new Handler() {
 			public void handleMessage(Message msg) {
@@ -119,6 +116,61 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 		if (mPagerAdapter.getCount() > 0) {
 			set(0);
 		}
+
+		daoYouImageView();
+		backImageView();
+	}
+
+	private void backImageView() {
+		ImageView backiv = (ImageView) containerView.findViewById(R.id.back_ImageView);
+		backiv.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				if (FULL_SCREEN) {
+					setBaiduMapFullScreen(false);
+					return;
+				}
+
+				if (!FULL_SCREEN) {
+					back();
+					return;
+				}
+			}
+		});
+	}
+
+	private void setBaiduMapFullScreen(boolean show) {
+
+		final FrameLayout headFrameLayout = (FrameLayout) containerView.findViewById(R.id.headFrameLayout);
+		final FrameLayout daoyouFrameLayout = (FrameLayout) containerView.findViewById(R.id.daoyouFrameLayout);
+		final LinearLayout centerLinearLayout = (LinearLayout) containerView.findViewById(R.id.centerLinearLayout);
+
+		int visibility = 0;
+
+		if (show)
+			visibility = View.GONE;
+		if (!show)
+			visibility = View.VISIBLE;
+
+		headFrameLayout.setVisibility(visibility);
+		daoyouFrameLayout.setVisibility(visibility);
+		centerLinearLayout.setVisibility(visibility);
+		
+		FULL_SCREEN=show;
+	}
+
+	private void daoYouImageView() {
+
+		ImageView spotImageView = (ImageView) containerView.findViewById(R.id.daoyouImageView);
+		spotImageView.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				setBaiduMapFullScreen(true);
+			}
+		});
 	}
 
 	private void baiduMap() {
@@ -144,8 +196,8 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 		mSearch.setOnGetGeoCodeResultListener(this);
 
 		// 不晓得为啥，反正必须不能太快调用百度地图的定位搜索功能，
-		// 需要先暂停几秒钟才可以正常工作
-		// 如果直接调用，则返回为空值。
+		// 需要先暂停一些时间才可以正常工作
+		// 如果直接调用，则返回为空值。莫名其妙！
 		Handler handler = new Handler();
 		handler.postDelayed(new Runnable() {
 
@@ -153,7 +205,7 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 			public void run() {
 				locationTo();
 			}
-		}, 3000);
+		}, 500);
 	}
 
 	private void locationTo() {
@@ -187,9 +239,20 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 		}
 
 		mBaiduMap.clear();
+		
 		mBaiduMap.addOverlay(new MarkerOptions().position(result.getLocation())
 				.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_marka)));
 
+		mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener(){
+
+			@Override
+			public boolean onMarkerClick(Marker marker) {
+				if(!FULL_SCREEN)
+					setBaiduMapFullScreen(true);
+				return false;
+			}});
+		
+		
 		MapStatusUpdate mMapStatusUpdate = MapStatusUpdateFactory.newLatLngZoom(result.getLocation(), 17.0f);
 		mBaiduMap.setMapStatus(mMapStatusUpdate);
 

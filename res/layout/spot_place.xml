@@ -8,6 +8,7 @@
         android:orientation="vertical" >
 
         <FrameLayout
+            android:id="@+id/headFrameLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1" >
@@ -31,6 +32,7 @@
             android:orientation="vertical" >
 
             <LinearLayout
+                android:id="@+id/centerLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="60dip"
                 android:gravity="right"
@@ -67,12 +69,14 @@
     </LinearLayout>
 
     <FrameLayout
+        android:id="@+id/daoyouFrameLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left|center"
         android:layout_marginRight="5dip" >
 
         <ImageView
+            android:id="@+id/daoyouImageView"
             android:layout_width="50dip"
             android:layout_height="50dip"
             android:gravity="center"
