@@ -19,6 +19,8 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 
+import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -27,6 +29,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +41,10 @@ import android.widget.Toast;
 import android.widget.ZoomControls;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+
 import chinamobile.iot.andtravels.utils.Utils;
+
 
 public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoderResultListener {
 
@@ -247,8 +254,13 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 
 			@Override
 			public boolean onMarkerClick(Marker marker) {
-				if(!FULL_SCREEN)
+				if(!FULL_SCREEN){
 					setBaiduMapFullScreen(true);
+				}
+				
+				if(FULL_SCREEN)
+					pop();
+				
 				return false;
 			}});
 		
@@ -324,5 +336,33 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 			iv.setScaleType(ScaleType.CENTER_CROP);
 			return iv;
 		}
+	}
+	
+	
+	
+	private	void	pop(){
+		int	blank_w=100,blank_h=400;
+		DisplayMetrics  displayMetrics = getResources().getDisplayMetrics();
+        int w=displayMetrics.widthPixels;
+        int h=displayMetrics.heightPixels;
+        
+        LayoutInflater inflater =(LayoutInflater)(this).getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View v=inflater.inflate(R.layout.popupwindow, null);
+		v.setBackgroundResource(R.drawable.popupwindow_round_corner);
+		v.setAlpha(0.618f);//0，完全透明；1，完全不透明。
+		
+		PopupWindow popWindow=new PopupWindow(this);
+		ColorDrawable dw = new ColorDrawable(-00000);
+	    popWindow.setBackgroundDrawable(dw);
+		popWindow.setFocusable(true);
+		popWindow.setTouchable(true);//PopupWindow可触摸
+		popWindow.setOutsideTouchable(true); //设置非PopupWindow区域可触摸
+		popWindow.setAnimationStyle(android.R.anim.fade_in); //-1 缺省						
+		popWindow.setWidth(w-blank_w);
+		popWindow.setHeight(blank_h);
+		
+		popWindow.setContentView(v);
+		
+		popWindow.showAtLocation(getWindow().getDecorView(), Gravity.NO_GRAVITY, blank_w/2, blank_h/2);
 	}
 }
