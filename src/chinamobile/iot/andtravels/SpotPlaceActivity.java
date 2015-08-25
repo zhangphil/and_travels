@@ -20,6 +20,7 @@ import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,16 +36,19 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ZoomControls;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
-
+import android.widget.TextView;
 import chinamobile.iot.andtravels.utils.Utils;
-
 
 public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoderResultListener {
 
@@ -164,8 +168,8 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 		headFrameLayout.setVisibility(visibility);
 		daoyouFrameLayout.setVisibility(visibility);
 		centerLinearLayout.setVisibility(visibility);
-		
-		FULL_SCREEN=show;
+
+		FULL_SCREEN = show;
 	}
 
 	private void daoYouImageView() {
@@ -246,25 +250,25 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 		}
 
 		mBaiduMap.clear();
-		
+
 		mBaiduMap.addOverlay(new MarkerOptions().position(result.getLocation())
 				.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_marka)));
 
-		mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener(){
+		mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener() {
 
 			@Override
 			public boolean onMarkerClick(Marker marker) {
-				if(!FULL_SCREEN){
+				if (!FULL_SCREEN) {
 					setBaiduMapFullScreen(true);
 				}
-				
-				if(FULL_SCREEN)
+
+				if (FULL_SCREEN)
 					pop();
-				
+
 				return false;
-			}});
-		
-		
+			}
+		});
+
 		MapStatusUpdate mMapStatusUpdate = MapStatusUpdateFactory.newLatLngZoom(result.getLocation(), 17.0f);
 		mBaiduMap.setMapStatus(mMapStatusUpdate);
 
@@ -337,32 +341,78 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 			return iv;
 		}
 	}
-	
-	
-	
-	private	void	pop(){
-		int	blank_w=100,blank_h=400;
-		DisplayMetrics  displayMetrics = getResources().getDisplayMetrics();
-        int w=displayMetrics.widthPixels;
-        int h=displayMetrics.heightPixels;
-        
-        LayoutInflater inflater =(LayoutInflater)(this).getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View v=inflater.inflate(R.layout.popupwindow, null);
-		v.setBackgroundResource(R.drawable.popupwindow_round_corner);
-		v.setAlpha(0.618f);//0，完全透明；1，完全不透明。
+
+	private void pop() {
+		int blank_w = 100, hight = 400;
+		DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+		int w = displayMetrics.widthPixels;
+		// int h=displayMetrics.heightPixels;
+
+		LayoutInflater inflater = (LayoutInflater) (this).getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View v = inflater.inflate(R.layout.popupwindow, null);
+		v.setAlpha(128);// 半透明
+
+		String[] spots = { "宽巷子", "窄巷子", "井巷子", "其他" };
+		final int[] imgs={R.drawable.homepage,R.drawable.qingyanggong,R.drawable.spotplace_home,R.drawable.ic_launcher};
+		final ImageView imageViewDisplay=(ImageView) v.findViewById(R.id.imageViewDisplay);
+		ListView lv = (ListView) v.findViewById(R.id.listView);
+		ArrayAdapter adapter = new MyArrayAdapter(this, -1, spots);
+		lv.setAdapter(adapter);
+		lv.setOnItemClickListener(new OnItemClickListener(){
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				imageViewDisplay.setImageResource(imgs[position]);
+			}});
 		
-		PopupWindow popWindow=new PopupWindow(this);
-		ColorDrawable dw = new ColorDrawable(-00000);
-	    popWindow.setBackgroundDrawable(dw);
+		ImageView playImageView=(ImageView)v.findViewById(R.id.playerImageView);
+		
+
+		PopupWindow popWindow = new PopupWindow(this);
+		//ColorDrawable dw = new ColorDrawable(-00000);
+		//popWindow.setBackgroundDrawable(dw);
 		popWindow.setFocusable(true);
-		popWindow.setTouchable(true);//PopupWindow可触摸
-		popWindow.setOutsideTouchable(true); //设置非PopupWindow区域可触摸
-		popWindow.setAnimationStyle(android.R.anim.fade_in); //-1 缺省						
-		popWindow.setWidth(w-blank_w);
-		popWindow.setHeight(blank_h);
-		
+		popWindow.setTouchable(true);// PopupWindow可触摸
+		popWindow.setOutsideTouchable(true); // 设置非PopupWindow区域可触摸
+		popWindow.setAnimationStyle(android.R.anim.fade_in); // -1 缺省
+		popWindow.setWidth(w - blank_w);
+		popWindow.setHeight(hight);
+
 		popWindow.setContentView(v);
+
+		popWindow.showAtLocation(getWindow().getDecorView(), Gravity.NO_GRAVITY, blank_w / 2, hight / 2);
+	}
+
+	private class MyArrayAdapter extends ArrayAdapter {
+
+		private	String[] data;
+		private	LayoutInflater mLayoutInflater;
 		
-		popWindow.showAtLocation(getWindow().getDecorView(), Gravity.NO_GRAVITY, blank_w/2, blank_h/2);
+		public MyArrayAdapter(Context context, int resource, String[] objects) {
+			super(context, resource, objects);
+			data=objects;
+			mLayoutInflater=LayoutInflater.from(context);
+		}
+
+		@Override
+		public	View	getView(int position,View convertView,ViewGroup parent){
+			if(convertView==null)
+				convertView=mLayoutInflater.inflate(android.R.layout.simple_list_item_1, null);
+			TextView text=(TextView) convertView.findViewById(android.R.id.text1);
+			text.setText((position+1)+" "+getItem(position));
+			text.setTextColor(Color.WHITE);
+			
+			return	convertView;
+		}
+		
+		@Override
+		public	String	getItem(int pos){
+			return data[pos];
+		}
+
+		@Override
+		public int getCount() {
+			return data.length;
+		}
 	}
 }
