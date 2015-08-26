@@ -216,7 +216,7 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 			public void run() {
 				locationTo();
 			}
-		}, 500);
+		}, 100);
 	}
 
 	private void locationTo() {
