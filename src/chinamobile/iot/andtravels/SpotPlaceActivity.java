@@ -3,6 +3,13 @@ package chinamobile.iot.andtravels;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.json.JSONObject;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
@@ -25,6 +32,7 @@ import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.google.gson.Gson;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -349,7 +357,6 @@ public class SpotPlaceActivity extends FragmentActivity {
 	 * } }); }
 	 */
 
-
 	private void add(Fragment fragment) {
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -480,110 +487,151 @@ public class SpotPlaceActivity extends FragmentActivity {
 		}
 	}
 
-
 	private void baiduMapOnCreate(GeoCodeResult result) {
 
-		//MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(15.0f);
-		//mBaiduMap.setMapStatus(msu);
-		initOverlay(result);
-		//mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener() {
-			//public boolean onMarkerClick(Marker marker) {
-//				Button button = new Button(getApplicationContext());
-//				button.setBackgroundResource(R.drawable.popup);
-//				OnInfoWindowClickListener listener = null;
-//				if (marker == mMarkerA || marker == mMarkerD) {
-//					button.setText("更改位置");
-//					listener = new OnInfoWindowClickListener() {
-//						public void onInfoWindowClick() {
-//							LatLng ll = marker.getPosition();
-//							LatLng llNew = new LatLng(ll.latitude + 0.005, ll.longitude + 0.005);
-//							marker.setPosition(llNew);
-//							mBaiduMap.hideInfoWindow();
-//						}
-//					};
-//					LatLng ll = marker.getPosition();
-//					mInfoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(button), ll, -47, listener);
-//					mBaiduMap.showInfoWindow(mInfoWindow);
-//				} else if (marker == mMarkerB) {
-//					button.setText("更改图标");
-//					button.setOnClickListener(new OnClickListener() {
-//						public void onClick(View v) {
-//							marker.setIcon(bd);
-//							mBaiduMap.hideInfoWindow();
-//						}
-//					});
-//					LatLng ll = marker.getPosition();
-//					mInfoWindow = new InfoWindow(button, ll, -47);
-//					mBaiduMap.showInfoWindow(mInfoWindow);
-//				} else if (marker == mMarkerC) {
-//					button.setText("删除");
-//					button.setOnClickListener(new OnClickListener() {
-//						public void onClick(View v) {
-//							marker.remove();
-//							mBaiduMap.hideInfoWindow();
-//						}
-//					});
-//					LatLng ll = marker.getPosition();
-//					mInfoWindow = new InfoWindow(button, ll, -47);
-//					mBaiduMap.showInfoWindow(mInfoWindow);
-//				}
-				//return true;
-			//}
-		//});
+		// MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(15.0f);
+		// mBaiduMap.setMapStatus(msu);
+
+		Log.d("武侯祠坐标", result.getLocation().latitude + " " + result.getLocation().longitude);
+		coords(result.getLocation().latitude, result.getLocation().longitude);
+
+		// mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener() {
+		// public boolean onMarkerClick(Marker marker) {
+		// Button button = new Button(getApplicationContext());
+		// button.setBackgroundResource(R.drawable.popup);
+		// OnInfoWindowClickListener listener = null;
+		// if (marker == mMarkerA || marker == mMarkerD) {
+		// button.setText("更改位置");
+		// listener = new OnInfoWindowClickListener() {
+		// public void onInfoWindowClick() {
+		// LatLng ll = marker.getPosition();
+		// LatLng llNew = new LatLng(ll.latitude + 0.005, ll.longitude + 0.005);
+		// marker.setPosition(llNew);
+		// mBaiduMap.hideInfoWindow();
+		// }
+		// };
+		// LatLng ll = marker.getPosition();
+		// mInfoWindow = new
+		// InfoWindow(BitmapDescriptorFactory.fromView(button), ll, -47,
+		// listener);
+		// mBaiduMap.showInfoWindow(mInfoWindow);
+		// } else if (marker == mMarkerB) {
+		// button.setText("更改图标");
+		// button.setOnClickListener(new OnClickListener() {
+		// public void onClick(View v) {
+		// marker.setIcon(bd);
+		// mBaiduMap.hideInfoWindow();
+		// }
+		// });
+		// LatLng ll = marker.getPosition();
+		// mInfoWindow = new InfoWindow(button, ll, -47);
+		// mBaiduMap.showInfoWindow(mInfoWindow);
+		// } else if (marker == mMarkerC) {
+		// button.setText("删除");
+		// button.setOnClickListener(new OnClickListener() {
+		// public void onClick(View v) {
+		// marker.remove();
+		// mBaiduMap.hideInfoWindow();
+		// }
+		// });
+		// LatLng ll = marker.getPosition();
+		// mInfoWindow = new InfoWindow(button, ll, -47);
+		// mBaiduMap.showInfoWindow(mInfoWindow);
+		// }
+		// return true;
+		// }
+		// });
 	}
 
-	public void initOverlay(GeoCodeResult result) {
-		//添加气泡
-		MarkerOptions markerOptions=new MarkerOptions().position(result.getLocation()).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_mark));
+	private void coords(double lat, double lng) {
+		RequestQueue mQueue = Volley.newRequestQueue(this);
+
+		String ak = "8u3nVdBibB5nf8xucGHGXAGS";
+		int from = 1;
+		int to = 5;
+		String url = "http://api.map.baidu.com/geoconv/v1/?coords=" + lng + "," + lat + "&from=" + from + "&to=" + to
+				+ "&ak=" + ak;
+		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
+
+			@Override
+			public void onResponse(JSONObject response) {
+				Gson gson = new Gson();
+				BaiduMapCoord coord = gson.fromJson(response + "", BaiduMapCoord.class);
+				LatLng llNew = new LatLng(coord.result[0].y, coord.result[0].x);
+				Log.d("调校状态:" + coord.status, coord.result[0].y + " " + coord.result[0].x);
+
+				addOverlay(llNew);
+				// MapStatusUpdate u = MapStatusUpdateFactory
+				// .newLatLng(llNew);
+				// mBaiduMap.setMapStatus(u);
+			}
+		}, new Response.ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+
+			}
+		});
+
+		mQueue.add(jsonObjectRequest);
+	}
+
+	public void addOverlay(LatLng ll) {
+		// 添加气泡
+		MarkerOptions markerOptions = new MarkerOptions().position(ll)
+				.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_mark));
 		Marker marker = (Marker) (mBaiduMap.addOverlay(markerOptions));
-		
+
 		// 添加景点的覆盖图
-		LatLng target = result.getLocation();
-		Log.d("武侯祠坐标", target.latitude+" "+target.longitude);
+		// LatLng target = result.getLocation();
 		
-		double lat = target.latitude;
-		double lng = target.longitude;
-		double delta=0.003;
-		LatLng northeast = new LatLng(lat + delta, lng+delta);
-		LatLng southwest = new LatLng(lat - delta, lng-delta);
+
+		double lat = ll.latitude;
+		double lng = ll.longitude;
+		double delta = 0.001;
+		LatLng northeast = new LatLng(lat + 0.000, lng + 0.001);
+		LatLng southwest = new LatLng(lat - 0.003, lng - 0.003);
 		LatLngBounds bounds = new LatLngBounds.Builder().include(northeast).include(southwest).build();
 
 		BitmapDescriptor bdGround = BitmapDescriptorFactory.fromResource(R.drawable.wuhouci);
-		
+
 		GroundOverlayOptions goGround = new GroundOverlayOptions();
 		goGround.positionFromBounds(bounds);
 		goGround.image(bdGround);
 		goGround.transparency(0.6f);
 
 		mBaiduMap.addOverlay(goGround);
-		
-		mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener(){
+
+		mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener() {
 
 			@Override
 			public boolean onMarkerClick(Marker marker) {
 				pop();
-				return	false;
-			}});
+				return false;
+			}
+		});
 
-		MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory.newLatLngZoom(bounds.getCenter(),16.0f);
+		MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory.newLatLngZoom(bounds.getCenter(), 16.0f);
 		mBaiduMap.setMapStatus(mapStatusUpdate);
-		
-		Log.d("武侯祠坐标 2", bounds.getCenter().latitude+" "+bounds.getCenter().longitude);
 
-//		mBaiduMap.setOnMarkerDragListener(new OnMarkerDragListener() {
-//			public void onMarkerDrag(Marker marker) {
-//			
-//			}
-//
-//			public void onMarkerDragEnd(Marker marker) {
-//				Toast.makeText(getApplication(),
-//						"拖拽结束，新位置：" + marker.getPosition().latitude + ", " + marker.getPosition().longitude,
-//						Toast.LENGTH_LONG).show();
-//			}
-//
-//			public void onMarkerDragStart(Marker marker) {
-//				
-//			}
-//		});
+		Log.d("武侯祠坐标 2", bounds.getCenter().latitude + " " + bounds.getCenter().longitude);
+
+		// coords(bounds.getCenter().latitude, bounds.getCenter().longitude);
+
+		// mBaiduMap.setOnMarkerDragListener(new OnMarkerDragListener() {
+		// public void onMarkerDrag(Marker marker) {
+		//
+		// }
+		//
+		// public void onMarkerDragEnd(Marker marker) {
+		// Toast.makeText(getApplication(),
+		// "拖拽结束，新位置：" + marker.getPosition().latitude + ", " +
+		// marker.getPosition().longitude,
+		// Toast.LENGTH_LONG).show();
+		// }
+		//
+		// public void onMarkerDragStart(Marker marker) {
+		//
+		// }
+		// });
 	}
 }
