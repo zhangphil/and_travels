@@ -5,14 +5,21 @@ import java.util.HashMap;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BaiduMap.OnMarkerClickListener;
+import com.baidu.mapapi.map.BaiduMap.OnMarkerDragListener;
+import com.baidu.mapapi.map.InfoWindow.OnInfoWindowClickListener;
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.model.LatLngBounds;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.GroundOverlayOptions;
+import com.baidu.mapapi.map.InfoWindow;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
-import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.search.geocode.GeoCodeOption;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
@@ -30,14 +37,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -50,7 +60,7 @@ import android.widget.TextView;
 
 import chinamobile.iot.andtravels.utils.Utils;
 
-public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoderResultListener {
+public class SpotPlaceActivity extends FragmentActivity {
 
 	private MyFragmentPagerAdapter mPagerAdapter;
 	private ViewPager mViewPager;
@@ -77,8 +87,6 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 		containerView = this.getLayoutInflater().inflate(R.layout.spot_place, null);
 		setContentView(containerView);
 
-		baiduMap();
-
 		mArrayList = new ArrayList<HashMap<String, Object>>();
 		for (int i = 0; i < 4; i++) {
 			Fragment fragment = new ImageFragment();
@@ -92,7 +100,9 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 
 			@Override
 			public void onPageSelected(int pos) {
-				set(pos);
+				// set(pos);
+				mViewPager.setCurrentItem(pos, true);
+				handler.sendEmptyMessage(MESSAGE_WHAT_CHANGED);
 			}
 
 			@Override
@@ -115,7 +125,6 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 				case MESSAGE_WHAT_CHANGED:
 					mCircleIndicatorView.setCircleCount(mPagerAdapter.getCount());
 					mCircleIndicatorView.setCircleSelectedPosition(mViewPager.getCurrentItem());
-					// mCircleIndicatorView.setSelectedCircleRadius(7);
 					mCircleIndicatorView.drawCircleView();
 
 					break;
@@ -125,11 +134,14 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 
 		// 初始化选择第一项
 		if (mPagerAdapter.getCount() > 0) {
-			set(0);
+			mViewPager.setCurrentItem(0, true);
+			handler.sendEmptyMessage(MESSAGE_WHAT_CHANGED);
 		}
 
 		daoYouImageView();
 		backImageView();
+
+		initMyBaiduMap();
 	}
 
 	private void backImageView() {
@@ -145,7 +157,7 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 				}
 
 				if (!FULL_SCREEN) {
-					back();
+					Utils.onKeyEvent(KeyEvent.KEYCODE_BACK);
 					return;
 				}
 			}
@@ -184,7 +196,7 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 		});
 	}
 
-	private void baiduMap() {
+	private void initMyBaiduMap() {
 
 		// 地图初始化
 		mMapView = (MapView) findViewById(R.id.bmapView);
@@ -204,7 +216,18 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 
 		// 初始化搜索模块，注册事件监听
 		mSearch = GeoCoder.newInstance();
-		mSearch.setOnGetGeoCodeResultListener(this);
+		mSearch.setOnGetGeoCodeResultListener(new OnGetGeoCoderResultListener() {
+
+			@Override
+			public void onGetGeoCodeResult(GeoCodeResult result) {
+				baiduMapOnCreate(result);
+			}
+
+			@Override
+			public void onGetReverseGeoCodeResult(ReverseGeoCodeResult arg0) {
+
+			}
+		});
 
 		// 不晓得为啥，反正必须不能太快调用百度地图的定位搜索功能，
 		// 需要先暂停一些时间才可以正常工作
@@ -214,13 +237,9 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 
 			@Override
 			public void run() {
-				locationTo();
+				mSearch.geocode(new GeoCodeOption().city("成都").address("武侯祠"));
 			}
 		}, 100);
-	}
-
-	private void locationTo() {
-		mSearch.geocode(new GeoCodeOption().city("成都").address("宽窄巷子"));
 	}
 
 	@Override
@@ -242,49 +261,40 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 		super.onDestroy();
 	}
 
-	@Override
-	public void onGetGeoCodeResult(GeoCodeResult result) {
-		if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-			Toast.makeText(this, "抱歉，未能找到结果", Toast.LENGTH_LONG).show();
-			return;
-		}
-
-		mBaiduMap.clear();
-
-		mBaiduMap.addOverlay(new MarkerOptions().position(result.getLocation())
-				.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_marka)));
-
-		mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener() {
-
-			@Override
-			public boolean onMarkerClick(Marker marker) {
-				if (!FULL_SCREEN) {
-					setBaiduMapFullScreen(true);
-				}
-
-				if (FULL_SCREEN) {
-					pop();
-				}
-
-				return false;
-			}
-		});
-
-		// newpop();
-
-		MapStatusUpdate mMapStatusUpdate = MapStatusUpdateFactory.newLatLngZoom(result.getLocation(), 17.0f);
-		mBaiduMap.setMapStatus(mMapStatusUpdate);
-
-		// mBaiduMap.animateMapStatus(mMapStatusUpdate,5000);
-		// String strInfo = String.format("纬度：%f 经度：%f",
-		// result.getLocation().latitude, result.getLocation().longitude);
-		// Toast.makeText(GeoCoderDemo.this, strInfo, Toast.LENGTH_LONG).show();
-	}
-
-	@Override
-	public void onGetReverseGeoCodeResult(ReverseGeoCodeResult arg0) {
-
-	}
+	// @Override
+	// public void onGetGeoCodeResult(GeoCodeResult result) {
+	// if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
+	// Toast.makeText(this, "抱歉，未能找到结果", Toast.LENGTH_LONG).show();
+	// return;
+	// }
+	//
+	// mBaiduMap.clear();
+	//
+	// mBaiduMap.addOverlay(new MarkerOptions().position(result.getLocation())
+	// .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_marka)));
+	//
+	// mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener() {
+	//
+	// @Override
+	// public boolean onMarkerClick(Marker marker) {
+	// if (!FULL_SCREEN) {
+	// setBaiduMapFullScreen(true);
+	// }
+	//
+	// if (FULL_SCREEN) {
+	// pop();
+	// }
+	//
+	// return false;
+	// }
+	// });
+	//
+	// // newpop();
+	//
+	// MapStatusUpdate mMapStatusUpdate =
+	// MapStatusUpdateFactory.newLatLngZoom(result.getLocation(), 17.0f);
+	// mBaiduMap.setMapStatus(mMapStatusUpdate);
+	// }
 
 	/*
 	 * private void newpop() {
@@ -339,9 +349,6 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 	 * } }); }
 	 */
 
-	private void back() {
-		Utils.onKeyEvent(KeyEvent.KEYCODE_BACK);
-	}
 
 	private void add(Fragment fragment) {
 
@@ -352,11 +359,6 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 		map.put(FRAGMENT, fragment);
 
 		mArrayList.add(map);
-	}
-
-	private void set(int pos) {
-		mViewPager.setCurrentItem(pos, true);
-		handler.sendEmptyMessage(MESSAGE_WHAT_CHANGED);
 	}
 
 	private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
@@ -476,5 +478,112 @@ public class SpotPlaceActivity extends FragmentActivity implements OnGetGeoCoder
 		public int getCount() {
 			return data.length;
 		}
+	}
+
+
+	private void baiduMapOnCreate(GeoCodeResult result) {
+
+		//MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(15.0f);
+		//mBaiduMap.setMapStatus(msu);
+		initOverlay(result);
+		//mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener() {
+			//public boolean onMarkerClick(Marker marker) {
+//				Button button = new Button(getApplicationContext());
+//				button.setBackgroundResource(R.drawable.popup);
+//				OnInfoWindowClickListener listener = null;
+//				if (marker == mMarkerA || marker == mMarkerD) {
+//					button.setText("更改位置");
+//					listener = new OnInfoWindowClickListener() {
+//						public void onInfoWindowClick() {
+//							LatLng ll = marker.getPosition();
+//							LatLng llNew = new LatLng(ll.latitude + 0.005, ll.longitude + 0.005);
+//							marker.setPosition(llNew);
+//							mBaiduMap.hideInfoWindow();
+//						}
+//					};
+//					LatLng ll = marker.getPosition();
+//					mInfoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(button), ll, -47, listener);
+//					mBaiduMap.showInfoWindow(mInfoWindow);
+//				} else if (marker == mMarkerB) {
+//					button.setText("更改图标");
+//					button.setOnClickListener(new OnClickListener() {
+//						public void onClick(View v) {
+//							marker.setIcon(bd);
+//							mBaiduMap.hideInfoWindow();
+//						}
+//					});
+//					LatLng ll = marker.getPosition();
+//					mInfoWindow = new InfoWindow(button, ll, -47);
+//					mBaiduMap.showInfoWindow(mInfoWindow);
+//				} else if (marker == mMarkerC) {
+//					button.setText("删除");
+//					button.setOnClickListener(new OnClickListener() {
+//						public void onClick(View v) {
+//							marker.remove();
+//							mBaiduMap.hideInfoWindow();
+//						}
+//					});
+//					LatLng ll = marker.getPosition();
+//					mInfoWindow = new InfoWindow(button, ll, -47);
+//					mBaiduMap.showInfoWindow(mInfoWindow);
+//				}
+				//return true;
+			//}
+		//});
+	}
+
+	public void initOverlay(GeoCodeResult result) {
+		//添加气泡
+		MarkerOptions markerOptions=new MarkerOptions().position(result.getLocation()).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_mark));
+		Marker marker = (Marker) (mBaiduMap.addOverlay(markerOptions));
+		
+		// 添加景点的覆盖图
+		LatLng target = result.getLocation();
+		Log.d("武侯祠坐标", target.latitude+" "+target.longitude);
+		
+		double lat = target.latitude;
+		double lng = target.longitude;
+		double delta=0.003;
+		LatLng northeast = new LatLng(lat + delta, lng+delta);
+		LatLng southwest = new LatLng(lat - delta, lng-delta);
+		LatLngBounds bounds = new LatLngBounds.Builder().include(northeast).include(southwest).build();
+
+		BitmapDescriptor bdGround = BitmapDescriptorFactory.fromResource(R.drawable.wuhouci);
+		
+		GroundOverlayOptions goGround = new GroundOverlayOptions();
+		goGround.positionFromBounds(bounds);
+		goGround.image(bdGround);
+		goGround.transparency(0.6f);
+
+		mBaiduMap.addOverlay(goGround);
+		
+		mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener(){
+
+			@Override
+			public boolean onMarkerClick(Marker marker) {
+				pop();
+				return	false;
+			}});
+
+		MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory.newLatLngZoom(bounds.getCenter(),16.0f);
+		mBaiduMap.setMapStatus(mapStatusUpdate);
+		
+		Log.d("武侯祠坐标 2", bounds.getCenter().latitude+" "+bounds.getCenter().longitude);
+
+//		mBaiduMap.setOnMarkerDragListener(new OnMarkerDragListener() {
+//			public void onMarkerDrag(Marker marker) {
+//			
+//			}
+//
+//			public void onMarkerDragEnd(Marker marker) {
+//				Toast.makeText(getApplication(),
+//						"拖拽结束，新位置：" + marker.getPosition().latitude + ", " + marker.getPosition().longitude,
+//						Toast.LENGTH_LONG).show();
+//			}
+//
+//			public void onMarkerDragStart(Marker marker) {
+//				
+//			}
+//		});
 	}
 }
