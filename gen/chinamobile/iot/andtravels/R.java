@@ -2446,13 +2446,14 @@ containing a value of this type.
         public static final int loc=0x7f02004e;
         public static final int loc_gray=0x7f02004f;
         public static final int location=0x7f020050;
-        public static final int notification_template_icon_bg=0x7f020057;
+        public static final int notification_template_icon_bg=0x7f020058;
         public static final int pin=0x7f020051;
         public static final int play=0x7f020052;
         public static final int qingyanggong=0x7f020053;
         public static final int spot=0x7f020054;
         public static final int spotplace_home=0x7f020055;
         public static final int stop=0x7f020056;
+        public static final int wuhouci=0x7f020057;
     }
     public static final class id {
         public static final int action0=0x7f090059;

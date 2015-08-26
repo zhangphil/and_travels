@@ -593,13 +593,14 @@ int drawable icon_marka 0x7f02004d
 int drawable loc 0x7f02004e
 int drawable loc_gray 0x7f02004f
 int drawable location 0x7f020050
-int drawable notification_template_icon_bg 0x7f020057
+int drawable notification_template_icon_bg 0x7f020058
 int drawable pin 0x7f020051
 int drawable play 0x7f020052
 int drawable qingyanggong 0x7f020053
 int drawable spot 0x7f020054
 int drawable spotplace_home 0x7f020055
 int drawable stop 0x7f020056
+int drawable wuhouci 0x7f020057
 int id action0 0x7f090059
 int id action_bar 0x7f09003e
 int id action_bar_activity_content 0x7f090003
