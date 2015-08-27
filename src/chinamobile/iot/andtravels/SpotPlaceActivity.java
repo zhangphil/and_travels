@@ -14,19 +14,15 @@ import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BaiduMap.OnMarkerClickListener;
-import com.baidu.mapapi.map.BaiduMap.OnMarkerDragListener;
-import com.baidu.mapapi.map.InfoWindow.OnInfoWindowClickListener;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.model.LatLngBounds;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.GroundOverlayOptions;
-import com.baidu.mapapi.map.InfoWindow;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
-import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.search.geocode.GeoCodeOption;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
@@ -51,14 +47,11 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
 import android.widget.ZoomControls;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
@@ -66,6 +59,7 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import chinamobile.iot.andtravels.utils.Constants.WuHouCiGeoPoint;
 import chinamobile.iot.andtravels.utils.Utils;
 
 public class SpotPlaceActivity extends FragmentActivity {
@@ -86,6 +80,9 @@ public class SpotPlaceActivity extends FragmentActivity {
 	private View containerView;
 	private boolean FULL_SCREEN = false;
 
+	private	final	String	CITY="成都";
+	private	final	String	ADDRESS="武侯祠";	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -245,7 +242,7 @@ public class SpotPlaceActivity extends FragmentActivity {
 
 			@Override
 			public void run() {
-				mSearch.geocode(new GeoCodeOption().city("成都").address("武侯祠"));
+				mSearch.geocode(new GeoCodeOption().city(CITY).address(ADDRESS));
 			}
 		}, 100);
 	}
@@ -492,8 +489,15 @@ public class SpotPlaceActivity extends FragmentActivity {
 		// MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(15.0f);
 		// mBaiduMap.setMapStatus(msu);
 
-		Log.d("武侯祠坐标", result.getLocation().latitude + " " + result.getLocation().longitude);
-		coords(result.getLocation().latitude, result.getLocation().longitude);
+		LatLng latlng=result.getLocation();
+		
+		Log.d("百度返回的武侯祠坐标", latlng.latitude + " " + latlng.longitude);
+		
+		LatLng newLL=new LatLng(WuHouCiGeoPoint.lat,WuHouCiGeoPoint.lng);
+		
+		addOverlay(newLL);
+		
+		//coords(latlng);
 
 		// mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener() {
 		// public boolean onMarkerClick(Marker marker) {
@@ -543,14 +547,11 @@ public class SpotPlaceActivity extends FragmentActivity {
 		// });
 	}
 
-	private void coords(double lat, double lng) {
+	private void coords(LatLng latlng) {
 		RequestQueue mQueue = Volley.newRequestQueue(this);
 
-		String ak = "8u3nVdBibB5nf8xucGHGXAGS";
-		int from = 1;
-		int to = 5;
-		String url = "http://api.map.baidu.com/geoconv/v1/?coords=" + lng + "," + lat + "&from=" + from + "&to=" + to
-				+ "&ak=" + ak;
+		String url=Utils.getBaiduCoordURL(5, 5, latlng.longitude, latlng.latitude);
+		
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
 
 			@Override
@@ -561,6 +562,7 @@ public class SpotPlaceActivity extends FragmentActivity {
 				Log.d("调校状态:" + coord.status, coord.result[0].y + " " + coord.result[0].x);
 
 				addOverlay(llNew);
+				
 				// MapStatusUpdate u = MapStatusUpdateFactory
 				// .newLatLng(llNew);
 				// mBaiduMap.setMapStatus(u);
@@ -568,7 +570,7 @@ public class SpotPlaceActivity extends FragmentActivity {
 		}, new Response.ErrorListener() {
 			@Override
 			public void onErrorResponse(VolleyError error) {
-
+				
 			}
 		});
 
@@ -576,23 +578,20 @@ public class SpotPlaceActivity extends FragmentActivity {
 	}
 
 	public void addOverlay(LatLng ll) {
+		
 		// 添加气泡
 		MarkerOptions markerOptions = new MarkerOptions().position(ll)
 				.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_mark));
 		Marker marker = (Marker) (mBaiduMap.addOverlay(markerOptions));
 
-		// 添加景点的覆盖图
-		// LatLng target = result.getLocation();
-		
-
 		double lat = ll.latitude;
 		double lng = ll.longitude;
-		double delta = 0.001;
-		LatLng northeast = new LatLng(lat + 0.000, lng + 0.001);
-		LatLng southwest = new LatLng(lat - 0.003, lng - 0.003);
+		//double delta = 0.003;
+		LatLng northeast = new LatLng(lat + 0.00252, lng + 0.002);
+		LatLng southwest = new LatLng(lat - 0.0022, lng - 0.0028);
 		LatLngBounds bounds = new LatLngBounds.Builder().include(northeast).include(southwest).build();
 
-		BitmapDescriptor bdGround = BitmapDescriptorFactory.fromResource(R.drawable.wuhouci);
+		BitmapDescriptor bdGround = BitmapDescriptorFactory.fromBitmap(Utils.getBitmapNonOOM(this, R.drawable.wuhouci));
 
 		GroundOverlayOptions goGround = new GroundOverlayOptions();
 		goGround.positionFromBounds(bounds);
@@ -606,14 +605,15 @@ public class SpotPlaceActivity extends FragmentActivity {
 			@Override
 			public boolean onMarkerClick(Marker marker) {
 				pop();
+				setBaiduMapFullScreen(true);
 				return false;
 			}
 		});
 
-		MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory.newLatLngZoom(bounds.getCenter(), 16.0f);
+		MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory.newLatLngZoom(ll, 16.0f);
 		mBaiduMap.setMapStatus(mapStatusUpdate);
 
-		Log.d("武侯祠坐标 2", bounds.getCenter().latitude + " " + bounds.getCenter().longitude);
+		//Log.d("武侯祠坐标 2", bounds.getCenter().latitude + " " + bounds.getCenter().longitude);
 
 		// coords(bounds.getCenter().latitude, bounds.getCenter().longitude);
 

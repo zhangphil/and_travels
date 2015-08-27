@@ -8,6 +8,12 @@ import android.media.ThumbnailUtils;
 
 public class Utils {
 
+	public static String getBaiduCoordURL(int from, int to, double lng, double lat) {
+		String url = "http://api.map.baidu.com/geoconv/v1/?coords=" + lng + "," + lat + "&from=" + from + "&to=" + to
+				+ "&ak=" + Constants.BAIDUMAP_AK;
+		return url;
+	}
+
 	/**
 	 * 模拟系统按键。
 	 * 
@@ -34,6 +40,20 @@ public class Utils {
 		int w = sourceBitmap.getWidth();
 
 		Bitmap bmp = ThumbnailUtils.extractThumbnail(sourceBitmap, w / resize, h / resize);
+
+		if (sourceBitmap != null && !sourceBitmap.isRecycled()) {
+			sourceBitmap.recycle();
+			sourceBitmap = null;
+			System.gc();
+		}
+
 		return bmp;
+	}
+	
+	public	static	Bitmap getBitmapNonOOM(Context context, int resId){
+		BitmapFactory.Options opts = new BitmapFactory.Options();
+		opts.inSampleSize = 5;
+		Bitmap bmp = BitmapFactory.decodeResource(context.getResources(), resId,opts);
+		return	bmp;
 	}
 }
