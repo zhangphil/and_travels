@@ -51,9 +51,21 @@ public class Utils {
 	}
 	
 	public	static	Bitmap getBitmapNonOOM(Context context, int resId){
-		BitmapFactory.Options opts = new BitmapFactory.Options();
-		opts.inSampleSize = 5;
-		Bitmap bmp = BitmapFactory.decodeResource(context.getResources(), resId,opts);
+		
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		
+		//设置此参数后，将不会把图片载入内存不会分配内存，而只读取图片的基础信息如宽、高。
+		//options.inJustDecodeBounds = true;
+		
+		//BitmapFactory.decodeResource(context.getResources(), resId, options);
+		//int imageHeight = options.outHeight;
+		//int imageWidth = options.outWidth;
+	
+		//将原图缩小两倍
+		options.inSampleSize = 2;
+		
+		Bitmap bmp = BitmapFactory.decodeResource(context.getResources(), resId,options);
+		
 		return	bmp;
 	}
 }
