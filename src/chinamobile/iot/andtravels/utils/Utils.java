@@ -61,8 +61,8 @@ public class Utils {
 		//int imageHeight = options.outHeight;
 		//int imageWidth = options.outWidth;
 	
-		//将原图缩小两倍
-		options.inSampleSize = 2;
+		//将原图缩小3倍
+		options.inSampleSize = 3;
 		
 		Bitmap bmp = BitmapFactory.decodeResource(context.getResources(), resId,options);
 		
