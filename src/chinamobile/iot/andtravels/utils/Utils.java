@@ -49,23 +49,23 @@ public class Utils {
 
 		return bmp;
 	}
-	
-	public	static	Bitmap getBitmapNonOOM(Context context, int resId){
-		
+
+	public static Bitmap getBitmapNonOOM(Context context, int resId) {
+
 		BitmapFactory.Options options = new BitmapFactory.Options();
-		
-		//设置此参数后，将不会把图片载入内存不会分配内存，而只读取图片的基础信息如宽、高。
-		//options.inJustDecodeBounds = true;
-		
-		//BitmapFactory.decodeResource(context.getResources(), resId, options);
-		//int imageHeight = options.outHeight;
-		//int imageWidth = options.outWidth;
-	
-		//将原图缩小3倍
+
+		// 设置此参数后，将不会把图片载入内存不会分配内存，而只读取图片的基础信息如宽、高。
+		// options.inJustDecodeBounds = true;
+
+		// BitmapFactory.decodeResource(context.getResources(), resId, options);
+		// int imageHeight = options.outHeight;
+		// int imageWidth = options.outWidth;
+
+		// 将原图缩小3倍
 		options.inSampleSize = 3;
-		
-		Bitmap bmp = BitmapFactory.decodeResource(context.getResources(), resId,options);
-		
-		return	bmp;
+
+		Bitmap bmp = BitmapFactory.decodeResource(context.getResources(), resId, options);
+
+		return bmp;
 	}
 }

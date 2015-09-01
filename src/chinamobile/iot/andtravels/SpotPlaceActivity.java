@@ -80,9 +80,9 @@ public class SpotPlaceActivity extends FragmentActivity {
 	private View containerView;
 	private boolean FULL_SCREEN = false;
 
-	private	final	String	CITY="成都";
-	private	final	String	ADDRESS="武侯祠";	
-	
+	private final String CITY = "成都";
+	private final String ADDRESS = "武侯祠";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -489,15 +489,15 @@ public class SpotPlaceActivity extends FragmentActivity {
 		// MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(15.0f);
 		// mBaiduMap.setMapStatus(msu);
 
-		LatLng latlng=result.getLocation();
-		
+		LatLng latlng = result.getLocation();
+
 		Log.d("百度返回的武侯祠坐标", latlng.latitude + " " + latlng.longitude);
-		
-		LatLng newLL=new LatLng(WuHouCiGeoPoint.lat,WuHouCiGeoPoint.lng);
-		
+
+		LatLng newLL = new LatLng(WuHouCiGeoPoint.lat, WuHouCiGeoPoint.lng);
+
 		addOverlay(newLL);
-		
-		//coords(latlng);
+
+		// coords(latlng);
 
 		// mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener() {
 		// public boolean onMarkerClick(Marker marker) {
@@ -550,8 +550,8 @@ public class SpotPlaceActivity extends FragmentActivity {
 	private void coords(LatLng latlng) {
 		RequestQueue mQueue = Volley.newRequestQueue(this);
 
-		String url=Utils.getBaiduCoordURL(5, 5, latlng.longitude, latlng.latitude);
-		
+		String url = Utils.getBaiduCoordURL(5, 5, latlng.longitude, latlng.latitude);
+
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
 
 			@Override
@@ -562,7 +562,7 @@ public class SpotPlaceActivity extends FragmentActivity {
 				Log.d("调校状态:" + coord.status, coord.result[0].y + " " + coord.result[0].x);
 
 				addOverlay(llNew);
-				
+
 				// MapStatusUpdate u = MapStatusUpdateFactory
 				// .newLatLng(llNew);
 				// mBaiduMap.setMapStatus(u);
@@ -570,7 +570,7 @@ public class SpotPlaceActivity extends FragmentActivity {
 		}, new Response.ErrorListener() {
 			@Override
 			public void onErrorResponse(VolleyError error) {
-				
+
 			}
 		});
 
@@ -578,7 +578,7 @@ public class SpotPlaceActivity extends FragmentActivity {
 	}
 
 	public void addOverlay(LatLng ll) {
-		
+
 		// 添加气泡
 		MarkerOptions markerOptions = new MarkerOptions().position(ll)
 				.icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_mark));
@@ -586,7 +586,7 @@ public class SpotPlaceActivity extends FragmentActivity {
 
 		double lat = ll.latitude;
 		double lng = ll.longitude;
-		//double delta = 0.003;
+		// double delta = 0.003;
 		LatLng northeast = new LatLng(lat + 0.00252, lng + 0.002);
 		LatLng southwest = new LatLng(lat - 0.0022, lng - 0.0028);
 		LatLngBounds bounds = new LatLngBounds.Builder().include(northeast).include(southwest).build();
@@ -613,7 +613,8 @@ public class SpotPlaceActivity extends FragmentActivity {
 		MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory.newLatLngZoom(ll, 16.0f);
 		mBaiduMap.setMapStatus(mapStatusUpdate);
 
-		//Log.d("武侯祠坐标 2", bounds.getCenter().latitude + " " + bounds.getCenter().longitude);
+		// Log.d("武侯祠坐标 2", bounds.getCenter().latitude + " " +
+		// bounds.getCenter().longitude);
 
 		// coords(bounds.getCenter().latitude, bounds.getCenter().longitude);
 

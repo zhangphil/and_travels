@@ -40,22 +40,11 @@ public class ContainerActivity extends FragmentActivity {
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			mArrayList = new ArrayList<Fragment>();
-			for (int i = 0; i < getItemsCount(); i++) {
-				Fragment fragment = null;
 
-				if (i == 0)
-					fragment = new LvYouDaoLan();
-				else
-					if(i==2)
-						fragment=new SettingFragment();
-				else
-					if(i==3)
-						fragment=new PersonSettingFragment();
-					else
-				fragment = new Fragment();
-
-				mArrayList.add(fragment);
-			}
+			mArrayList.add(new LvYouDaoLan());
+			mArrayList.add(new Fragment());
+			mArrayList.add(new SettingFragment());
+			mArrayList.add(new PersonSettingFragment());
 
 			Resources res = getResources();
 			tab_cards = res.getStringArray(R.array.tab_cards);
