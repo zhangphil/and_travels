@@ -46,7 +46,13 @@ public class ContainerActivity extends FragmentActivity {
 				if (i == 0)
 					fragment = new LvYouDaoLan();
 				else
-					fragment = new Fragment();
+					if(i==2)
+						fragment=new SettingFragment();
+				else
+					if(i==3)
+						fragment=new PersonSettingFragment();
+					else
+				fragment = new Fragment();
 
 				mArrayList.add(fragment);
 			}

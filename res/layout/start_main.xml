@@ -1,0 +1,134 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        
+	    <LinearLayout
+	        android:id="@+id/view1"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical" >
+	  
+	        <android.support.v4.view.ViewPager
+	        android:id="@+id/viewpager"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_weight ="1" />
+	  
+		   	<!--显示点点-->
+		    <LinearLayout
+		        android:id="@+id/viewGroup"  
+		        android:layout_width="fill_parent"  
+		        android:layout_height="wrap_content"  
+		        android:layout_weight ="1"
+		        android:orientation="horizontal" >
+		    </LinearLayout>
+		 </LinearLayout> 
+	     
+	    
+	     <ImageView
+	        android:id="@+id/imageView"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:src="@drawable/mainview" 
+	        android:layout_marginTop="140dip"
+	        />
+		
+			
+		<LinearLayout 
+		    android:id="@+id/view3"
+		    android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:orientation="vertical" >
+		<!--显示底部导航栏-->
+		<FrameLayout
+		   android:id="@+id/tab_menu_frame"
+	       android:layout_width="fill_parent"
+	       android:layout_height="85dip"
+	       android:background="#EFEFEF"
+	       android:orientation="vertical"
+	       android:gravity="bottom"
+	       > 
+	           
+		</FrameLayout>
+		</LinearLayout>
+	</RelativeLayout>
+	<FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:layout_marginLeft="80dip"
+        android:layout_marginTop="300dip">
+		
+	    <RadioGroup
+	    android:id="@+id/kaiShiDaoLan"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+	    
+		    <RadioButton
+	            android:id="@+id/kaiShiDaoLanButtom"
+	            android:layout_width="213dip"
+	            android:layout_height="82dip"
+	            android:layout_gravity="bottom"
+	            android:layout_weight="1"
+	            android:button="@null"
+	            android:checked="false"
+	            android:gravity="center_horizontal"
+	            android:paddingTop="20dp"
+	            android:text="开始导游"
+	            android:textSize="30sp"
+	            android:background="@drawable/corner"/>
+	    </RadioGroup>
+
+    </FrameLayout>
+    
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginRight="44dip"
+        android:layout_marginTop="185dip" >
+
+        <ImageView
+            android:layout_width="50dip"
+            android:layout_height="50dip"
+            android:gravity="center"
+            android:src="@drawable/iteme" />
+    </FrameLayout>
+    
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_marginLeft="5dip"
+        android:layout_marginTop="10dip"
+        android:orientation="horizontal">
+
+        <RadioGroup
+        android:id="@+id/city"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+        
+          <RadioButton
+            android:id="@+id/daoLan"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:button="@null"
+            android:checked="false"
+            android:drawableLeft="@drawable/tab_daolan"
+            android:gravity="center_vertical"
+            android:paddingTop="2dp"
+            android:text="成都"/>
+        
+        </RadioGroup>
+    </FrameLayout>
+    
+</FrameLayout>

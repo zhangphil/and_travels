@@ -1,0 +1,71 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+	android:background="#f4f2f2"
+	android:layout_height="match_parent"
+    android:orientation="horizontal">
+    
+    <View
+	  android:layout_width="fill_parent"
+	  android:layout_height="1dip"
+	  android:background="#707172"/>
+    
+	<RadioGroup
+        android:id="@+id/tab_menu"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+        
+          <RadioButton
+            android:id="@+id/daoLan"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:button="@null"
+            android:checked="false"
+            android:drawableTop="@drawable/tab_daolan"
+            android:gravity="center_horizontal|bottom"
+            android:paddingTop="2dp"
+            android:text="旅游导览"/>
+        
+          <RadioButton
+            android:id="@+id/youJi"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:button="@null"
+            android:checked="false"
+            android:drawableTop="@drawable/tab_youji"
+            android:gravity="center_horizontal|bottom"
+            android:paddingTop="2dp"
+            android:text="游记"/>
+        
+          <RadioButton
+            android:id="@+id/set"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:button="@null"
+            android:checked="false"
+            android:drawableTop="@drawable/tab_set"
+            android:gravity="center_horizontal|bottom"
+            android:paddingTop="2dp"
+            android:text="设置" />
+	    
+         <RadioButton
+            android:id="@+id/person"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:button="@null"
+            android:checked="false"
+            android:drawableTop="@drawable/tab_person"
+            android:gravity="center_horizontal|bottom"
+            android:paddingTop="2dp"
+            android:text="我的"/>
+        
+        </RadioGroup>
+</RelativeLayout>

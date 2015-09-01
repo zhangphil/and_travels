@@ -1,0 +1,16 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="30dip"
+    android:background="#f4f2f2"
+    android:orientation="horizontal">
+    
+    <TextView
+       android:id="@+id/title"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_alignParentLeft="true"
+       android:layout_marginLeft="10dip"
+       android:layout_centerVertical="true"
+       />
+    
+</RelativeLayout>
