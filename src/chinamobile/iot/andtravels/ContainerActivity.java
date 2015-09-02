@@ -2,18 +2,34 @@ package chinamobile.iot.andtravels;
 
 import java.util.ArrayList;
 
+import com.aprilbrother.aprilbrothersdk.BeaconManager;
+
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.aprilbrother.aprilbrothersdk.BeaconManager;
+import com.aprilbrother.aprilbrothersdk.Beacon;
+import com.aprilbrother.aprilbrothersdk.BeaconManager.MonitoringListener;
+import com.aprilbrother.aprilbrothersdk.BeaconManager.RangingListener;
+import com.aprilbrother.aprilbrothersdk.Region;
+
 public class ContainerActivity extends FragmentActivity {
 
+	private static final int REQUEST_ENABLE_BT = 1234;
+	private BluetoothAdapter mBluetoothAdapter;
+	private BeaconManager beaconManager = new BeaconManager(this);
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -23,8 +39,46 @@ public class ContainerActivity extends FragmentActivity {
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.fragment, newFragment);
 		transaction.commit();
+		
+		//开启蓝牙
+		startBle();
 	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == REQUEST_ENABLE_BT) {
+			if (resultCode == Activity.RESULT_OK) {
+				Log.e("Tag", "蓝牙设备打开了,启动服务开始扫描");
 
+			} else {
+				Log.e("终端启动蓝牙失败", "");
+			}
+		} else {
+			Log.e("Tag", "启动参数不是启动蓝牙");
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+	
+	private void startBle() {
+
+		if (!beaconManager.hasBluetooth()) {
+			Log.e("Tag", "没有找到蓝牙设备");
+			return;
+		}
+
+		Log.e("Tag", "找到蓝牙设备,准备扫描");
+
+		if (!beaconManager.isBluetoothEnabled()) {
+			Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+			startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+			Log.e("Tag", "启动蓝牙设备");
+		} else {
+
+			Log.e("Tag", "蓝牙设备已经打开了");
+		}
+
+	}
+	
 	public static class MyViewPagerTabHost extends ViewPagerTabHost {
 
 		private ArrayList<Fragment> mArrayList;
@@ -55,12 +109,28 @@ public class ContainerActivity extends FragmentActivity {
 		}
 
 		@Override
-		protected View getIndicatorAt(int pos) {
+		protected View getIndicatorAt(final	int pos) {
 			View v = mLayoutInflater.inflate(R.layout.tab_card, null);
 			ImageView iv = (ImageView) v.findViewById(R.id.imageView);
+			iv.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					if(pos==0){
+						//点击导览后，启动后台蓝牙扫描
+						Intent daoLanIntent = new Intent();
+						daoLanIntent.setAction("chinamobile.iot.andtravels.communication.BeaconService");
+						daoLanIntent.setPackage(getActivity().getPackageName());
+						getActivity().startService(daoLanIntent);
+					}
+				}
+			});
 			iv.setImageResource(icon_unselected[pos]);
 			TextView text = (TextView) v.findViewById(R.id.textView);
 			text.setText(tab_cards[pos]);
+			
+			
+			
 			return v;
 		}
 
