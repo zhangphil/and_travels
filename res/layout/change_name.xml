@@ -18,6 +18,7 @@
             android:maxWidth="30dip"
             android:maxHeight="30dip"
             android:adjustViewBounds="true"
+            android:layout_marginLeft="10dip"
             android:src="@drawable/back"/>
         
         

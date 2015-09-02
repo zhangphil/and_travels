@@ -10,20 +10,21 @@
        android:layout_alignParentLeft="true"
        android:layout_marginLeft="10dip"
        android:layout_centerVertical="true"
+       android:textSize="12sp"
        />
        
     <ImageView
        android:id="@+id/manImage"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
+       android:layout_width="45dip"
+       android:layout_height="45dip"
        android:layout_alignParentRight="true"
        android:layout_centerVertical="true"
-       android:layout_marginRight="40dip" />
+       android:layout_marginRight="35dip" />
     
       <ImageView
        android:id="@+id/touchImage"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
+       android:layout_width="10dip"
+       android:layout_height="12dip"
        android:layout_alignParentRight="true"
        android:layout_centerVertical="true"
        android:layout_marginRight="10dip" />
