@@ -46,7 +46,7 @@ public class SubmitRegisterActivity extends Activity {
 		Bundle bundle = intent.getBundleExtra("bundle");
 		strPhoneNum = bundle.getString("PhoneNum");
 
-		regButton = (TextView) findViewById(R.id.registerButton);
+		regButton = (TextView) findViewById(R.id.login);
 
 		backView = (ImageView) findViewById(R.id.back);
 
@@ -58,7 +58,9 @@ public class SubmitRegisterActivity extends Activity {
 
 				// TODO Auto-generated method stub
 				// 发送客户信息到服务器
-				Register();
+				//Register();
+				Intent intent = new Intent(mActivity, MainActivity.class);
+				startActivity(intent);
 
 			}
 
