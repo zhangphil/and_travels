@@ -417,8 +417,8 @@ public class BLEScanService extends Service implements Runnable{
 			String action = intent.getStringExtra("usrAction"); 
 			if(action.compareToIgnoreCase("start") == 0){
 				Log.e(TAG, "获取客户点击开始按钮");
-				//stopMedia();
-				//playMedia(mCurPlayUrl);
+				stopMedia();
+				playMedia(mCurPlayUrl);
 			}
 			else if(action.compareToIgnoreCase("stop") == 0){
 				Log.e(TAG, "获取客户点击了暂停按钮");

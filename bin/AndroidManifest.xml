@@ -83,22 +83,6 @@
             android:name="com.aprilbrother.aprilbrothersdk.service.BeaconService"
             android:exported="false" />
         
-        <receiver android:name=".BLEScanService$UserActionReceiver"
-            android:exported="false">  
-            <intent-filter>  
-                <action android:name="chinamobile.iot.andtravels.BLEScanService.UserAction" />  
-            </intent-filter>  
-        </receiver>
-  
-         
-         
-         
-         
-         
-         
-         
-         
-         
     </application>
 
     
