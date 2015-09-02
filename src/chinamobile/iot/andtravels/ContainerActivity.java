@@ -9,6 +9,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -18,16 +19,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.aprilbrother.aprilbrothersdk.BeaconManager;
-import com.aprilbrother.aprilbrothersdk.Beacon;
-import com.aprilbrother.aprilbrothersdk.BeaconManager.MonitoringListener;
-import com.aprilbrother.aprilbrothersdk.BeaconManager.RangingListener;
-import com.aprilbrother.aprilbrothersdk.Region;
 
 public class ContainerActivity extends FragmentActivity {
 
 	private static final int REQUEST_ENABLE_BT = 1234;
-	private BluetoothAdapter mBluetoothAdapter;
+	//private BluetoothAdapter mBluetoothAdapter;
 	private BeaconManager beaconManager = new BeaconManager(this);
 	
 	@Override
@@ -112,24 +108,9 @@ public class ContainerActivity extends FragmentActivity {
 		protected View getIndicatorAt(final	int pos) {
 			View v = mLayoutInflater.inflate(R.layout.tab_card, null);
 			ImageView iv = (ImageView) v.findViewById(R.id.imageView);
-			iv.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					if(pos==0){
-						//点击导览后，启动后台蓝牙扫描
-						Intent daoLanIntent = new Intent();
-						daoLanIntent.setAction("chinamobile.iot.andtravels.communication.BeaconService");
-						daoLanIntent.setPackage(getActivity().getPackageName());
-						getActivity().startService(daoLanIntent);
-					}
-				}
-			});
 			iv.setImageResource(icon_unselected[pos]);
 			TextView text = (TextView) v.findViewById(R.id.textView);
 			text.setText(tab_cards[pos]);
-			
-			
 			
 			return v;
 		}
@@ -149,12 +130,23 @@ public class ContainerActivity extends FragmentActivity {
 		public void onOnTabIndicatorSelected(View view, int pos) {
 			ImageView iv = (ImageView) view.findViewById(R.id.imageView);
 			iv.setImageResource(icon_selected[pos]);
+			
+			if(pos==0)
+				startBluetooth();	
 		}
 
 		@Override
 		public void onOnTabIndicatorUnSelected(View view, int pos) {
 			ImageView iv = (ImageView) view.findViewById(R.id.imageView);
 			iv.setImageResource(icon_unselected[pos]);
+		}
+		
+		private void	startBluetooth(){
+			//点击导览后，启动后台蓝牙扫描
+			Intent daoLanIntent = new Intent();
+			daoLanIntent.setAction("chinamobile.iot.andtravels.communication.BeaconService");
+			daoLanIntent.setPackage(getActivity().getPackageName());
+			getActivity().startService(daoLanIntent);
 		}
 	}
 }
