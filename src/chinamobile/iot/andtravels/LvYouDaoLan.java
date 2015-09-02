@@ -1,7 +1,6 @@
 package chinamobile.iot.andtravels;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,10 +8,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,66 +31,42 @@ public class LvYouDaoLan extends Fragment {
 	private final int MESSAGE_WHAT_CHANGED = 100;
 
 	//装载若干张展示用的图片。
-	private ArrayList<HashMap<String, Object>> mArrayList = null;
+	//private ArrayList<HashMap<String, Object>> mArrayList = null;
 	
-	private final String FRAGMENT = "fragment_tag";
+	//private final String FRAGMENT = "fragment_tag";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mArrayList = new ArrayList<HashMap<String, Object>>();
-		for (int i = 0; i < 3; i++) {
-			Fragment fragment = new ImageFragment();
-			add(fragment);
-		}
+//		mArrayList = new ArrayList<HashMap<String, Object>>();
+//		for (int i = 0; i < 3; i++) {
+//			Fragment fragment = new ImageFragment();
+//			add(fragment);
+//		}
 	}
 	
-	private void add(Fragment fragment) {
+//	private void add(Fragment fragment) {
+//
+//		HashMap<String, Object> map = new HashMap<String, Object>();
+//
+//		Bundle args = new Bundle();
+//		fragment.setArguments(args);
+//		map.put(FRAGMENT, fragment);
+//
+//		mArrayList.add(map);
+//	}
 
-		HashMap<String, Object> map = new HashMap<String, Object>();
-
-		Bundle args = new Bundle();
-		fragment.setArguments(args);
-		map.put(FRAGMENT, fragment);
-
-		mArrayList.add(map);
-	}
-
-	private class ImageFragment extends Fragment {
-		
-		@Override
-		public	void	onCreate(Bundle savedInstanceState){
-			super.onCreate(savedInstanceState);
-		}
-		
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-			ImageView iv = new ImageView(getContext());
-			iv.setImageResource(R.drawable.homepage);
-			iv.setScaleType(ScaleType.CENTER_CROP);
-			return iv;
-		}
-	
-		@Override
-		public	void	onResume(){
-			super.onResume();
-			Log.d("phil", "onResume");
-		}
-		
-		@Override
-		public	void	onPause(){
-			super.onPause();
-			Log.d("phil", "onPause");
-		}
-	
-		@Override
-		public	void	onStop(){
-			super.onStop();
-			Log.d("phil", "onStop");
-		}
-	}
+//	private class ImageFragment extends Fragment {
+//		@Override
+//		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+//
+//			ImageView iv = new ImageView(getContext());
+//			iv.setImageResource(R.drawable.homepage);
+//			iv.setScaleType(ScaleType.CENTER_CROP);
+//			return iv;
+//		}
+//	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -110,7 +83,8 @@ public class LvYouDaoLan extends Fragment {
 		});
 
 		mViewPager = (ViewPager) view.findViewById(R.id.viewpager_head);
-		mPagerAdapter = new MyFragmentPagerAdapter(getFragmentManager());
+		//mPagerAdapter = new MyFragmentPagerAdapter(getFragmentManager());
+		mPagerAdapter = new MyFragmentPagerAdapter();
 		mViewPager.setAdapter(mPagerAdapter);
 		mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
@@ -171,13 +145,55 @@ public class LvYouDaoLan extends Fragment {
 		Utils.onKeyEvent(KeyEvent.KEYCODE_BACK);
 	}
 
-	
-
 	private void set(int pos) {
 		mViewPager.setCurrentItem(pos, true);
 		handler.sendEmptyMessage(MESSAGE_WHAT_CHANGED);
 	}
 
+	
+	private class MyFragmentPagerAdapter extends	PagerAdapter {
+
+		private ArrayList<ImageView> mItems = null;
+		
+		public	MyFragmentPagerAdapter(){
+			mItems=new ArrayList<ImageView>();
+			for(int i=0;i<3;i++){
+				ImageView image=new ImageView(getContext());
+				image.setImageResource(R.drawable.homepage);
+				image.setScaleType(ScaleType.CENTER_CROP);
+				mItems.add(image);
+			}
+		}
+		
+		@Override
+		public ImageView instantiateItem(View container, int position) {
+			((ViewPager) container).addView(mItems.get(position));
+			return mItems.get(position);
+		}
+
+		@Override
+		public void destroyItem(ViewGroup container, int position, Object object) {
+			((ViewPager) container).removeView((View) object);
+		}
+		
+		@Override
+		public int getCount() {
+			return mItems.size();
+		}
+
+		@Override
+		public boolean isViewFromObject(View arg0, Object arg1) {
+			return arg0==arg1;
+		}
+		
+		@Override
+		public void notifyDataSetChanged() {
+			super.notifyDataSetChanged();
+			handler.sendEmptyMessage(MESSAGE_WHAT_CHANGED);
+		}
+	}
+	
+	/*
 	private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
 
 		public MyFragmentPagerAdapter(FragmentManager fm) {
@@ -200,6 +216,7 @@ public class LvYouDaoLan extends Fragment {
 			handler.sendEmptyMessage(MESSAGE_WHAT_CHANGED);
 		}
 	}
+	*/
 
 	private class MyArrayAdapter extends ArrayAdapter {
 
