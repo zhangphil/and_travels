@@ -96,7 +96,7 @@ public class SpotPlaceActivity extends FragmentActivity {
 		setContentView(containerView);
 
 		mArrayList = new ArrayList<HashMap<String, Object>>();
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 3; i++) {
 			Fragment fragment = new ImageFragment();
 			add(fragment);
 		}
