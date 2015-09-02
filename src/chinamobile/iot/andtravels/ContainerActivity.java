@@ -90,8 +90,8 @@ public class ContainerActivity extends FragmentActivity {
 			mArrayList = new ArrayList<Fragment>();
 
 			mArrayList.add(new LvYouDaoLan());
-			mArrayList.add(new SettingFragment());
 			mArrayList.add(new PersonSettingFragment());
+			mArrayList.add(new SettingFragment());
 
 			Resources res = getResources();
 			tab_cards = res.getStringArray(R.array.tab_cards);
