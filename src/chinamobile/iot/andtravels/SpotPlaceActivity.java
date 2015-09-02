@@ -31,6 +31,7 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.google.gson.Gson;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -83,6 +84,8 @@ public class SpotPlaceActivity extends FragmentActivity {
 	private final String CITY = "成都";
 	private final String ADDRESS = "武侯祠";
 
+	private boolean	isPlaying=false;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -434,8 +437,22 @@ public class SpotPlaceActivity extends FragmentActivity {
 			}
 		});
 
-		ImageView playImageView = (ImageView) v.findViewById(R.id.playerImageView);
-
+		final ImageView playImageView = (ImageView) v.findViewById(R.id.playerImageView);
+		playImageView.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if(isPlaying){
+					stopAudio();
+					playImageView.setImageResource(R.drawable.stop);
+				}
+				else{
+					playAudio();
+					playImageView.setImageResource(R.drawable.play);
+				}
+			}	
+		});		
+		
 		PopupWindow popWindow = new PopupWindow(this);
 		// ColorDrawable dw = new ColorDrawable(-00000);
 		// popWindow.setBackgroundDrawable(dw);
@@ -449,12 +466,22 @@ public class SpotPlaceActivity extends FragmentActivity {
 		popWindow.setContentView(v);
 
 		popWindow.showAtLocation(getWindow().getDecorView(), Gravity.NO_GRAVITY, blank_w / 2, hight / 2);
-	
-		playAudio();
 	}
 	
 	protected	void	playAudio(){
+		Intent intent = new Intent("chinamobile.iot.andtravels.BLEScanService.UserAction");
+		intent.putExtra("usrAction", "start");
+		sendBroadcast(intent);
 		
+		isPlaying=true;
+	}
+	
+	protected	void	stopAudio(){
+		Intent intent = new Intent("chinamobile.iot.andtravels.BLEScanService.UserAction");
+		intent.putExtra("usrAction", "stop");
+		sendBroadcast(intent);
+		
+		isPlaying=false;
 	}
 
 	private class MyArrayAdapter extends ArrayAdapter {
