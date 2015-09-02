@@ -449,6 +449,12 @@ public class SpotPlaceActivity extends FragmentActivity {
 		popWindow.setContentView(v);
 
 		popWindow.showAtLocation(getWindow().getDecorView(), Gravity.NO_GRAVITY, blank_w / 2, hight / 2);
+	
+		playAudio();
+	}
+	
+	protected	void	playAudio(){
+		
 	}
 
 	private class MyArrayAdapter extends ArrayAdapter {
