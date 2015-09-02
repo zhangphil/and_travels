@@ -131,8 +131,6 @@ public class ContainerActivity extends FragmentActivity {
 			ImageView iv = (ImageView) view.findViewById(R.id.imageView);
 			iv.setImageResource(icon_selected[pos]);
 			
-			if(pos==0)
-				startBluetooth();	
 		}
 
 		@Override
@@ -141,12 +139,6 @@ public class ContainerActivity extends FragmentActivity {
 			iv.setImageResource(icon_unselected[pos]);
 		}
 		
-		private void	startBluetooth(){
-			//点击导览后，启动后台蓝牙扫描
-			Intent daoLanIntent = new Intent();
-			daoLanIntent.setAction("chinamobile.iot.andtravels.communication.BeaconService");
-			daoLanIntent.setPackage(getActivity().getPackageName());
-			getActivity().startService(daoLanIntent);
-		}
+	
 	}
 }

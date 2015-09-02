@@ -60,7 +60,7 @@ public class RegisterActivity extends Activity {
 						// TODO Auto-generated method stub
 						// 获取号码，切换到输入密码界面
 						strPhoneNum = editText.toString();
-						Intent intent = new Intent(mActivity, MainActivity.class);
+						Intent intent = new Intent(mActivity, SubmitRegisterActivity.class);
 						Bundle bundle = new Bundle();
 						bundle.putString("PhoneNum", strPhoneNum);
 						intent.putExtra("bundle", bundle);

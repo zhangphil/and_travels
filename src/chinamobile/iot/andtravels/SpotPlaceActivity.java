@@ -193,8 +193,19 @@ public class SpotPlaceActivity extends FragmentActivity {
 		centerLinearLayout.setVisibility(visibility);
 
 		FULL_SCREEN = show;
+		
+		startBluetooth();
+		
 	}
 
+	private void	startBluetooth(){
+		//点击导览后，启动后台蓝牙扫描
+		Intent daoLanIntent = new Intent();
+		daoLanIntent.setAction("chinamobile.iot.andtravels.communication.BeaconService");
+		daoLanIntent.setPackage(getPackageName());
+		startService(daoLanIntent);
+	}
+	
 	private void daoYouImageView() {
 
 		ImageView spotImageView = (ImageView) containerView.findViewById(R.id.daoyouImageView);
