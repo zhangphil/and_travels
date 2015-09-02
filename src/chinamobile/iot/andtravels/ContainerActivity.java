@@ -40,7 +40,6 @@ public class ContainerActivity extends FragmentActivity {
 			mArrayList = new ArrayList<Fragment>();
 
 			mArrayList.add(new LvYouDaoLan());
-			mArrayList.add(new Fragment());
 			mArrayList.add(new SettingFragment());
 			mArrayList.add(new PersonSettingFragment());
 
