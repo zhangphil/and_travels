@@ -11,19 +11,12 @@
         android:background="#007cc8"
         android:orientation="horizontal" >
         
-        <ImageView
-	        android:id="@+id/backImage"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:src="@drawable/back" 
-	        android:layout_alignParentLeft="true"
-       		android:layout_marginLeft="10dip"
-       		android:layout_centerVertical="true"/>
     	<TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="登录" />
+            android:text="登录" 
+            android:textSize="15sp"/>
     	
     	<Button 
     	    android:id="@+id/Registr"
@@ -35,6 +28,7 @@
             android:background="@android:color/transparent"
             android:adjustViewBounds="true"
             android:padding="0dip"
+             android:textSize="15sp"
             android:text="注册"/>
     	
     	</RelativeLayout>
@@ -68,7 +62,7 @@
             android:id="@+id/submitButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="220dip"
+            android:layout_marginTop="250dip"
             android:background="#007CC8"
             android:text="登录"
             />

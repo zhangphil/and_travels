@@ -32,8 +32,7 @@ public class LoginActivity extends Activity {
 	private EditText secondEditText;
 	private TextView submitTextView;
 	private TextView regTextView;
-	private ImageView backView;
-
+	
 	private final LoginActivity mActivity = this;
 
 	@Override
@@ -45,8 +44,7 @@ public class LoginActivity extends Activity {
 		secondEditText = (EditText) findViewById(R.id.Password);
 		regTextView = (TextView) findViewById(R.id.login_register);
 		submitTextView = (TextView) findViewById(R.id.login);
-		backView = (ImageView) findViewById(R.id.back);
-
+		
 		submitTextView.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -75,15 +73,6 @@ public class LoginActivity extends Activity {
 			}
 		});
 
-		backView.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				finish();
-
-			}
-		});
 	}
 
 	private void Login() {
