@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.ListView;
+import android.widget.TextView;
 import chinamobile.iot.andtravels.utils.Utils;
 
 public class LvYouDaoLan extends Fragment {
@@ -217,26 +218,38 @@ public class LvYouDaoLan extends Fragment {
 
 		private LayoutInflater mLayoutInflater;
 
+		private	String[] distance={"12.6km","7.8km","10.5km"};
+		private	int[] res={R.drawable.wuhouci_small,R.drawable.caotang_samll,R.drawable.kuanzhaixiangzi_small};
+		private	String[] details={"纪念三国时蜀汉丞相诸葛亮的祠堂。","是目前我国最大、最完整的杜甫文物保护中心。","走进了最成都、最世界、最古老、最时尚的老成都名片。"};
+		private	String[] placeNames={"武侯祠","杜甫草堂","宽窄巷子"};
 		public MyArrayAdapter(Context context, int resource) {
 			super(context, resource);
-
 			mLayoutInflater = LayoutInflater.from(context);
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(int pos, View convertView, ViewGroup parent) {
 			if (convertView == null)
 				convertView = mLayoutInflater.inflate(R.layout.lvyoudaolan_item, null);
 
 			ImageView imageViewPlace = (ImageView) convertView.findViewById(R.id.imageViewPlace);
-			imageViewPlace.setImageBitmap(Utils.getResize(getContext(), R.drawable.qingyanggong, 2));
-
+			imageViewPlace.setImageResource(res[pos]);
+			
+			TextView placeName=(TextView)convertView.findViewById(R.id.placeName);
+			placeName.setText(placeNames[pos]);
+			
+			TextView detail=(TextView) convertView.findViewById(R.id.textViewDetail);
+			detail.setText(details[pos]);
+			
+			TextView distancetv=(TextView) convertView.findViewById(R.id.textViewDistance);
+			distancetv.setText(distance[pos]);
+			
 			return convertView;
 		}
 
 		@Override
 		public int getCount() {
-			return 5;
+			return 3;
 		}
 	}
 }

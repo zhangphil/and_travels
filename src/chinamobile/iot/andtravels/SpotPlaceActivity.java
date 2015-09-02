@@ -35,7 +35,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -69,9 +68,6 @@ public class SpotPlaceActivity extends FragmentActivity {
 	private Handler handler;
 	private final int MESSAGE_WHAT_CHANGED = 100;
 
-	//private ArrayList<HashMap<String, Object>> mArrayList = null;
-	//private final String FRAGMENT = "fragment_tag";
-
 	private GeoCoder mSearch = null;
 	private BaiduMap mBaiduMap = null;
 	private MapView mMapView = null;
@@ -92,17 +88,6 @@ public class SpotPlaceActivity extends FragmentActivity {
 
 		containerView = this.getLayoutInflater().inflate(R.layout.spot_place, null);
 		setContentView(containerView);
-
-		//mArrayList = new ArrayList<HashMap<String, Object>>();
-		
-		
-//		for (int i = 0; i < 3; i++) {
-//			Fragment fragment = new ImageFragment();
-//			Bundle bundle=new Bundle();
-//			bundle.putInt("RES", res[i]);
-//			fragment.setArguments(bundle);
-//			add(fragment);
-//		}
 
 		mViewPager = (ViewPager) containerView.findViewById(R.id.viewpager_head);
 		mPagerAdapter = new MyPagerAdapter(this);
@@ -459,9 +444,8 @@ public class SpotPlaceActivity extends FragmentActivity {
 		View v = inflater.inflate(R.layout.popupwindow, null);
 		v.setAlpha(128);// 半透明
 
-		String[] spots = { "宽巷子", "窄巷子", "井巷子", "其他" };
-		final int[] imgs = { R.drawable.cd1, R.drawable.qingyanggong, R.drawable.qingyanggong,
-				R.drawable.ic_launcher };
+		String[] spots = { "武侯祠1", "武侯祠2", "武侯祠3" };
+		final int[] imgs = { R.drawable.wuhouci1, R.drawable.wuhouci2, R.drawable.wuhouci3 };
 		final ImageView imageViewDisplay = (ImageView) v.findViewById(R.id.imageViewDisplay);
 		ListView lv = (ListView) v.findViewById(R.id.listView);
 		ArrayAdapter adapter = new MyArrayAdapter(this, -1, spots);

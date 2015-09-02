@@ -9,7 +9,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -107,6 +106,7 @@ public class ContainerActivity extends FragmentActivity {
 		@Override
 		protected View getIndicatorAt(final	int pos) {
 			View v = mLayoutInflater.inflate(R.layout.tab_card, null);
+			
 			ImageView iv = (ImageView) v.findViewById(R.id.imageView);
 			iv.setImageResource(icon_unselected[pos]);
 			TextView text = (TextView) v.findViewById(R.id.textView);

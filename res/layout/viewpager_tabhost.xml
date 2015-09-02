@@ -23,7 +23,7 @@
     <LinearLayout
         android:id="@+id/indicator_LinearLayout"
         android:layout_width="match_parent"
-        android:layout_height="90dip"
+        android:layout_height="60dip"
         android:orientation="horizontal" >
     </LinearLayout>
 

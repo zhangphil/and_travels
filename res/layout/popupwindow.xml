@@ -15,7 +15,7 @@
             android:layout_width="0dip"
             android:layout_weight="0.6"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_launcher" />
+            android:src="@drawable/wuhouci1" />
 
         <ListView
             android:id="@+id/listView"
@@ -40,13 +40,17 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:maxWidth="30dip"
+            android:maxHeight="30dip"
+            android:adjustViewBounds="true"
             android:src="@drawable/loc_gray" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="宽巷子"
+            android:text="武侯祠"
             android:textColor="@android:color/white" />
     </LinearLayout>
 
