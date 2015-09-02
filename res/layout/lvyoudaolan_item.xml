@@ -2,9 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="2dip"
     android:orientation="horizontal" >
 
     <ImageView
+        android:padding="1dip"
         android:id="@+id/imageViewPlace"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -13,19 +15,23 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:padding="1dip" >
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
 
             <TextView
+                android:textStyle="bold"
+                android:textSize="13sp"
                 android:id="@+id/placeName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_centerVertical="true"
+                android:textColor="@color/and_travels_titlebar"
                 android:text="青羊宫" />
 
              <TextView
@@ -35,6 +41,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:layout_centerVertical="true"
+                android:textSize="9sp"
                 android:text="12.4km" />
             
             <ImageView
@@ -43,16 +50,21 @@
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/textViewDistance"
                 android:layout_centerVertical="true"
+                android:maxWidth="10dip"
+                android:maxHeight="10dip"
+                android:adjustViewBounds="true"
                 android:src="@drawable/loc" />
             
         </RelativeLayout>
 
         <TextView
+            android:padding="5dip"
+            android:textSize="11sp"
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:maxLines="3"
+            android:maxLines="2"
             android:text="青羊宫位于成都市一环路西二段，侧依锦江，被誉为“川西第一道观”、“西南第一丛林”，是西南地区建筑年代最久远、规模最大的一座道教宫观，也是全国著名的道教宫观之一。" />
     </LinearLayout>
 
