@@ -1,7 +1,6 @@
 package chinamobile.iot.andtravels;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.json.JSONObject;
 
@@ -38,8 +37,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -65,14 +63,14 @@ import chinamobile.iot.andtravels.utils.Utils;
 
 public class SpotPlaceActivity extends FragmentActivity {
 
-	private MyFragmentPagerAdapter mPagerAdapter;
+	private PagerAdapter mPagerAdapter;
 	private ViewPager mViewPager;
 
 	private Handler handler;
 	private final int MESSAGE_WHAT_CHANGED = 100;
 
-	private ArrayList<HashMap<String, Object>> mArrayList = null;
-	private final String FRAGMENT = "fragment_tag";
+	//private ArrayList<HashMap<String, Object>> mArrayList = null;
+	//private final String FRAGMENT = "fragment_tag";
 
 	private GeoCoder mSearch = null;
 	private BaiduMap mBaiduMap = null;
@@ -95,14 +93,19 @@ public class SpotPlaceActivity extends FragmentActivity {
 		containerView = this.getLayoutInflater().inflate(R.layout.spot_place, null);
 		setContentView(containerView);
 
-		mArrayList = new ArrayList<HashMap<String, Object>>();
-		for (int i = 0; i < 3; i++) {
-			Fragment fragment = new ImageFragment();
-			add(fragment);
-		}
+		//mArrayList = new ArrayList<HashMap<String, Object>>();
+		
+		
+//		for (int i = 0; i < 3; i++) {
+//			Fragment fragment = new ImageFragment();
+//			Bundle bundle=new Bundle();
+//			bundle.putInt("RES", res[i]);
+//			fragment.setArguments(bundle);
+//			add(fragment);
+//		}
 
 		mViewPager = (ViewPager) containerView.findViewById(R.id.viewpager_head);
-		mPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
+		mPagerAdapter = new MyPagerAdapter(this);
 		mViewPager.setAdapter(mPagerAdapter);
 		mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
@@ -357,36 +360,51 @@ public class SpotPlaceActivity extends FragmentActivity {
 	 * } }); }
 	 */
 
-	private void add(Fragment fragment) {
+//	private void add(Fragment fragment) {
+//
+//		HashMap<String, Object> map = new HashMap<String, Object>();
+//
+//		Bundle args = new Bundle();
+//		fragment.setArguments(args);
+//		map.put(FRAGMENT, fragment);
+//
+//		mArrayList.add(map);
+//	}
 
-		HashMap<String, Object> map = new HashMap<String, Object>();
+	private class MyPagerAdapter extends PagerAdapter {
 
-		Bundle args = new Bundle();
-		fragment.setArguments(args);
-		map.put(FRAGMENT, fragment);
-
-		mArrayList.add(map);
-	}
-
-	private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
-
-		public MyFragmentPagerAdapter(FragmentManager fm) {
-			super(fm);
+		private ArrayList<ImageView> mItems = null;
+		private	Context context;
+		
+		public MyPagerAdapter(Context context) {
+			this.context=context;
+			
+			int[] res={R.drawable.wuhouci1,R.drawable.wuhouci2,R.drawable.wuhouci3};
+			
+			mItems=new ArrayList<ImageView>();
+			
+			for(int i=0;i<3;i++){
+				ImageView image=new ImageView(context);
+				image.setImageResource(res[i]);
+				image.setScaleType(ScaleType.CENTER_CROP);
+				mItems.add(image);
+			}
 		}
 
 		@Override
-		public Fragment getItem(int pos) {
-			return (Fragment) mArrayList.get(pos).get(FRAGMENT);
+		public ImageView instantiateItem(View container, int position) {
+			((ViewPager) container).addView(mItems.get(position));
+			return mItems.get(position);
 		}
 
 		@Override
-		public int getItemPosition(Object object) {
-			return FragmentPagerAdapter.POSITION_NONE;
+		public void destroyItem(ViewGroup container, int position, Object object) {
+			((ViewPager) container).removeView((View) object);
 		}
-
+		
 		@Override
 		public int getCount() {
-			return mArrayList.size();
+			return mItems.size();
 		}
 
 		@Override
@@ -394,23 +412,31 @@ public class SpotPlaceActivity extends FragmentActivity {
 			super.notifyDataSetChanged();
 			handler.sendEmptyMessage(MESSAGE_WHAT_CHANGED);
 		}
-	}
-
-	private class ImageFragment extends Fragment {
-
-		public ImageFragment() {
-			super();
-		}
 
 		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-			ImageView iv = new ImageView(getContext());
-			iv.setImageResource(R.drawable.spotplace_home);
-			iv.setScaleType(ScaleType.CENTER_CROP);
-			return iv;
+		public boolean isViewFromObject(View arg0, Object arg1) {
+			return arg0==arg1;
 		}
 	}
+
+//	private class ImageFragment extends Fragment {
+//
+//		public ImageFragment() {
+//			super();
+//		}
+//
+//		@Override
+//		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+//
+//			Bundle bundle=this.getArguments();
+//			int resId=bundle.getInt("RES");
+//			
+//			ImageView iv = new ImageView(getContext());
+//			iv.setImageResource(resId);
+//			iv.setScaleType(ScaleType.CENTER_CROP);
+//			return iv;
+//		}
+//	}
 
 	private void pop() {
 		int blank_w = 100, hight = 400;
@@ -423,7 +449,7 @@ public class SpotPlaceActivity extends FragmentActivity {
 		v.setAlpha(128);// 半透明
 
 		String[] spots = { "宽巷子", "窄巷子", "井巷子", "其他" };
-		final int[] imgs = { R.drawable.homepage, R.drawable.qingyanggong, R.drawable.spotplace_home,
+		final int[] imgs = { R.drawable.cd1, R.drawable.qingyanggong, R.drawable.qingyanggong,
 				R.drawable.ic_launcher };
 		final ImageView imageViewDisplay = (ImageView) v.findViewById(R.id.imageViewDisplay);
 		ListView lv = (ListView) v.findViewById(R.id.listView);

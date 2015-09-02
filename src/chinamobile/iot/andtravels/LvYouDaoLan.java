@@ -38,12 +38,6 @@ public class LvYouDaoLan extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-//		mArrayList = new ArrayList<HashMap<String, Object>>();
-//		for (int i = 0; i < 3; i++) {
-//			Fragment fragment = new ImageFragment();
-//			add(fragment);
-//		}
 	}
 	
 //	private void add(Fragment fragment) {
@@ -157,9 +151,10 @@ public class LvYouDaoLan extends Fragment {
 		
 		public	MyFragmentPagerAdapter(){
 			mItems=new ArrayList<ImageView>();
+			int[] res={R.drawable.cd1,R.drawable.cd2,R.drawable.cd3};
 			for(int i=0;i<3;i++){
 				ImageView image=new ImageView(getContext());
-				image.setImageResource(R.drawable.homepage);
+				image.setImageResource(res[i]);
 				image.setScaleType(ScaleType.CENTER_CROP);
 				mItems.add(image);
 			}
