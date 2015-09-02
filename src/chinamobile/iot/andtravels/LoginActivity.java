@@ -127,7 +127,7 @@ public class LoginActivity extends Activity {
 	}
 	
 	@Override
-	protected void onDestroy() {
+	protected void onDestroy(){
 
 		Intent daoLanIntent = new Intent();
 		daoLanIntent.setAction("chinamobile.iot.andtravels.communication.BeaconService");
