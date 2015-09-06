@@ -138,13 +138,28 @@
         android:layout_gravity="left|center"
         android:layout_marginRight="5dip" >
 
-        <ImageView
-            android:id="@+id/daoyouImageView"
-            android:layout_width="50dip"
-            android:layout_height="50dip"
-            android:gravity="center"
-            android:src="@drawable/spot" />
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dip" >
+
+            <ImageView
+                android:id="@+id/daoyouImageView"
+                android:layout_width="50dip"
+                android:layout_height="50dip"
+                android:gravity="center"
+                android:src="@drawable/spot" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/daoyouImageView"
+                android:text="导游"
+                android:gravity="center"
+                android:layout_centerHorizontal="true"
+                android:textSize="10sp" >
+            </TextView>
+        </RelativeLayout>
     </FrameLayout>
-  
 
 </FrameLayout>
