@@ -10,7 +10,7 @@
         android:id="@+id/imageViewPlace"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/qingyanggong" />
+        android:src="@drawable/qingyanggong"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,6 +19,7 @@
         android:padding="1dip" >
 
         <RelativeLayout
+            android:padding="5dip"
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
 
@@ -58,6 +59,7 @@
         </RelativeLayout>
 
         <TextView
+            android:layout_marginTop="5dip"
             android:padding="5dip"
             android:textSize="11sp"
             android:id="@+id/textViewDetail"

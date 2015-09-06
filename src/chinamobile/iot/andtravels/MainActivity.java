@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -27,18 +29,33 @@ public class MainActivity extends ActionBarActivity {
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
 				android.R.id.text1, city);
 		lv.setAdapter(adapter);
+		
+		lv.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 
-		final Activity mActivity = this;
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				TextView tv=(TextView)view;
+				String s=tv.getText()+"";
+				if(s.equals("成都")){
+					goToContainerActivity();
+				}
+			}});
+
+		//final Activity mActivity = this;
 
 		LinearLayout mLinearLayout = (LinearLayout) findViewById(R.id.chooseCity);
 		mLinearLayout.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(mActivity, ContainerActivity.class);
-				mActivity.startActivity(intent);
+				goToContainerActivity();
 			}
 		});
 	}
-
+	
+	
+	private	void	goToContainerActivity(){
+		Intent intent = new Intent(this, ContainerActivity.class);
+		startActivity(intent);
+	}
 }
