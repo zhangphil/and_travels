@@ -6,7 +6,7 @@
     
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="50dip"
         android:layout_centerInParent="true"
         android:background="@color/and_travels_titlebar"
         android:gravity="center"
@@ -15,7 +15,7 @@
     </TextView>
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/back_ImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -23,6 +23,7 @@
         android:maxWidth="20dip"
         android:maxHeight="20dip"
         android:adjustViewBounds="true"
-        android:src="@drawable/back" />
+        android:src="@drawable/back" 
+        android:layout_marginLeft="10dip"/>
 
 </RelativeLayout>

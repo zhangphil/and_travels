@@ -32,7 +32,7 @@ public class LoginActivity extends Activity {
 	private EditText secondEditText;
 	private TextView submitTextView;
 	private TextView regTextView;
-	
+
 	private final LoginActivity mActivity = this;
 
 	@Override
@@ -44,7 +44,7 @@ public class LoginActivity extends Activity {
 		secondEditText = (EditText) findViewById(R.id.Password);
 		regTextView = (TextView) findViewById(R.id.login_register);
 		submitTextView = (TextView) findViewById(R.id.login);
-		
+
 		submitTextView.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -114,9 +114,9 @@ public class LoginActivity extends Activity {
 		 * 
 		 **/
 	}
-	
+
 	@Override
-	protected void onDestroy(){
+	protected void onDestroy() {
 
 		Intent daoLanIntent = new Intent();
 		daoLanIntent.setAction("chinamobile.iot.andtravels.communication.BeaconService");
@@ -130,6 +130,5 @@ public class LoginActivity extends Activity {
 	protected void onStop() {
 		super.onStop();
 	}
-
 
 }

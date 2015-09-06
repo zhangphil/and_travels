@@ -78,8 +78,8 @@ public class SpotPlaceActivity extends FragmentActivity {
 	private final String CITY = "成都";
 	private final String ADDRESS = "武侯祠";
 
-	private boolean	isPlaying=false;
-	
+	private boolean isPlaying = false;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -178,19 +178,19 @@ public class SpotPlaceActivity extends FragmentActivity {
 		centerLinearLayout.setVisibility(visibility);
 
 		FULL_SCREEN = show;
-		
+
 		startBluetooth();
-		
+
 	}
 
-	private void	startBluetooth(){
-		//点击导览后，启动后台蓝牙扫描
+	private void startBluetooth() {
+		// 点击导览后，启动后台蓝牙扫描
 		Intent daoLanIntent = new Intent();
 		daoLanIntent.setAction("chinamobile.iot.andtravels.communication.BeaconService");
 		daoLanIntent.setPackage(getPackageName());
 		startService(daoLanIntent);
 	}
-	
+
 	private void daoYouImageView() {
 
 		ImageView spotImageView = (ImageView) containerView.findViewById(R.id.daoyouImageView);
@@ -356,31 +356,31 @@ public class SpotPlaceActivity extends FragmentActivity {
 	 * } }); }
 	 */
 
-//	private void add(Fragment fragment) {
-//
-//		HashMap<String, Object> map = new HashMap<String, Object>();
-//
-//		Bundle args = new Bundle();
-//		fragment.setArguments(args);
-//		map.put(FRAGMENT, fragment);
-//
-//		mArrayList.add(map);
-//	}
+	// private void add(Fragment fragment) {
+	//
+	// HashMap<String, Object> map = new HashMap<String, Object>();
+	//
+	// Bundle args = new Bundle();
+	// fragment.setArguments(args);
+	// map.put(FRAGMENT, fragment);
+	//
+	// mArrayList.add(map);
+	// }
 
 	private class MyPagerAdapter extends PagerAdapter {
 
 		private ArrayList<ImageView> mItems = null;
-		private	Context context;
-		
+		private Context context;
+
 		public MyPagerAdapter(Context context) {
-			this.context=context;
-			
-			int[] res={R.drawable.wuhouci1,R.drawable.wuhouci2,R.drawable.wuhouci3};
-			
-			mItems=new ArrayList<ImageView>();
-			
-			for(int i=0;i<3;i++){
-				ImageView image=new ImageView(context);
+			this.context = context;
+
+			int[] res = { R.drawable.wuhouci1, R.drawable.wuhouci2, R.drawable.wuhouci3 };
+
+			mItems = new ArrayList<ImageView>();
+
+			for (int i = 0; i < 3; i++) {
+				ImageView image = new ImageView(context);
 				image.setImageResource(res[i]);
 				image.setScaleType(ScaleType.CENTER_CROP);
 				mItems.add(image);
@@ -397,7 +397,7 @@ public class SpotPlaceActivity extends FragmentActivity {
 		public void destroyItem(ViewGroup container, int position, Object object) {
 			((ViewPager) container).removeView((View) object);
 		}
-		
+
 		@Override
 		public int getCount() {
 			return mItems.size();
@@ -411,28 +411,29 @@ public class SpotPlaceActivity extends FragmentActivity {
 
 		@Override
 		public boolean isViewFromObject(View arg0, Object arg1) {
-			return arg0==arg1;
+			return arg0 == arg1;
 		}
 	}
 
-//	private class ImageFragment extends Fragment {
-//
-//		public ImageFragment() {
-//			super();
-//		}
-//
-//		@Override
-//		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//
-//			Bundle bundle=this.getArguments();
-//			int resId=bundle.getInt("RES");
-//			
-//			ImageView iv = new ImageView(getContext());
-//			iv.setImageResource(resId);
-//			iv.setScaleType(ScaleType.CENTER_CROP);
-//			return iv;
-//		}
-//	}
+	// private class ImageFragment extends Fragment {
+	//
+	// public ImageFragment() {
+	// super();
+	// }
+	//
+	// @Override
+	// public View onCreateView(LayoutInflater inflater, ViewGroup container,
+	// Bundle savedInstanceState) {
+	//
+	// Bundle bundle=this.getArguments();
+	// int resId=bundle.getInt("RES");
+	//
+	// ImageView iv = new ImageView(getContext());
+	// iv.setImageResource(resId);
+	// iv.setScaleType(ScaleType.CENTER_CROP);
+	// return iv;
+	// }
+	// }
 
 	private void pop() {
 		int blank_w = 100, hight = 400;
@@ -460,20 +461,19 @@ public class SpotPlaceActivity extends FragmentActivity {
 
 		final ImageView playImageView = (ImageView) v.findViewById(R.id.playerImageView);
 		playImageView.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				if(isPlaying){
+				if (isPlaying) {
 					stopAudio();
 					playImageView.setImageResource(R.drawable.stop);
-				}
-				else{
+				} else {
 					playAudio();
 					playImageView.setImageResource(R.drawable.play);
 				}
-			}	
-		});		
-		
+			}
+		});
+
 		PopupWindow popWindow = new PopupWindow(this);
 		// ColorDrawable dw = new ColorDrawable(-00000);
 		// popWindow.setBackgroundDrawable(dw);
@@ -488,21 +488,21 @@ public class SpotPlaceActivity extends FragmentActivity {
 
 		popWindow.showAtLocation(getWindow().getDecorView(), Gravity.NO_GRAVITY, blank_w / 2, hight / 2);
 	}
-	
-	protected	void	playAudio(){
+
+	protected void playAudio() {
 		Intent intent = new Intent("chinamobile.iot.andtravels.BLEScanService.UserAction");
 		intent.putExtra("usrAction", "start");
 		sendBroadcast(intent);
-		
-		isPlaying=true;
+
+		isPlaying = true;
 	}
-	
-	protected	void	stopAudio(){
+
+	protected void stopAudio() {
 		Intent intent = new Intent("chinamobile.iot.andtravels.BLEScanService.UserAction");
 		intent.putExtra("usrAction", "stop");
 		sendBroadcast(intent);
-		
-		isPlaying=false;
+
+		isPlaying = false;
 	}
 
 	private class MyArrayAdapter extends ArrayAdapter {

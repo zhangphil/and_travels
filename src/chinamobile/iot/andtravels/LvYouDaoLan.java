@@ -31,37 +31,38 @@ public class LvYouDaoLan extends Fragment {
 	private Handler handler;
 	private final int MESSAGE_WHAT_CHANGED = 100;
 
-	//装载若干张展示用的图片。
-	//private ArrayList<HashMap<String, Object>> mArrayList = null;
-	
-	//private final String FRAGMENT = "fragment_tag";
+	// 装载若干张展示用的图片。
+	// private ArrayList<HashMap<String, Object>> mArrayList = null;
+
+	// private final String FRAGMENT = "fragment_tag";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	}
-	
-//	private void add(Fragment fragment) {
-//
-//		HashMap<String, Object> map = new HashMap<String, Object>();
-//
-//		Bundle args = new Bundle();
-//		fragment.setArguments(args);
-//		map.put(FRAGMENT, fragment);
-//
-//		mArrayList.add(map);
-//	}
 
-//	private class ImageFragment extends Fragment {
-//		@Override
-//		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//
-//			ImageView iv = new ImageView(getContext());
-//			iv.setImageResource(R.drawable.homepage);
-//			iv.setScaleType(ScaleType.CENTER_CROP);
-//			return iv;
-//		}
-//	}
+	// private void add(Fragment fragment) {
+	//
+	// HashMap<String, Object> map = new HashMap<String, Object>();
+	//
+	// Bundle args = new Bundle();
+	// fragment.setArguments(args);
+	// map.put(FRAGMENT, fragment);
+	//
+	// mArrayList.add(map);
+	// }
+
+	// private class ImageFragment extends Fragment {
+	// @Override
+	// public View onCreateView(LayoutInflater inflater, ViewGroup container,
+	// Bundle savedInstanceState) {
+	//
+	// ImageView iv = new ImageView(getContext());
+	// iv.setImageResource(R.drawable.homepage);
+	// iv.setScaleType(ScaleType.CENTER_CROP);
+	// return iv;
+	// }
+	// }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -78,7 +79,6 @@ public class LvYouDaoLan extends Fragment {
 		});
 
 		mViewPager = (ViewPager) view.findViewById(R.id.viewpager_head);
-		//mPagerAdapter = new MyFragmentPagerAdapter(getFragmentManager());
 		mPagerAdapter = new MyFragmentPagerAdapter();
 		mViewPager.setAdapter(mPagerAdapter);
 		mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -145,22 +145,21 @@ public class LvYouDaoLan extends Fragment {
 		handler.sendEmptyMessage(MESSAGE_WHAT_CHANGED);
 	}
 
-	
-	private class MyFragmentPagerAdapter extends	PagerAdapter {
+	private class MyFragmentPagerAdapter extends PagerAdapter {
 
 		private ArrayList<ImageView> mItems = null;
-		
-		public	MyFragmentPagerAdapter(){
-			mItems=new ArrayList<ImageView>();
-			int[] res={R.drawable.cd1,R.drawable.cd2,R.drawable.cd3};
-			for(int i=0;i<3;i++){
-				ImageView image=new ImageView(getContext());
+
+		public MyFragmentPagerAdapter() {
+			mItems = new ArrayList<ImageView>();
+			int[] res = { R.drawable.cd1, R.drawable.cd2, R.drawable.cd3 };
+			for (int i = 0; i < 3; i++) {
+				ImageView image = new ImageView(getContext());
 				image.setImageResource(res[i]);
 				image.setScaleType(ScaleType.CENTER_CROP);
 				mItems.add(image);
 			}
 		}
-		
+
 		@Override
 		public ImageView instantiateItem(View container, int position) {
 			((ViewPager) container).addView(mItems.get(position));
@@ -171,7 +170,7 @@ public class LvYouDaoLan extends Fragment {
 		public void destroyItem(ViewGroup container, int position, Object object) {
 			((ViewPager) container).removeView((View) object);
 		}
-		
+
 		@Override
 		public int getCount() {
 			return mItems.size();
@@ -179,49 +178,40 @@ public class LvYouDaoLan extends Fragment {
 
 		@Override
 		public boolean isViewFromObject(View arg0, Object arg1) {
-			return arg0==arg1;
+			return arg0 == arg1;
 		}
-		
+
 		@Override
 		public void notifyDataSetChanged() {
 			super.notifyDataSetChanged();
 			handler.sendEmptyMessage(MESSAGE_WHAT_CHANGED);
 		}
 	}
-	
+
 	/*
-	private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
-
-		public MyFragmentPagerAdapter(FragmentManager fm) {
-			super(fm);
-		}
-
-		@Override
-		public Fragment getItem(int pos) {
-			return (Fragment) mArrayList.get(pos).get(FRAGMENT);
-		}
-
-		@Override
-		public int getCount() {
-			return mArrayList.size();
-		}
-
-		@Override
-		public void notifyDataSetChanged() {
-			super.notifyDataSetChanged();
-			handler.sendEmptyMessage(MESSAGE_WHAT_CHANGED);
-		}
-	}
-	*/
+	 * private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
+	 * 
+	 * public MyFragmentPagerAdapter(FragmentManager fm) { super(fm); }
+	 * 
+	 * @Override public Fragment getItem(int pos) { return (Fragment)
+	 * mArrayList.get(pos).get(FRAGMENT); }
+	 * 
+	 * @Override public int getCount() { return mArrayList.size(); }
+	 * 
+	 * @Override public void notifyDataSetChanged() {
+	 * super.notifyDataSetChanged();
+	 * handler.sendEmptyMessage(MESSAGE_WHAT_CHANGED); } }
+	 */
 
 	private class MyArrayAdapter extends ArrayAdapter {
 
 		private LayoutInflater mLayoutInflater;
 
-		private	String[] distance={"12.6km","7.8km","10.5km"};
-		private	int[] res={R.drawable.wuhouci_small,R.drawable.caotang_samll,R.drawable.kuanzhaixiangzi_small};
-		private	String[] details={"纪念三国时蜀汉丞相诸葛亮的祠堂。","是目前我国最大、最完整的杜甫文物保护中心。","走进了最成都、最世界、最古老、最时尚的老成都名片。"};
-		private	String[] placeNames={"武侯祠","杜甫草堂","宽窄巷子"};
+		private String[] distance = { "12.6km", "7.8km", "10.5km" };
+		private int[] res = { R.drawable.wuhouci_small, R.drawable.caotang_samll, R.drawable.kuanzhaixiangzi_small };
+		private String[] details = { "纪念三国时蜀汉丞相诸葛亮的祠堂。", "是目前我国最大、最完整的杜甫文物保护中心。", "走进了最成都、最世界、最古老、最时尚的老成都名片。" };
+		private String[] placeNames = { "武侯祠", "杜甫草堂", "宽窄巷子" };
+
 		public MyArrayAdapter(Context context, int resource) {
 			super(context, resource);
 			mLayoutInflater = LayoutInflater.from(context);
@@ -234,16 +224,16 @@ public class LvYouDaoLan extends Fragment {
 
 			ImageView imageViewPlace = (ImageView) convertView.findViewById(R.id.imageViewPlace);
 			imageViewPlace.setImageResource(res[pos]);
-			
-			TextView placeName=(TextView)convertView.findViewById(R.id.placeName);
+
+			TextView placeName = (TextView) convertView.findViewById(R.id.placeName);
 			placeName.setText(placeNames[pos]);
-			
-			TextView detail=(TextView) convertView.findViewById(R.id.textViewDetail);
+
+			TextView detail = (TextView) convertView.findViewById(R.id.textViewDetail);
 			detail.setText(details[pos]);
-			
-			TextView distancetv=(TextView) convertView.findViewById(R.id.textViewDistance);
+
+			TextView distancetv = (TextView) convertView.findViewById(R.id.textViewDistance);
 			distancetv.setText(distance[pos]);
-			
+
 			return convertView;
 		}
 

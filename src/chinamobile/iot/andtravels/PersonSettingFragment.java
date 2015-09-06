@@ -38,7 +38,7 @@ public class PersonSettingFragment extends Fragment {
 	private Integer[] imgeIDs = { R.drawable.talkhead, R.drawable.talkhead, R.drawable.talkhead, R.drawable.talkhead,
 			R.drawable.talkhead, R.drawable.talkhead };
 	private String[] titleNames = { "头像", "个人资料", "昵称", "手机", "账号完全", "修改密码" };
-	
+
 	private Activity mActivity;
 
 	@Override
@@ -54,7 +54,7 @@ public class PersonSettingFragment extends Fragment {
 		View view = inflater.inflate(R.layout.personsetting, null);
 
 		ListView listView = (ListView) view.findViewById(R.id.PersonSetting);
-		
+
 		mListItems = getListItems();
 		listViewAdapter = new ListViewAdapter(mActivity, mListItems); // 创建适配器
 		listView.setAdapter(listViewAdapter);
@@ -93,8 +93,6 @@ public class PersonSettingFragment extends Fragment {
 			}
 
 		});
-
-		
 
 		// initTabMenuView();
 		return view;

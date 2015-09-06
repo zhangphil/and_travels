@@ -4,6 +4,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/title" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,7 +23,7 @@
             android:maxHeight="25dip"
             android:maxWidth="25dip"
             android:src="@drawable/location"
-            android:visibility="invisible"/>"
+            android:visibility="invisible"/>
 
         <TextView
             android:layout_width="match_parent"
