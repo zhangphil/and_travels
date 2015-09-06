@@ -54,6 +54,9 @@ public class MainActivity extends Activity {
 		});
 	}
 
+	//private	class	MyArratAdapter
+	
+	
 	private void goToContainerActivity() {
 		Intent intent = new Intent(this, ContainerActivity.class);
 		startActivity(intent);
