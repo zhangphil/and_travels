@@ -14,10 +14,9 @@
 	        android:orientation="vertical" >
 	  
 	        <android.support.v4.view.ViewPager
-	        android:id="@+id/viewpager"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_weight ="1" />
+	            android:id="@+id/viewpager"
+	            android:layout_width="wrap_content"
+	            android:layout_height="188dp" />
 	  
 		   	<!--显示点点-->
 		    <LinearLayout
@@ -45,18 +44,17 @@
 	        android:layout_height="wrap_content"
 	        android:layout_alignParentBottom="true"
 	        android:orientation="vertical" >
-		<!--显示底部导航栏-->
-		<FrameLayout
-		   android:id="@+id/tab_menu_frame"
-	       android:layout_width="fill_parent"
-	       android:layout_height="85dip"
-	       android:background="#EFEFEF"
-	       android:orientation="vertical"
-	       android:gravity="bottom"
-	       > 
-	           
-		</FrameLayout>
 		</LinearLayout>
+
+		<ImageView
+		    android:layout_width="50dip"
+		    android:layout_height="50dip"
+		    android:layout_alignParentRight="true"
+		    android:layout_alignTop="@+id/imageView"
+		    android:layout_marginRight="18dp"
+		    android:gravity="center"
+		    android:src="@drawable/iteme" />
+
 	</RelativeLayout>
 	<FrameLayout
         android:layout_width="wrap_content"
@@ -93,12 +91,6 @@
         android:layout_gravity="right"
         android:layout_marginRight="44dip"
         android:layout_marginTop="185dip" >
-
-        <ImageView
-            android:layout_width="50dip"
-            android:layout_height="50dip"
-            android:gravity="center"
-            android:src="@drawable/iteme" />
     </FrameLayout>
     
     <FrameLayout
