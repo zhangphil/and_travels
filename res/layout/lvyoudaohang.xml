@@ -7,20 +7,28 @@
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
-        <include
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            layout="@layout/title" />
-
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1" >
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/viewpager_head"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent" >
+
+                <include
+                    android:id="@+id/titleBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    layout="@layout/title" />
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/viewpager_head"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/titleBar" />
+            </RelativeLayout>
 
             <chinamobile.iot.andtravels.CircleIndicatorView
                 android:id="@+id/circleIndicatorView"
@@ -61,17 +69,5 @@
             android:gravity="center"
             android:src="@drawable/head" />
     </FrameLayout>
-
-    <!--  
-    <ImageView
-        android:id="@+id/back_ImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:maxHeight="30dip"
-        android:maxWidth="30dip"
-        android:padding="3dip"
-        android:src="@drawable/back" />
-        -->
 
 </FrameLayout>

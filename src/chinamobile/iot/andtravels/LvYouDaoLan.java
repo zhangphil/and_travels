@@ -155,7 +155,7 @@ public class LvYouDaoLan extends Fragment {
 			for (int i = 0; i < 3; i++) {
 				ImageView image = new ImageView(getContext());
 				image.setImageResource(res[i]);
-				image.setScaleType(ScaleType.CENTER_CROP);
+				image.setScaleType(ScaleType.FIT_XY);
 				mItems.add(image);
 			}
 		}
