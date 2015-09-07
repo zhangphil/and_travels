@@ -65,7 +65,7 @@ public class StartActivity extends FragmentActivity {
 
 		setContentView(R.layout.start_main_fragment);
 		
-		Fragment newFragment = new MyViewPagerTabHost();
+		Fragment newFragment = new StartMainFragment();
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.fragment, newFragment);
 		transaction.commit();

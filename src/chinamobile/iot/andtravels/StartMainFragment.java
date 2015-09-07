@@ -1,21 +1,16 @@
 package chinamobile.iot.andtravels;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-import com.aprilbrother.aprilbrothersdk.BeaconManager;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,52 +25,47 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import chinamobile.iot.andtravels.SettingFragment.ListViewAdapter;
 
-public class StartMainFragment extends Fragment {
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 
-	private static final String LOG_TAG = "StartActivity";
-	private ImageHandler handler = new ImageHandler(new WeakReference<StartActivity>(getActivity().this));
+public class StartMainFragment extends Fragment implements OnPageChangeListener{
+
+	private static final String LOG_TAG = "StartMainFragment";
 	private ViewPager viewPager;
-	private RadioGroup viewTabMenuGroup;
 	private RadioGroup viewDaoLanGroup;
+	private ImageAdapter mImageAdapter;
+	private Handler handler;
+	private final int MESSAGE_WHAT_CHANGED = 100;
 
-	private final Activity mActivity;
-	private Fragment mFragment;
-	private boolean mIsExit = false;
 	private boolean mIsLogin = false;
 
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		mActivity = activity;
-	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		// super.onCreate(savedInstanceState);
-		// super.onCreateView(inflater, container, savedInstanceState);
-		View view = inflater.inflate(R.layout.start_main_fragment, null);
-
-		ListView listView = (ListView) view.findViewById(R.id.ShareSetting);
-
 		
-			
+		View view = inflater.inflate(R.layout.start_main, null);
+		
+		viewPager = (ViewPager) view.findViewById(R.id.viewpager);
+		final CircleIndicatorView mCircleIndicatorView =  (CircleIndicatorView) view.findViewById(R.id.circleIndicatorView);
+		handler = new Handler() {
+			public void handleMessage(Message msg) {
+				super.handleMessage(msg);
+				switch (msg.what) {
+				case MESSAGE_WHAT_CHANGED:
+					mCircleIndicatorView.setCircleCount(mImageAdapter.getCount());
+					mCircleIndicatorView.setCircleSelectedPosition(viewPager.getCurrentItem());
+					mCircleIndicatorView.setCircleSelectedColor(Color.RED);
+					mCircleIndicatorView.drawCircleView();
+					
 
-		// initTabMenuView();
-		return view;
-	}
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.start_main);
-
-		// 连接BLE扫描服务
-		// Intent service = new Intent(this, BLEScanService.class);
-		// bindService(service, mServiceConn, BIND_AUTO_CREATE);
-
-		// 初始化iewPager的内容
-		viewPager = (ViewPager) findViewById(R.id.viewpager);
-		LayoutInflater inflater = LayoutInflater.from(this);
-
+					break;
+				}
+			};
+		};
+		
+		
 		ImageView view1 = (ImageView) inflater.inflate(R.layout.viewpage_item, null).findViewById(R.id.imageViewPage);
 		ImageView view2 = (ImageView) inflater.inflate(R.layout.viewpage_item02, null)
 				.findViewById(R.id.imageViewPage02);
@@ -95,99 +85,17 @@ public class StartMainFragment extends Fragment {
 		views.add(view3);
 		views.add(view4);
 
-		viewPager.setAdapter(new ImageAdapter(views));
-		viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+		mImageAdapter = new ImageAdapter(views);
+		viewPager.setAdapter(mImageAdapter);
+		viewPager.setOnPageChangeListener(this);
 
-			// 配合Adapter的currentItem字段进行设置。
-			@Override
-			public void onPageSelected(int arg0) {
-				handler.sendMessage(Message.obtain(handler, ImageHandler.MSG_PAGE_CHANGED, arg0, 0));
-			}
-
-			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
-			}
-
-			// 覆写该方法实现轮播效果的暂停和恢复
-			@Override
-			public void onPageScrollStateChanged(int arg0) {
-				switch (arg0) {
-				case ViewPager.SCROLL_STATE_DRAGGING:
-					handler.sendEmptyMessage(ImageHandler.MSG_KEEP_SILENT);
-					break;
-				case ViewPager.SCROLL_STATE_IDLE:
-					handler.sendEmptyMessageDelayed(ImageHandler.MSG_UPDATE_IMAGE, ImageHandler.MSG_DELAY);
-					break;
-				default:
-					break;
-				}
-			}
-		});
-
-		viewPager.setCurrentItem(Integer.MAX_VALUE / 2);// 默认在中间，使用户看不到边界
-		// 开始轮播效果
-		handler.sendEmptyMessageDelayed(ImageHandler.MSG_UPDATE_IMAGE, ImageHandler.MSG_DELAY);
-
-		initTabMenuView();
-		initDaoLanView();
-		startBle();
-	}// end of onCreate
-
+		viewPager.setCurrentItem(Integer.MAX_VALUE / 2);
 	
-
-	private static class ImageHandler extends Handler {
-
-		protected static final int MSG_UPDATE_IMAGE = 1;
-		protected static final int MSG_KEEP_SILENT = 2;
-		protected static final int MSG_BREAK_SILENT = 3;
-		protected static final int MSG_PAGE_CHANGED = 4;
-
-		protected static final long MSG_DELAY = 3000;
-
-		// 使用弱引用避免Handler泄露.这里的泛型参数可以不是Activity，也可以是Fragment等
-		private WeakReference<StartActivity> weakReference;
-		private int currentItem = 0;
-
-		protected ImageHandler(WeakReference<StartActivity> wk) {
-			weakReference = wk;
-		}
-
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-			Log.d(LOG_TAG, "receive message " + msg.what);
-			StartActivity activity = weakReference.get();
-			if (activity == null) {
-				// Activity已经回收，无需再处理UI了
-				return;
-			}
-			// 检查消息队列并移除未发送的消息，这主要是避免在复杂环境下消息出现重复等问题。
-			if (activity.handler.hasMessages(MSG_UPDATE_IMAGE)) {
-				activity.handler.removeMessages(MSG_UPDATE_IMAGE);
-			}
-			switch (msg.what) {
-			case MSG_UPDATE_IMAGE:
-				currentItem++;
-				activity.viewPager.setCurrentItem(currentItem);
-				// 准备下次播放
-				activity.handler.sendEmptyMessageDelayed(MSG_UPDATE_IMAGE, MSG_DELAY);
-				break;
-			case MSG_KEEP_SILENT:
-				// 只要不发送消息就暂停了
-				break;
-			case MSG_BREAK_SILENT:
-				activity.handler.sendEmptyMessageDelayed(MSG_UPDATE_IMAGE, MSG_DELAY);
-				break;
-			case MSG_PAGE_CHANGED:
-				// 记录当前的页号，避免播放的时候页面显示不正确。
-				currentItem = msg.arg1;
-				break;
-			default:
-				break;
-			}
-		}
+		initDaoLanView(view);
+		
+		return view;
 	}
-
+	
 	private class ImageAdapter extends PagerAdapter {
 
 		private ArrayList<ImageView> viewlist;
@@ -210,6 +118,7 @@ public class StartMainFragment extends Fragment {
 		@Override
 		public void destroyItem(ViewGroup container, int position, Object object) {
 			// Warning：不要在这里调用removeView
+			((ViewPager)container).removeView(viewlist.get(position % (viewlist.size())));  
 		}
 
 		@Override
@@ -232,8 +141,8 @@ public class StartMainFragment extends Fragment {
 		}
 	}
 
-	private void initDaoLanView() {
-		viewDaoLanGroup = (RadioGroup) findViewById(R.id.kaiShiDaoLan);
+	private void initDaoLanView(View view) {
+		viewDaoLanGroup = (RadioGroup) view.findViewById(R.id.kaiShiDaoLan);
 		viewDaoLanGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override
@@ -245,16 +154,13 @@ public class StartMainFragment extends Fragment {
 					Log.i("DaoLanView", "On Click");
 
 					if (!mIsLogin) {
-						// Intent intent=new Intent(mActivity,
-						// LoginActivity.class);
-						// mActivity.startActivity(intent);
 						Intent daoLanIntent = new Intent();
 						daoLanIntent.setAction("chinamobile.iot.andtravels.communication.BeaconService");
-						daoLanIntent.setPackage(getPackageName());
-						startService(daoLanIntent);
+						daoLanIntent.setPackage(getActivity().getPackageName());
+						getActivity().startService(daoLanIntent);
 					} else {
-
-						// mScanService.startScanBle();
+						//提示用户需要付费才能使用
+						
 
 					}
 					break;
@@ -267,6 +173,24 @@ public class StartMainFragment extends Fragment {
 
 		});
 
+	}
+
+	@Override
+	public void onPageScrollStateChanged(int arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onPageScrolled(int arg0, float arg1, int arg2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onPageSelected(int arg0) {
+		// TODO Auto-generated method stub
+		//setImageBackground(arg0 % mImageViews.length); 
 	}
 
 
