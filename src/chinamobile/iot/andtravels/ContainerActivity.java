@@ -130,7 +130,6 @@ public class ContainerActivity extends FragmentActivity {
 		public void onOnTabIndicatorSelected(View view, int pos) {
 			ImageView iv = (ImageView) view.findViewById(R.id.imageView);
 			iv.setImageResource(icon_selected[pos]);
-
 		}
 
 		@Override
@@ -138,6 +137,5 @@ public class ContainerActivity extends FragmentActivity {
 			ImageView iv = (ImageView) view.findViewById(R.id.imageView);
 			iv.setImageResource(icon_unselected[pos]);
 		}
-
 	}
 }
