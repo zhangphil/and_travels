@@ -34,7 +34,7 @@ public class TabMenuFragment extends Fragment {
 		View view = inflater.inflate(R.layout.tab_menu_fragment, container, false);
 		viewTabMenuGroup = (RadioGroup) view.findViewById(R.id.tab_menu);
 		viewTabMenuGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
+        int pos = 0;
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				// TODO Auto-generated method stub
@@ -70,19 +70,20 @@ public class TabMenuFragment extends Fragment {
 					}
 					break;
 				case R.id.youJi:
-					Intent intent = new Intent("chinamobile.iot.andtravels.BLEScanService.UserAction");
-					intent.putExtra("usrAction", "start");
-					getActivity().sendBroadcast(intent);
-
+					pos = 1;
 					break;
 				case R.id.set:
-
-					Intent setIntent = new Intent(getActivity(), SettingFragment.class);
+					pos = 1;
+					Intent setIntent = new Intent(getActivity(), ContainerActivity.class);
+					setIntent.putExtra("curViewPos", pos);
 					getActivity().startActivity(setIntent);
 
 					break;
 				case R.id.person:
-
+					pos = 2;
+					Intent personIntent = new Intent(getActivity(), ContainerActivity.class);
+					personIntent.putExtra("curViewPos", pos);
+					getActivity().startActivity(personIntent);
 					break;
 				default:
 					break;
