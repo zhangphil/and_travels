@@ -1,7 +1,12 @@
 package chinamobile.iot.andtravels.utils;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import android.app.Instrumentation;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
@@ -50,15 +55,32 @@ public class Utils {
 		return bmp;
 	}
 
-	public static Bitmap getBitmapNonOOM(Context context, int resId) {
-
-		BitmapFactory.Options options = new BitmapFactory.Options();
-
-		// 将原图缩小n倍
-		options.inSampleSize = 4;
-
-		Bitmap bmp = BitmapFactory.decodeResource(context.getResources(), resId, options);
-
-		return bmp;
-	}
+	
+//	public static Bitmap getAssetImage(Context context, String filename) {
+//	    AssetManager assets = context.getResources().getAssets();
+//	    InputStream is = null;
+//		try {
+//			is = assets.open("drawable/" + filename + ".png");
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		BitmapFactory.Options options = new BitmapFactory.Options(); 
+//        options.inPurgeable = true;
+//        BufferedInputStream buffer = new BufferedInputStream(is);
+//	    Bitmap bitmap = BitmapFactory.decodeStream(buffer ,null, options);
+//	    return	bitmap;
+//	    //return new BitmapDrawable(context.getResources(), bitmap);
+//	}
+	
+//	public static Bitmap getBitmapNonOOM(Context context, int resId) {
+//
+//		BitmapFactory.Options options = new BitmapFactory.Options();
+//
+//		// 将原图缩小n倍
+//		options.inSampleSize = 4;
+//
+//		Bitmap bmp = BitmapFactory.decodeResource(context.getResources(), resId, options);
+//
+//		return bmp;
+//	}
 }
