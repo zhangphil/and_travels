@@ -15,9 +15,10 @@
     </string-array>
 
      <string-array name="tab_cards">
-        <item>旅游导览</item>
+        <item>导览</item>
+        <item>游记</item>
         <item>设置</item>
-        <item>个人中心</item>
+        <item>我</item>
     </string-array>
     
 </resources>

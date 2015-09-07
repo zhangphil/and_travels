@@ -79,8 +79,8 @@ public class ContainerActivity extends FragmentActivity {
 		private String[] tab_cards;
 		private LayoutInflater mLayoutInflater;
 
-		private int[] icon_selected = { R.drawable.a_selected, R.drawable.c_selected, R.drawable.d_selected };
-		private int[] icon_unselected = { R.drawable.a_unselected, R.drawable.c_unselected, R.drawable.d_unselected, };
+		private int[] icon_selected = { R.drawable.a_selected, R.drawable.b_selected,R.drawable.c_selected, R.drawable.d_selected };
+		private int[] icon_unselected = { R.drawable.a_unselected, R.drawable.b_unselected,R.drawable.c_unselected, R.drawable.d_unselected, };
 
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
@@ -88,6 +88,7 @@ public class ContainerActivity extends FragmentActivity {
 			mArrayList = new ArrayList<Fragment>();
 
 			mArrayList.add(new LvYouDaoLan());
+			mArrayList.add(new Fragment());
 			mArrayList.add(new PersonSettingFragment());
 			mArrayList.add(new SettingFragment());
 
@@ -116,7 +117,7 @@ public class ContainerActivity extends FragmentActivity {
 
 		@Override
 		protected int getItemsCount() {
-			return 3;
+			return 4;
 		}
 
 		@Override
