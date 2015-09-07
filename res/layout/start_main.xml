@@ -8,32 +8,20 @@
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
-        <FrameLayout
+        <RelativeLayout
             android:id="@+id/relativeLayout1"
             android:layout_width="match_parent"
             android:layout_height="228dip"
             android:layout_alignParentTop="true"
             android:orientation="vertical" >
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" >
-            
             <android.support.v4.view.ViewPager
                 android:id="@+id/viewpager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignParentTop="true" />
-            </RelativeLayout>
             
-            <!-- 显示点点 -->    
-            <chinamobile.iot.andtravels.CircleIndicatorView
-                android:id="@+id/circleIndicatorView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom" />
-            
-        </FrameLayout>
+        </RelativeLayout>
 
          <RelativeLayout
             android:layout_width="match_parent"
@@ -86,7 +74,20 @@
         </FrameLayout>
 
         
-        
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dip"
+            android:layout_alignBottom="@+id/relativeLayout1"
+            android:layout_marginBottom="20dp" >
+
+            <!-- 显示点点 -->    
+            <chinamobile.iot.andtravels.CircleIndicatorView
+                android:id="@+id/circleIndicatorView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"   
+	            android:gravity="center_horizontal"    
+	            android:orientation="horizontal"/>
+        </FrameLayout>
         
         
     </RelativeLayout>
