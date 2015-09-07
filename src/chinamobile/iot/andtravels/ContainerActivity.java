@@ -21,7 +21,6 @@ import android.widget.TextView;
 public class ContainerActivity extends FragmentActivity {
 
 	private static final int REQUEST_ENABLE_BT = 1234;
-	// private BluetoothAdapter mBluetoothAdapter;
 	private BeaconManager beaconManager = new BeaconManager(this);
 
 	@Override
@@ -88,7 +87,7 @@ public class ContainerActivity extends FragmentActivity {
 			mArrayList = new ArrayList<Fragment>();
 
 			mArrayList.add(new LvYouDaoLan());
-			mArrayList.add(new Fragment());
+			mArrayList.add(new YouJiFragment());
 			mArrayList.add(new PersonSettingFragment());
 			mArrayList.add(new SettingFragment());
 
