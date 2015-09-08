@@ -25,10 +25,14 @@ public class YouJiActivity extends Activity{
 		ListView listView=(ListView) view.findViewById(android.R.id.list);
 		ArrayAdapter adapter=new MyArrayAdapter(this,-1);
 		listView.setAdapter(adapter);
+		listView.setHeaderDividersEnabled(false);
 		
-		TableLayout tableLayout = (TableLayout) view.findViewById(R.id.tableLayout);
+		View v=mLayoutInflater.inflate(R.layout.youji_item, null);
+		listView.addHeaderView(v);
+		
+		TableLayout tableLayout = (TableLayout) v.findViewById(R.id.tableLayout);
 		final int WC = ViewGroup.LayoutParams.WRAP_CONTENT;
-		int total = 2;
+		int total = 6;
 		int ROW=0;
 		int mod=total%3;
 		if(mod==0)
@@ -42,8 +46,8 @@ public class YouJiActivity extends Activity{
 			
 			for (int j = 0; j < 3; j++) {
 				if (k < total) {
-					View v = mLayoutInflater.inflate(R.layout.image_layout, null);
-					tableRow.addView(v);
+					View vv = mLayoutInflater.inflate(R.layout.image_layout, null);
+					tableRow.addView(vv);
 					
 					k++;
 				}
@@ -73,7 +77,7 @@ public class YouJiActivity extends Activity{
 
 		@Override
 		public int getCount() {
-			return 3;
+			return 10;
 		}
 	}
 }
