@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dip"
+    android:paddingBottom="20dip" >
+
+    <ImageView
+        android:id="@+id/imageViewHead"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="5dip"
+        android:adjustViewBounds="true"
+        android:maxHeight="60dip"
+        android:maxWidth="60dip"
+        android:padding="1dip"
+        android:src="@drawable/darkhead" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="5dip"
+        android:layout_toRightOf="@+id/imageViewHead"
+        android:orientation="vertical"
+        android:padding="1dip" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="1dip" >
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_centerVertical="true"
+                android:text="小小"
+                android:textColor="@android:color/black"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_centerVertical="true"
+                android:text="2015-09-07"
+                android:textSize="9sp" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="#EFEFEF" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:text="初游草堂，忆童年" />
+
+        <TextView
+            android:id="@+id/detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:text="青羊宫位于成都市一环路西二段，侧依锦江，被誉为“川西第一道观”、“西南第一丛林”，是西南地区建筑年代最久远、规模最大的一座道教宫观，也是全国著名的道教宫观之一。"
+            android:textSize="11sp" />
+
+        <TableLayout
+            android:id="@+id/tableLayout"
+            android:shrinkColumns="0,1,2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/favorite"
+                    android:gravity="bottom"
+                    android:padding="1dip"
+                    android:text="12"
+                    android:textSize="8sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/comment"
+                    android:gravity="bottom"
+                    android:padding="1dip"
+                    android:text="19"
+                    android:textSize="8sp" />
+            </LinearLayout>
+        </RelativeLayout>
+        
+    </LinearLayout>
+
+</RelativeLayout>

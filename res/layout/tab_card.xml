@@ -16,8 +16,7 @@
             android:layout_centerHorizontal="true"
             android:adjustViewBounds="true"
             android:maxHeight="30dip"
-            android:maxWidth="30dip"
-            android:src="@drawable/ic_launcher" />
+            android:maxWidth="30dip"/>
 
         <TextView
             android:id="@+id/textView"
