@@ -76,8 +76,9 @@
             android:text="青羊宫位于成都市一环路西二段，侧依锦江，被誉为“川西第一道观”、“西南第一丛林”，是西南地区建筑年代最久远、规模最大的一座道教宫观，也是全国著名的道教宫观之一。"
             android:textSize="11sp" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <TableLayout
+            android:id="@+id/tableLayout"
+            android:shrinkColumns="0,1,2"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
@@ -110,6 +111,7 @@
                     android:textSize="8sp" />
             </LinearLayout>
         </RelativeLayout>
+        
     </LinearLayout>
 
 </RelativeLayout>
