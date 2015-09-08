@@ -177,7 +177,7 @@ public class PersonSettingFragment extends Fragment {
 		 */
 		public View getView(int position, View convertView, ViewGroup parent) {
 			// TODO Auto-generated method stub
-			Log.i("method", "getView");
+			//Log.i("method", "getView");
 			final int selectID = position;
 			// 自定义视图
 			ListItemView listItemView = null;

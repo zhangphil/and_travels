@@ -20,60 +20,32 @@ import android.widget.TextView;
 
 public class ContainerActivity extends FragmentActivity {
 
-	private static final int REQUEST_ENABLE_BT = 1234;
-	// private BluetoothAdapter mBluetoothAdapter;
-	private BeaconManager beaconManager = new BeaconManager(this);
+	private String TAG_LOG = "ContainerActivity";
+	private int  mCurViewPos = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fragment);
-
-		Fragment newFragment = new MyViewPagerTabHost();
+ 
+		Intent intent = getIntent();
+		Bundle bundle = intent.getExtras();//("curViewPos", mCurViewPos);
+		mCurViewPos = bundle.getInt("curViewPos");
+		
+		Log.e(TAG_LOG, "当前显示page is" + mCurViewPos);
+		
+		Fragment newFragment = new MyViewPagerTabHost(mCurViewPos);
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.fragment, newFragment);
 		transaction.commit();
-
-		// 开启蓝牙
-		startBle();
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == REQUEST_ENABLE_BT) {
-			if (resultCode == Activity.RESULT_OK) {
-				Log.e("Tag", "蓝牙设备打开了,启动服务开始扫描");
-
-			} else {
-				Log.e("终端启动蓝牙失败", "");
-			}
-		} else {
-			Log.e("Tag", "启动参数不是启动蓝牙");
-		}
-		super.onActivityResult(requestCode, resultCode, data);
-	}
-
-	private void startBle() {
-
-		if (!beaconManager.hasBluetooth()) {
-			Log.e("Tag", "没有找到蓝牙设备");
-			return;
-		}
-
-		Log.e("Tag", "找到蓝牙设备,准备扫描");
-
-		if (!beaconManager.isBluetoothEnabled()) {
-			Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-			startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-			Log.e("Tag", "启动蓝牙设备");
-		} else {
-
-			Log.e("Tag", "蓝牙设备已经打开了");
-		}
-
 	}
 
 	public static class MyViewPagerTabHost extends ViewPagerTabHost {
+
+		public MyViewPagerTabHost(int pos) {
+			super(pos);
+			// TODO Auto-generated constructor stub
+		}
 
 		private ArrayList<Fragment> mArrayList;
 		private String[] tab_cards;
@@ -99,7 +71,18 @@ public class ContainerActivity extends FragmentActivity {
 
 		@Override
 		protected Fragment getFragmentAt(int pos) {
-			return mArrayList.get(pos);
+			Fragment fragment = null;
+			if(mCurViewPos > 0 && mCurViewPos < mArrayList.size()){
+				fragment = mArrayList.get(1);
+			}else{
+				fragment = mArrayList.get(0);
+			}
+			
+			if(fragment == null){
+				fragment = mArrayList.get(0);
+			}
+			
+			return fragment;
 		}
 
 		@Override
@@ -136,6 +119,10 @@ public class ContainerActivity extends FragmentActivity {
 		public void onOnTabIndicatorUnSelected(View view, int pos) {
 			ImageView iv = (ImageView) view.findViewById(R.id.imageView);
 			iv.setImageResource(icon_unselected[pos]);
+		}
+		
+		public void setCurViewPage(int pos){
+			
 		}
 
 	}
