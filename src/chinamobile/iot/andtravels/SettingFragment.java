@@ -224,7 +224,6 @@ public class SettingFragment extends Fragment {
 
 			} else {
 				listItemView.showImage.setBackgroundResource((Integer) listItems.get(position).get("showImage"));
-				Log.e("test", (String) listItems.get(position).get("title"));
 				listItemView.title.setText((String) listItems.get(position).get("title"));
 				listItemView.touchImage.setBackgroundResource((Integer) listItems.get(position).get("touchImage"));
 

@@ -56,10 +56,12 @@ public class ViewPagerTabHost extends Fragment {
 		addIndicators();
 		// 初始化，第一项被选中
 		setIndicatorViewSelected(mCurViewPos);
+		
 		Log.e(TAG_LOG, "当前显示page is" + mCurViewPos);
 
 		mPagerAdapter = new MyFragmentPagerAdapter(getFragmentManager());
 		mViewPager.setAdapter(mPagerAdapter);
+		mViewPager.setCurrentItem(mCurViewPos);
 		mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
 			@Override
@@ -78,6 +80,8 @@ public class ViewPagerTabHost extends Fragment {
 			}
 		});
 
+		//set(mCurViewPos);
+		
 		return mView;
 	}
 
