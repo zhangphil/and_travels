@@ -55,9 +55,12 @@ import android.support.v4.app.FragmentTransaction;
 
 public class StartActivity extends FragmentActivity {
 
+	private final String LOG_TAG = "StartActivity";
+	
 	private static final int REQUEST_ENABLE_BT = 1234;
 	private BluetoothAdapter mBluetoothAdapter;
 	private BeaconManager beaconManager = new BeaconManager(this);
+	private Fragment newFragment;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +68,7 @@ public class StartActivity extends FragmentActivity {
 
 		setContentView(R.layout.start_main_fragment);
 		
-		Fragment newFragment = new StartMainFragment();
+		newFragment = new StartMainFragment();
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.fragment, newFragment);
 		transaction.commit();
@@ -73,6 +76,18 @@ public class StartActivity extends FragmentActivity {
 		startBle();
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		Log.e(LOG_TAG, "onResume 重新绘制fragment");
+		newFragment = new StartMainFragment();
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		transaction.replace(R.id.fragment, newFragment);
+		transaction.commit();
+		
+	}
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == REQUEST_ENABLE_BT) {

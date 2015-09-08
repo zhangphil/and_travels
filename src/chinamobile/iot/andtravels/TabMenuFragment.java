@@ -44,7 +44,9 @@ public class TabMenuFragment extends Fragment {
 					// 此处先检查客户端是否注册,先暂时不处理
 					if (mIsLogin) {
 						pos = 0;
-						
+						intent = new Intent(getActivity(), ContainerActivity.class);
+						intent.putExtra("curViewPos", pos);
+						getActivity().startActivity(intent);
 					} else {
 						new AlertDialog.Builder(getActivity()).setTitle("")
 
@@ -70,22 +72,30 @@ public class TabMenuFragment extends Fragment {
 					break;
 				case R.id.youJi:
 					pos = 1;
+					intent = new Intent(getActivity(), ContainerActivity.class);
+					intent.putExtra("curViewPos", pos);
+					getActivity().startActivity(intent);
+
 					break;
 				case R.id.set:
 					pos = 2;
+					intent = new Intent(getActivity(), ContainerActivity.class);
+					intent.putExtra("curViewPos", pos);
+					getActivity().startActivity(intent);
+
 					break;
 				case R.id.person:
 					pos = 3;
+					intent = new Intent(getActivity(), ContainerActivity.class);
+					intent.putExtra("curViewPos", pos);
+					getActivity().startActivity(intent);
+
 					break;
 				default:
 					break;
 				}
 				
-				//跳转到其他导览的主界面上去
-				intent = new Intent(getActivity(), ContainerActivity.class);
-				intent.putExtra("curViewPos", pos);
-				getActivity().startActivity(intent);
-
+				
 			}
 
 		});

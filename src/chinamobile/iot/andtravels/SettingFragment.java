@@ -63,22 +63,17 @@ public class SettingFragment extends Fragment {
 				// TODO Auto-generated method stub
 				if (position == 0) {
 
-					// 进入个人设置中心
-					// Intent intent=new Intent(mActivity,
-					// PersonSettingActivity.class);
-					// mActivity.startActivity(intent);
+		
+				}else if (position == 2) {
+					Log.e(LOG_TAG, "我的分享行被点击！！！！！！！！！！！！");
+					Intent intent=new Intent(mActivity,MyShareActivity.class);
+					mActivity.startActivity(intent);
 
-				} else if (position == 1) {
+				}else if (position == 3) {
 
-				} else if (position == 2) {
+				}else if (position == 5) {
 
-				} else if (position == 3) {
-
-				} else if (position == 4) {
-
-				} else if (position == 5) {
-
-				} else {
+				}else {
 
 				}
 			}

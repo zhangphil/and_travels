@@ -66,10 +66,14 @@
             android:name=".ChangeNameActivity">  
         </activity>
         
-         <activity
+        <activity
             android:name=".ChangePhoneNumActivity">  
         </activity>
         
+        <activity
+            android:name=".MyShareActivity">  
+        </activity>
+         
         
         <service android:name=".BLEScanService" 
             	 android:exported="false"> 
