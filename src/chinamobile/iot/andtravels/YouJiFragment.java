@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.text.TextUtils.TruncateAt;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +17,6 @@ import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class YouJiFragment extends ListFragment {
 
@@ -25,20 +26,21 @@ public class YouJiFragment extends ListFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		ArrayAdapter adapter = new MyArrayAdapter(this.getContext(), -1);
-		this.setListAdapter(adapter);
-
 		Random rand = new Random();
 		mArrayList = new ArrayList<Integer>();
 		for (int i = 0; i < 50; i++) {
 			int cnt = rand.nextInt(10);
 			mArrayList.add(cnt);
 		}
+		
+		ArrayAdapter adapter = new MyArrayAdapter(getContext(), -1);
+		setListAdapter(adapter);
 	}
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		Toast.makeText(getContext(), "点击:" + position, Toast.LENGTH_SHORT).show();
+		Intent intent=new Intent(getContext(),YouJiActivity.class);
+		startActivity(intent);
 	}
 
 	@Override
@@ -58,19 +60,25 @@ public class YouJiFragment extends ListFragment {
 			mLayoutInflater = LayoutInflater.from(context);
 		}
 
+		//注意！！！此处没有对性能进行优化！后期必须对此进行优化！
 		@Override
 		public View getView(int pos, View convertView, ViewGroup parent) {
-			// if(convertView==null)
-			convertView = mLayoutInflater.inflate(R.layout.youji_fragment_item, null);
+			//if(convertView==null)
+				convertView = mLayoutInflater.inflate(R.layout.youji_item, null);
+			//View view = mLayoutInflater.inflate(R.layout.youji_item, null);
 
 			TextView title = (TextView) convertView.findViewById(R.id.title);
 			title.setText("初游草堂，忆童年 （" + pos + "），图" + mArrayList.get(pos));
+
+			TextView detail = (TextView) convertView.findViewById(R.id.detail);
+			detail.setEllipsize(TruncateAt.END);
+			detail.setMaxLines(3);
 
 			TableLayout tableLayout = (TableLayout) convertView.findViewById(R.id.tableLayout);
 			//tableLayout.setStretchAllColumns(true);
 
 			final int WC = ViewGroup.LayoutParams.WRAP_CONTENT;
-			//final int MP = ViewGroup.LayoutParams.MATCH_PARENT;
+			final int MP = ViewGroup.LayoutParams.MATCH_PARENT;
 
 			int total = mArrayList.get(pos);
 		
@@ -94,7 +102,7 @@ public class YouJiFragment extends ListFragment {
 					}
 				}
 				
-				tableLayout.addView(tableRow, new TableLayout.LayoutParams(WC, WC));
+				tableLayout.addView(tableRow, new TableLayout.LayoutParams(MP, WC));
 			}
 
 			return convertView;
