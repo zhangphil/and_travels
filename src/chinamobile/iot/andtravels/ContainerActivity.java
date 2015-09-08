@@ -20,8 +20,13 @@ import android.widget.TextView;
 
 public class ContainerActivity extends FragmentActivity {
 
+<<<<<<< HEAD
 	private String TAG_LOG = "ContainerActivity";
 	private int  mCurViewPos = 0;
+=======
+	private static final int REQUEST_ENABLE_BT = 1234;
+	private BeaconManager beaconManager = new BeaconManager(this);
+>>>>>>> master
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +56,8 @@ public class ContainerActivity extends FragmentActivity {
 		private String[] tab_cards;
 		private LayoutInflater mLayoutInflater;
 
-		private int[] icon_selected = { R.drawable.a_selected, R.drawable.c_selected, R.drawable.d_selected };
-		private int[] icon_unselected = { R.drawable.a_unselected, R.drawable.c_unselected, R.drawable.d_unselected, };
+		private int[] icon_selected = { R.drawable.a_selected, R.drawable.b_selected,R.drawable.c_selected, R.drawable.d_selected };
+		private int[] icon_unselected = { R.drawable.a_unselected, R.drawable.b_unselected,R.drawable.c_unselected, R.drawable.d_unselected, };
 
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +65,7 @@ public class ContainerActivity extends FragmentActivity {
 			mArrayList = new ArrayList<Fragment>();
 
 			mArrayList.add(new LvYouDaoLan());
+			mArrayList.add(new YouJiFragment());
 			mArrayList.add(new PersonSettingFragment());
 			mArrayList.add(new SettingFragment());
 
@@ -99,7 +105,7 @@ public class ContainerActivity extends FragmentActivity {
 
 		@Override
 		protected int getItemsCount() {
-			return 3;
+			return 4;
 		}
 
 		@Override
@@ -112,7 +118,6 @@ public class ContainerActivity extends FragmentActivity {
 		public void onOnTabIndicatorSelected(View view, int pos) {
 			ImageView iv = (ImageView) view.findViewById(R.id.imageView);
 			iv.setImageResource(icon_selected[pos]);
-
 		}
 
 		@Override
@@ -120,10 +125,13 @@ public class ContainerActivity extends FragmentActivity {
 			ImageView iv = (ImageView) view.findViewById(R.id.imageView);
 			iv.setImageResource(icon_unselected[pos]);
 		}
+<<<<<<< HEAD
 		
 		public void setCurViewPage(int pos){
 			
 		}
 
+=======
+>>>>>>> master
 	}
 }

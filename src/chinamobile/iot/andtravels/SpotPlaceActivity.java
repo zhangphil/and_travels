@@ -31,6 +31,8 @@ import com.google.gson.Gson;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -645,8 +647,14 @@ public class SpotPlaceActivity extends FragmentActivity {
 		LatLng southwest = new LatLng(lat - 0.0022, lng - 0.0028);
 		LatLngBounds bounds = new LatLngBounds.Builder().include(northeast).include(southwest).build();
 
-		BitmapDescriptor bdGround = BitmapDescriptorFactory.fromBitmap(Utils.getBitmapNonOOM(this, R.drawable.wuhouci));
-
+		//BitmapFactory.Options options = new BitmapFactory.Options();
+		// 将原图缩小
+		//options.inSampleSize = 1;
+		//options.inJustDecodeBounds=true;
+		Bitmap bmp = BitmapFactory.decodeResource(this.getResources(), R.drawable.wuhouci);
+		
+		BitmapDescriptor bdGround = BitmapDescriptorFactory.fromBitmap(bmp);
+		
 		GroundOverlayOptions goGround = new GroundOverlayOptions();
 		goGround.positionFromBounds(bounds);
 		goGround.image(bdGround);
