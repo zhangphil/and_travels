@@ -2,13 +2,6 @@ package chinamobile.iot.andtravels;
 
 import java.util.ArrayList;
 
-import org.json.JSONObject;
-
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
@@ -27,7 +20,6 @@ import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
-import com.google.gson.Gson;
 
 import android.content.Context;
 import android.content.Intent;
@@ -98,7 +90,6 @@ public class SpotPlaceActivity extends FragmentActivity {
 
 			@Override
 			public void onPageSelected(int pos) {
-				// set(pos);
 				mViewPager.setCurrentItem(pos, true);
 				handler.sendEmptyMessage(MESSAGE_WHAT_CHANGED);
 			}
@@ -180,9 +171,23 @@ public class SpotPlaceActivity extends FragmentActivity {
 		centerLinearLayout.setVisibility(visibility);
 
 		FULL_SCREEN = show;
+		
+		//当地图全屏时候放大整个地图和景点覆盖物。
+		if(FULL_SCREEN){
+			setBaidMapZoomLarge();
+		}	
 
 		startBluetooth();
-
+	}
+	
+	private	void	setBaidMapZoomLarge(){
+		MapStatusUpdate mapStatusUpdate=MapStatusUpdateFactory.zoomTo(17.5f);
+		mBaiduMap.setMapStatus(mapStatusUpdate);
+	}
+	
+	private	void	setBaidMapZoomSmall(){
+		MapStatusUpdate mapStatusUpdate=MapStatusUpdateFactory.zoomTo(16.0f);
+		mBaiduMap.setMapStatus(mapStatusUpdate);
 	}
 
 	private void startBluetooth() {
@@ -358,17 +363,6 @@ public class SpotPlaceActivity extends FragmentActivity {
 	 * } }); }
 	 */
 
-	// private void add(Fragment fragment) {
-	//
-	// HashMap<String, Object> map = new HashMap<String, Object>();
-	//
-	// Bundle args = new Bundle();
-	// fragment.setArguments(args);
-	// map.put(FRAGMENT, fragment);
-	//
-	// mArrayList.add(map);
-	// }
-
 	private class MyPagerAdapter extends PagerAdapter {
 
 		private ArrayList<ImageView> mItems = null;
@@ -417,31 +411,10 @@ public class SpotPlaceActivity extends FragmentActivity {
 		}
 	}
 
-	// private class ImageFragment extends Fragment {
-	//
-	// public ImageFragment() {
-	// super();
-	// }
-	//
-	// @Override
-	// public View onCreateView(LayoutInflater inflater, ViewGroup container,
-	// Bundle savedInstanceState) {
-	//
-	// Bundle bundle=this.getArguments();
-	// int resId=bundle.getInt("RES");
-	//
-	// ImageView iv = new ImageView(getContext());
-	// iv.setImageResource(resId);
-	// iv.setScaleType(ScaleType.CENTER_CROP);
-	// return iv;
-	// }
-	// }
-
 	private void pop() {
 		int blank_w = 100, hight = 400;
 		DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 		int w = displayMetrics.widthPixels;
-		// int h=displayMetrics.heightPixels;
 
 		LayoutInflater inflater = (LayoutInflater) (this).getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View v = inflater.inflate(R.layout.popupwindow, null);
@@ -603,6 +576,7 @@ public class SpotPlaceActivity extends FragmentActivity {
 		// });
 	}
 
+	/*
 	private void coords(LatLng latlng) {
 		RequestQueue mQueue = Volley.newRequestQueue(this);
 
@@ -632,6 +606,7 @@ public class SpotPlaceActivity extends FragmentActivity {
 
 		mQueue.add(jsonObjectRequest);
 	}
+	*/
 
 	public void addOverlay(LatLng ll) {
 
@@ -647,10 +622,6 @@ public class SpotPlaceActivity extends FragmentActivity {
 		LatLng southwest = new LatLng(lat - 0.0022, lng - 0.0028);
 		LatLngBounds bounds = new LatLngBounds.Builder().include(northeast).include(southwest).build();
 
-		//BitmapFactory.Options options = new BitmapFactory.Options();
-		// 将原图缩小
-		//options.inSampleSize = 1;
-		//options.inJustDecodeBounds=true;
 		Bitmap bmp = BitmapFactory.decodeResource(this.getResources(), R.drawable.wuhouci);
 		
 		BitmapDescriptor bdGround = BitmapDescriptorFactory.fromBitmap(bmp);
@@ -696,5 +667,20 @@ public class SpotPlaceActivity extends FragmentActivity {
 		//
 		// }
 		// });
+	}
+	
+	@Override
+	public	boolean	onKeyDown(int keyCode, KeyEvent event){
+		if(keyCode == KeyEvent.KEYCODE_BACK && FULL_SCREEN){
+			this.setBaiduMapFullScreen(false);
+			this.setBaidMapZoomSmall();
+			return	false;
+		}
+		
+		if(keyCode == KeyEvent.KEYCODE_BACK && !FULL_SCREEN){
+			return	super.onKeyDown(keyCode, event);
+		}
+		
+		return	false;
 	}
 }

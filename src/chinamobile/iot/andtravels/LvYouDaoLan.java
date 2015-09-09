@@ -31,38 +31,10 @@ public class LvYouDaoLan extends Fragment {
 	private Handler handler;
 	private final int MESSAGE_WHAT_CHANGED = 100;
 
-	// 装载若干张展示用的图片。
-	// private ArrayList<HashMap<String, Object>> mArrayList = null;
-
-	// private final String FRAGMENT = "fragment_tag";
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	}
-
-	// private void add(Fragment fragment) {
-	//
-	// HashMap<String, Object> map = new HashMap<String, Object>();
-	//
-	// Bundle args = new Bundle();
-	// fragment.setArguments(args);
-	// map.put(FRAGMENT, fragment);
-	//
-	// mArrayList.add(map);
-	// }
-
-	// private class ImageFragment extends Fragment {
-	// @Override
-	// public View onCreateView(LayoutInflater inflater, ViewGroup container,
-	// Bundle savedInstanceState) {
-	//
-	// ImageView iv = new ImageView(getContext());
-	// iv.setImageResource(R.drawable.homepage);
-	// iv.setScaleType(ScaleType.CENTER_CROP);
-	// return iv;
-	// }
-	// }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -187,21 +159,6 @@ public class LvYouDaoLan extends Fragment {
 			handler.sendEmptyMessage(MESSAGE_WHAT_CHANGED);
 		}
 	}
-
-	/*
-	 * private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
-	 * 
-	 * public MyFragmentPagerAdapter(FragmentManager fm) { super(fm); }
-	 * 
-	 * @Override public Fragment getItem(int pos) { return (Fragment)
-	 * mArrayList.get(pos).get(FRAGMENT); }
-	 * 
-	 * @Override public int getCount() { return mArrayList.size(); }
-	 * 
-	 * @Override public void notifyDataSetChanged() {
-	 * super.notifyDataSetChanged();
-	 * handler.sendEmptyMessage(MESSAGE_WHAT_CHANGED); } }
-	 */
 
 	private class MyArrayAdapter extends ArrayAdapter {
 
