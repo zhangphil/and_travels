@@ -16,9 +16,11 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -28,6 +30,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 public class SettingFragment extends Fragment {
 
 	private final String LOG_TAG = "SettingActivity";
@@ -35,6 +38,8 @@ public class SettingFragment extends Fragment {
 	private int listItemNum = 9;
 	private ListViewAdapter listViewAdapter;
 	private List<Map<String, Object>> listItems;
+	private SharePopWindow mPopWindow;
+	
 	private Integer[] imgeIDs = { R.drawable.darkhead, R.drawable.darkhead, R.drawable.share1, R.drawable.save,
 			R.drawable.save, R.drawable.save, R.drawable.talk, R.drawable.talk, R.drawable.share1 };
 	private String[] titleNames = { "昵称", "", "我的分享", "我的景点收藏", "", "我的状态收藏", "我的评论", "", "分享App" };
@@ -56,6 +61,8 @@ public class SettingFragment extends Fragment {
 		listItems = getListItems();
 		listViewAdapter = new ListViewAdapter(mActivity, listItems); // 创建适配器
 		listView.setAdapter(listViewAdapter);
+		
+		
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -87,9 +94,11 @@ public class SettingFragment extends Fragment {
 					mActivity.startActivity(intent);
 				}else if(position == 8 ){
 					Log.e(LOG_TAG, "分享App行被点击！！！！！！！！！！！！");
-					//intent = new Intent(mActivity,GeneralActivity.class);
-					//intent.putExtra("title", "我的评论");
-					//mActivity.startActivity(intent);
+					
+					mPopWindow = new SharePopWindow(mActivity);  
+	                //显示窗口  
+					mPopWindow.showAtLocation(view, Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
+
 				}else{
 					
 				}
@@ -254,19 +263,6 @@ public class SettingFragment extends Fragment {
 		fragmentTransaction.commit();
 
 	}
-
-	/*
-	 * @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
-	 * 
-	 * // TODO Auto-generated method stub if(keyCode == KeyEvent.KEYCODE_BACK){
-	 * if(getFragmentManager().getBackStackEntryCount() > 0){
-	 * getFragmentManager().popBackStackImmediate(); Log.e(LOG_TAG,
-	 * "Fragment 个数不为0"); return false; } else{ return super.onKeyDown(keyCode,
-	 * event); }
-	 * 
-	 * } else{ return super.onKeyDown(keyCode, event); }
-	 * 
-	 * }
-	 */
-
+	
 }
+
