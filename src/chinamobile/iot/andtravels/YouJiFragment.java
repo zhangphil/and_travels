@@ -50,7 +50,7 @@ public class YouJiFragment extends ListFragment {
 
 	private class MyArrayAdapter extends ArrayAdapter {
 
-		private ArrayList mItems;
+		private ArrayList<Integer> mItems;
 		private LayoutInflater mLayoutInflater;
 		private ViewHolder holder;
 
@@ -60,7 +60,7 @@ public class YouJiFragment extends ListFragment {
 			public TextView detail;
 		}
 
-		public MyArrayAdapter(Context context, int resource, ArrayList mArrayList) {
+		public MyArrayAdapter(Context context, int resource, ArrayList<Integer> mArrayList) {
 			super(context, resource);
 			this.mLayoutInflater = LayoutInflater.from(context);
 			this.mItems = mArrayList;
@@ -81,15 +81,15 @@ public class YouJiFragment extends ListFragment {
 				holder.title = title;
 				holder.detail = detail;
 				holder.tableLayout = tableLayout;
+				
+				holder.detail.setEllipsize(TruncateAt.END);
+				holder.detail.setMaxLines(3);
 
 				convertView.setTag(holder);
 			} else
 				holder = (ViewHolder) convertView.getTag();
 
 			holder.title.setText("初游草堂，忆童年 （" + pos + "），" + mItems.get(pos) + "图");
-
-			holder.detail.setEllipsize(TruncateAt.END);
-			holder.detail.setMaxLines(3);
 
 			int total = getItem(pos);
 
@@ -98,9 +98,6 @@ public class YouJiFragment extends ListFragment {
 			} else {
 				holder.tableLayout.removeAllViewsInLayout();
 				holder.tableLayout.setVisibility(View.VISIBLE);
-
-				final int WC = ViewGroup.LayoutParams.WRAP_CONTENT;
-				final int MP = ViewGroup.LayoutParams.MATCH_PARENT;
 
 				int ROW = 0;
 				int mod = total % 3;
@@ -122,7 +119,7 @@ public class YouJiFragment extends ListFragment {
 						}
 					}
 
-					holder.tableLayout.addView(tableRow, new TableLayout.LayoutParams(MP, WC));
+					holder.tableLayout.addView(tableRow, new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 				}
 			}
 
