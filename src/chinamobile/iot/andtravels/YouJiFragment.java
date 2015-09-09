@@ -24,9 +24,10 @@ public class YouJiFragment extends ListFragment {
 		super.onCreate(savedInstanceState);
 
 		Random rand = new Random();
+		int cnt=0;
 		ArrayList<Integer> mArrayList = new ArrayList<Integer>();
 		for (int i = 0; i < 50; i++) {
-			int cnt = rand.nextInt(10);
+			cnt = rand.nextInt(10);
 			mArrayList.add(cnt);
 		}
 
@@ -66,7 +67,6 @@ public class YouJiFragment extends ListFragment {
 			this.mItems = mArrayList;
 		}
 
-		// 注意！！！此处没有对性能进行优化！后期必须对此进行优化！
 		@Override
 		public View getView(int pos, View convertView, ViewGroup parent) {
 			if (convertView == null) {

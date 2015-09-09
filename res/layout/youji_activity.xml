@@ -32,7 +32,7 @@
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="8"
-            android:hint="请输入" />
+            android:hint="发表评论" />
 
         <Button
             android:id="@+id/buttonSend"
