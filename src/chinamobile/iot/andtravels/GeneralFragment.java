@@ -20,7 +20,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class MyShareFragment extends Fragment {
+public class GeneralFragment extends Fragment {
 
 	private final String LOG_TAG = "MyShareFragment";
 	private Activity mActivity = null;
@@ -34,6 +34,8 @@ public class MyShareFragment extends Fragment {
 	private String[] time = { "2015-8-4", "2015-7-28", "2012-8-4", "2006-8-4", "2003-8-4", "2002-8-4", "1999-8-4", "2000-8-4", "2014-8-4" };
 
 	private ImageView backView;
+	private TextView  mTextViewName;
+	private String mTitle;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -41,10 +43,16 @@ public class MyShareFragment extends Fragment {
 		mActivity = activity;
 	}
 
+	public GeneralFragment(String title){
+		mTitle = title;
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
 		View view = inflater.inflate(R.layout.my_share, null);
+		mTextViewName =(TextView) view.findViewById(R.id.name);
+		mTextViewName.setText(mTitle);
 
 		ListView listView = (ListView) view.findViewById(R.id.myShareList);
 		backView = (ImageView) view.findViewById(R.id.back);

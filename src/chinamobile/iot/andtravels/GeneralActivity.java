@@ -20,12 +20,12 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 
-public class MyShareActivity extends FragmentActivity {
+public class GeneralActivity extends FragmentActivity {
 
 	private final String LOG_TAG = "MyShareActivity";
 	
 	private Fragment newFragment;
-	private int mCurViewPos = 0;
+	private String mTitle;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,35 +33,20 @@ public class MyShareActivity extends FragmentActivity {
 
 		setContentView(R.layout.my_share_activity);
 		
-		openFragment(mCurViewPos);
+		Intent intent = getIntent();
+		Bundle bundle = intent.getExtras();
+		mTitle = bundle.getString("title");
+		openFragment();
 		
 		
 	}
 
-	private void openFragment(int pos){
-		
-		switch(pos){
-			case 0:{
-				newFragment = new MyShareFragment();
-				break;
-			}
-			case 1:{
-				break;
-			}
-			case 2:{
-				break;
-			}
-			case 3:{
-				break;
-			}
-			case 4:{
-				break;
-			}
-			default:{
-				break;
-			}
+	private void openFragment(){
+		if( mTitle.equalsIgnoreCase("我的评论") ){
+			newFragment = new MyCommentFragment(mTitle);
+		}else{
+			newFragment = new GeneralFragment(mTitle);
 		}
-		
 		
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.fragment, newFragment);

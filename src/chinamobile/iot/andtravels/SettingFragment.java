@@ -61,20 +61,37 @@ public class SettingFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
+				Intent intent;
 				if (position == 0) {
-
-		
-				}else if (position == 2) {
+					
+				}else if (position == 2  ) {
 					Log.e(LOG_TAG, "我的分享行被点击！！！！！！！！！！！！");
-					Intent intent=new Intent(mActivity,MyShareActivity.class);
+					intent = new Intent(mActivity,GeneralActivity.class);
+					intent.putExtra("title", "我的分享");
 					mActivity.startActivity(intent);
 
 				}else if (position == 3) {
-
+					Log.e(LOG_TAG, "我的景点收藏行被点击！！！！！！！！！！！！");
+					intent = new Intent(mActivity,GeneralActivity.class);
+					intent.putExtra("title", "我的景点收藏");
+					mActivity.startActivity(intent);
 				}else if (position == 5) {
-
-				}else {
-
+					Log.e(LOG_TAG, "我的状态收藏行被点击！！！！！！！！！！！！");
+					intent = new Intent(mActivity,GeneralActivity.class);
+					intent.putExtra("title", "我的状态收藏");
+					mActivity.startActivity(intent);
+				}else if(position == 6){
+					Log.e(LOG_TAG, "我的评论行被点击！！！！！！！！！！！！");
+					intent = new Intent(mActivity,GeneralActivity.class);
+					intent.putExtra("title", "我的评论");
+					mActivity.startActivity(intent);
+				}else if(position == 8 ){
+					Log.e(LOG_TAG, "分享App行被点击！！！！！！！！！！！！");
+					//intent = new Intent(mActivity,GeneralActivity.class);
+					//intent.putExtra("title", "我的评论");
+					//mActivity.startActivity(intent);
+				}else{
+					
 				}
 			}
 
