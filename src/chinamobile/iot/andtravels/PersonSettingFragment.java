@@ -21,10 +21,12 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -46,6 +48,7 @@ public class PersonSettingFragment extends Fragment {
 
 	private Activity mActivity;
 	private View mView;
+	private AlertDialog dialog;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -70,24 +73,45 @@ public class PersonSettingFragment extends Fragment {
 				// TODO Auto-generated method stub
 				if (position == 0) {
 					// 修改头像
-					final String[] mItems = {"相册","照相","取消"}; 
-					AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);     
-					        builder.setItems(mItems, new DialogInterface.OnClickListener() {  
-					            public void onClick(DialogInterface dialog, int which) {  
-					                switch(which){
-						                case 1:{
-						                	getImageFromAlbum();
-						                	break;
-						                }case 2:{
-						                	
-						                	break;
-						                }default:{
-						                	
-						                }
-					                } 
-					            }  
-					        });  
-					        builder.create().show();
+					AlertDialog.Builder builder = new AlertDialog.Builder(mActivity); 
+					//设置Dialog的样式
+			        dialog = builder.create();
+			        dialog.show();
+			        Window window = dialog.getWindow();         
+			        window.setGravity(Gravity.BOTTOM);
+			        window.setContentView(R.layout.choose_image_dialog);
+			        TextView view1 = (TextView)window.findViewById(R.id.item1);
+			        view1.setOnClickListener(new View.OnClickListener(){
+
+						@Override
+						public void onClick(View v) {
+							// TODO Auto-generated method stub
+							getImageFromAlbum();
+						}
+			        	
+			        });
+			        
+			        window.findViewById(R.id.item2).setOnClickListener(new View.OnClickListener(){
+
+						@Override
+						public void onClick(View v) {
+							// TODO Auto-generated method stub
+							//getImageFromAlbum();
+						}
+			        	
+			        });
+			        
+			        window.findViewById(R.id.item3).setOnClickListener(new View.OnClickListener(){
+
+						@Override
+						public void onClick(View v) {
+							// TODO Auto-generated method stub
+							dialog.dismiss();
+						}
+			        	
+			        });
+			        
+			        
 
 				} else if (position == 1) {
 					//
@@ -133,9 +157,10 @@ public class PersonSettingFragment extends Fragment {
             ContentResolver cr = mActivity.getContentResolver();  
             try {  
                 Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));  
-                ImageView imageView = (ImageView) mView.findViewById(R.id.personImage);  
-                /* 将Bitmap设定到ImageView */  
-                imageView.setImageBitmap(bitmap);  
+                CircleImageView imageView = (CircleImageView) mView.findViewById(R.id.manImage);  
+                /* 将Bitmap设定到ImageView */ 
+                imageView.setBackgroundResource(0);
+                imageView.setImageBitmap(bitmap); 
             } catch (FileNotFoundException e) {  
                 Log.e("Exception", e.getMessage(),e);  
             }  
@@ -166,7 +191,7 @@ public class PersonSettingFragment extends Fragment {
 		private LayoutInflater listContainer; // 视图容器
 
 		public final class ListItemView { // 自定义控件集合
-			public ImageView manImage;
+			public CircleImageView manImage;
 			public TextView title;
 			public ImageView touchImage;
 		}
@@ -234,7 +259,7 @@ public class PersonSettingFragment extends Fragment {
 
 					// 获取控件对象
 					listItemView.title = (TextView) convertView.findViewById(R.id.title);
-					listItemView.manImage = (ImageView) convertView.findViewById(R.id.manImage);
+					listItemView.manImage = (CircleImageView) convertView.findViewById(R.id.manImage);
 					listItemView.touchImage = (ImageView) convertView.findViewById(R.id.touchImage);
 					// 设置控件集到convertView
 					convertView.setTag(listItemView);
