@@ -29,6 +29,7 @@
        android:layout_height="12dip"
        android:layout_alignParentRight="true"
        android:layout_centerVertical="true"
-       android:layout_marginRight="10dip" />
+       android:layout_marginRight="10dip"
+       android:visibility="gone" />
       
 </RelativeLayout>

@@ -1,5 +1,6 @@
 package chinamobile.iot.andtravels;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,9 +8,13 @@ import java.util.Map;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -40,6 +45,7 @@ public class PersonSettingFragment extends Fragment {
 	private String[] titleNames = { "头像", "个人资料", "昵称", "手机", "账号完全", "修改密码" };
 
 	private Activity mActivity;
+	private View mView;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -50,10 +56,9 @@ public class PersonSettingFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// setContentView(R.layout.personsetting);
-		View view = inflater.inflate(R.layout.personsetting, null);
+		mView = inflater.inflate(R.layout.personsetting, null);
 
-		ListView listView = (ListView) view.findViewById(R.id.PersonSetting);
+		ListView listView = (ListView) mView.findViewById(R.id.PersonSetting);
 
 		mListItems = getListItems();
 		listViewAdapter = new ListViewAdapter(mActivity, mListItems); // 创建适配器
@@ -65,9 +70,24 @@ public class PersonSettingFragment extends Fragment {
 				// TODO Auto-generated method stub
 				if (position == 0) {
 					// 修改头像
-					// Intent intent=new Intent(mActivity,
-					// PersonSettingActivity.class);
-					// mActivity.startActivity(intent);
+					final String[] mItems = {"相册","照相","取消"}; 
+					AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);     
+					        builder.setItems(mItems, new DialogInterface.OnClickListener() {  
+					            public void onClick(DialogInterface dialog, int which) {  
+					                switch(which){
+						                case 1:{
+						                	getImageFromAlbum();
+						                	break;
+						                }case 2:{
+						                	
+						                	break;
+						                }default:{
+						                	
+						                }
+					                } 
+					            }  
+					        });  
+					        builder.create().show();
 
 				} else if (position == 1) {
 					//
@@ -95,12 +115,34 @@ public class PersonSettingFragment extends Fragment {
 		});
 
 		// initTabMenuView();
-		return view;
+		return mView;
 	}
 
-	/**
-	 * 初始化商品信息
-	 */
+	private void getImageFromAlbum(){
+		Intent intent = new Intent();  
+        intent.setType("image/*");  
+        intent.setAction(Intent.ACTION_GET_CONTENT);   
+        startActivityForResult(intent, 1);
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {  
+        if (resultCode == Activity.RESULT_OK) {  
+            Uri uri = data.getData();  
+            Log.e("LOG_TAG", "获取到图片uri：" + uri.toString());  
+            ContentResolver cr = mActivity.getContentResolver();  
+            try {  
+                Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));  
+                ImageView imageView = (ImageView) mView.findViewById(R.id.personImage);  
+                /* 将Bitmap设定到ImageView */  
+                imageView.setImageBitmap(bitmap);  
+            } catch (FileNotFoundException e) {  
+                Log.e("Exception", e.getMessage(),e);  
+            }  
+        }  
+        super.onActivityResult(requestCode, resultCode, data);  
+    }  
+	
 	private List<Map<String, Object>> getListItems() {
 		List<Map<String, Object>> listItems = new ArrayList<Map<String, Object>>();
 
@@ -244,17 +286,5 @@ public class PersonSettingFragment extends Fragment {
 			return convertView;
 		}
 	}
-
-	// private void initTabMenuView()
-	// {
-	// FragmentManager mfragmentManager = getFragmentManager();
-	// FragmentTransaction fragmentTransaction =
-	// mfragmentManager.beginTransaction();
-	// TabMenuFragment fragment1 = new TabMenuFragment();
-	// fragmentTransaction.replace(R.id.tab_menu_frame, fragment1);
-	// fragmentTransaction.addToBackStack(null);
-	// fragmentTransaction.commit();
-	//
-	// }
 
 }

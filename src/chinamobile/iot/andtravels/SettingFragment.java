@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -38,7 +39,7 @@ public class SettingFragment extends Fragment {
 	private int listItemNum = 9;
 	private ListViewAdapter listViewAdapter;
 	private List<Map<String, Object>> listItems;
-	private SharePopWindow mPopWindow;
+	private ShareDialog mPopDialog;
 	
 	private Integer[] imgeIDs = { R.drawable.darkhead, R.drawable.darkhead, R.drawable.share1, R.drawable.save,
 			R.drawable.save, R.drawable.save, R.drawable.talk, R.drawable.talk, R.drawable.share1 };
@@ -95,9 +96,10 @@ public class SettingFragment extends Fragment {
 				}else if(position == 8 ){
 					Log.e(LOG_TAG, "分享App行被点击！！！！！！！！！！！！");
 					
-					mPopWindow = new SharePopWindow(mActivity);  
-	                //显示窗口  
-					mPopWindow.showAtLocation(view, Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
+					mPopDialog = new ShareDialog(mActivity);
+					mPopDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+					mPopDialog.show();  
+	                
 
 				}else{
 					

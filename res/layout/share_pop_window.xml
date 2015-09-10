@@ -1,7 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/popupWindowScrollView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="150dip"
+    android:background="#ffffff"
     android:orientation="vertical" >
 
    <RelativeLayout
@@ -20,10 +21,12 @@
         android:text="分享给您的朋友吧！"
         android:textSize="12sp" />
     
-     <!--  <ImageView
+     <ImageView
             android:id="@+id/quit"
             android:layout_width="10dip"
-            android:layout_height="match_parent" />-->
+            android:layout_height="10dip" 
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"/>
      
    </RelativeLayout>
    
@@ -36,7 +39,7 @@
 	  android:layout_below="@+id/title"
 	  android:orientation="horizontal"
 	  android:layout_marginTop="10dip"
-	  android:background="#707172"/>
+	  android:background="#f4f2f2"/>
 
    <RelativeLayout
        android:id="@+id/shareImage"
@@ -45,40 +48,61 @@
        android:layout_alignParentLeft="true"
        android:layout_below="@+id/divide"
        android:layout_marginTop="26dp"
-       android:background="#f4f2f2"
+       android:background="#ffffff"
        android:orientation="horizontal" >
 
-       <ImageView
-           android:id="@+id/share1"
-           android:layout_width="50dip"
-           android:layout_height="50dip"
-           android:layout_marginLeft="20dip"
-           android:src="@drawable/a_selected" />
-
-       <ImageView
-           android:id="@+id/share2"
-           android:layout_width="50dip"
-           android:layout_height="50dip"
-           android:layout_toRightOf="@+id/share1"
-           android:layout_marginLeft="30dip"
-           android:src="@drawable/b_selected" />
-
-       <ImageView
-           android:id="@+id/share3"
-           android:layout_width="50dip"
-           android:layout_height="50dip"
-           android:layout_toRightOf="@+id/share2"
-           android:layout_alignParentRight="true"
-           android:layout_marginRight="60dip"
-           android:src="@drawable/c_selected" />
-
-       <ImageView
-           android:id="@+id/share4"
-           android:layout_width="50dip"
-           android:layout_height="50dip"
-           android:layout_alignParentRight="true"
-           android:layout_marginRight="20dip"
-           android:src="@drawable/d_selected" />
+       <RadioGroup
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal" >
+		       <RadioButton
+		           android:id="@+id/share1"
+		           android:layout_width="0dp"
+            	   android:layout_height="wrap_content"
+                   android:layout_gravity="center"
+                   android:layout_weight="1"
+                   android:button="@null"
+                   android:checked="false"
+                   android:drawableTop="@drawable/a_selected"
+                   android:gravity="center_horizontal|bottom"
+                   android:paddingTop="1dp" />
+		
+		       <RadioButton
+		           android:id="@+id/share2"
+		           android:layout_width="0dp"
+            	   android:layout_height="wrap_content"
+                   android:layout_gravity="center"
+                   android:layout_weight="1"
+                   android:button="@null"
+                   android:checked="false"
+                   android:drawableTop="@drawable/b_selected"
+                   android:gravity="center_horizontal|bottom"
+                   android:paddingTop="1dp" />
+		
+		       <RadioButton
+		           android:id="@+id/share3"
+		           android:layout_width="0dp"
+            	   android:layout_height="wrap_content"
+                   android:layout_gravity="center"
+                   android:layout_weight="1"
+                   android:button="@null"
+                   android:checked="false"
+                   android:drawableTop="@drawable/c_selected"
+                   android:gravity="center_horizontal|bottom"
+                   android:paddingTop="1dp" />
+		
+		       <RadioButton
+		           android:id="@+id/share4"
+		           android:layout_width="0dp"
+            	   android:layout_height="wrap_content"
+                   android:layout_gravity="center"
+                   android:layout_weight="1"
+                   android:button="@null"
+                   android:checked="false"
+                   android:drawableTop="@drawable/d_selected"
+                   android:gravity="center_horizontal|bottom"
+                   android:paddingTop="1dp" />
+       </RadioGroup>
    </RelativeLayout>
    
 </RelativeLayout>
