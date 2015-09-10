@@ -73,15 +73,16 @@ public class PersonSettingFragment extends Fragment {
 				// TODO Auto-generated method stub
 				if (position == 0) {
 					// 修改头像
+					LayoutInflater inflater = LayoutInflater.from(mActivity);  
+			        View choseImageView = inflater.inflate(R.layout.choose_image_dialog, null);
+			        
 					AlertDialog.Builder builder = new AlertDialog.Builder(mActivity); 
-					//设置Dialog的样式
+					builder.setView(choseImageView);
 			        dialog = builder.create();
-			        dialog.show();
-			        Window window = dialog.getWindow();         
-			        window.setGravity(Gravity.BOTTOM);
-			        window.setContentView(R.layout.choose_image_dialog);
-			        TextView view1 = (TextView)window.findViewById(R.id.item1);
-			        view1.setOnClickListener(new View.OnClickListener(){
+			       
+			        
+			        TextView view1 = (TextView)choseImageView.findViewById(R.id.item1);
+			        view1.setOnClickListener(new android.view.View.OnClickListener(){
 
 						@Override
 						public void onClick(View v) {
@@ -91,7 +92,7 @@ public class PersonSettingFragment extends Fragment {
 			        	
 			        });
 			        
-			        window.findViewById(R.id.item2).setOnClickListener(new View.OnClickListener(){
+			        choseImageView.findViewById(R.id.item2).setOnClickListener(new android.view.View.OnClickListener(){
 
 						@Override
 						public void onClick(View v) {
@@ -101,7 +102,7 @@ public class PersonSettingFragment extends Fragment {
 			        	
 			        });
 			        
-			        window.findViewById(R.id.item3).setOnClickListener(new View.OnClickListener(){
+			        choseImageView.findViewById(R.id.item3).setOnClickListener(new android.view.View.OnClickListener(){
 
 						@Override
 						public void onClick(View v) {
@@ -111,7 +112,9 @@ public class PersonSettingFragment extends Fragment {
 			        	
 			        });
 			        
-			        
+			        dialog.show();
+			        Window window = dialog.getWindow();         
+			        window.setGravity(Gravity.BOTTOM);
 
 				} else if (position == 1) {
 					//
