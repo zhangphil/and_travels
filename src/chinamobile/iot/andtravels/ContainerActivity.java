@@ -11,6 +11,8 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentManager.BackStackEntry;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,13 +22,9 @@ import android.widget.TextView;
 
 public class ContainerActivity extends FragmentActivity {
 
-<<<<<<< HEAD
 	private String TAG_LOG = "ContainerActivity";
 	private int  mCurViewPos = 0;
-=======
-	private static final int REQUEST_ENABLE_BT = 1234;
-	private BeaconManager beaconManager = new BeaconManager(this);
->>>>>>> master
+	private Fragment newFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +37,19 @@ public class ContainerActivity extends FragmentActivity {
 		
 		Log.e(TAG_LOG, "当前显示page is" + mCurViewPos);
 		
-		Fragment newFragment = new MyViewPagerTabHost(mCurViewPos);
+		newFragment = new MyViewPagerTabHost(mCurViewPos);
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.fragment, newFragment);
 		transaction.commit();
+		
 	}
 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		
+	}
+	
 	public static class MyViewPagerTabHost extends ViewPagerTabHost {
 
 		public MyViewPagerTabHost(int pos) {
@@ -73,22 +78,12 @@ public class ContainerActivity extends FragmentActivity {
 			tab_cards = res.getStringArray(R.array.tab_cards);
 
 			mLayoutInflater = LayoutInflater.from(getContext());
+			
 		}
 
 		@Override
 		protected Fragment getFragmentAt(int pos) {
-			Fragment fragment = null;
-			if(mCurViewPos > 0 && mCurViewPos < mArrayList.size()){
-				fragment = mArrayList.get(1);
-			}else{
-				fragment = mArrayList.get(0);
-			}
-			
-			if(fragment == null){
-				fragment = mArrayList.get(0);
-			}
-			
-			return fragment;
+			return mArrayList.get(pos);
 		}
 
 		@Override
@@ -125,13 +120,7 @@ public class ContainerActivity extends FragmentActivity {
 			ImageView iv = (ImageView) view.findViewById(R.id.imageView);
 			iv.setImageResource(icon_unselected[pos]);
 		}
-<<<<<<< HEAD
 		
-		public void setCurViewPage(int pos){
-			
-		}
-
-=======
->>>>>>> master
 	}
 }
+

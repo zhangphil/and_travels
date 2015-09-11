@@ -55,18 +55,14 @@ import android.support.v4.app.FragmentTransaction;
 
 public class StartActivity extends FragmentActivity {
 
-<<<<<<< HEAD
+
 	private final String LOG_TAG = "StartActivity";
 	
 	private static final int REQUEST_ENABLE_BT = 1234;
 	private BluetoothAdapter mBluetoothAdapter;
 	private BeaconManager beaconManager = new BeaconManager(this);
 	private Fragment newFragment;
-=======
-	private static final int REQUEST_ENABLE_BT = 1234;
-	private BluetoothAdapter mBluetoothAdapter;
-	private BeaconManager beaconManager = new BeaconManager(this);
->>>>>>> developer
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,17 +70,15 @@ public class StartActivity extends FragmentActivity {
 
 		setContentView(R.layout.start_main_fragment);
 		
-<<<<<<< HEAD
+
 		newFragment = new StartMainFragment();
-=======
-		Fragment newFragment = new StartMainFragment();
->>>>>>> developer
+
+
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.fragment, newFragment);
 		transaction.commit();
 		
 		startBle();
-<<<<<<< HEAD
 	}
 
 	@Override
@@ -96,9 +90,6 @@ public class StartActivity extends FragmentActivity {
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.fragment, newFragment);
 		transaction.commit();
-		
-=======
->>>>>>> developer
 	}
 	
 	@Override
