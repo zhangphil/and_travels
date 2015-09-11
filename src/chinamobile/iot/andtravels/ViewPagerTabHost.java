@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +14,15 @@ import android.widget.LinearLayout.LayoutParams;
 
 public class ViewPagerTabHost extends Fragment {
 
+	private final String TAG_LOG = "ViewPagerTabHost";
 	private MyFragmentPagerAdapter mPagerAdapter;
 	private ViewPager mViewPager;
 	private LinearLayout mLinearLayout;
+	protected int mCurViewPos = 0;
 
+	public ViewPagerTabHost(int pos){
+		mCurViewPos = pos;
+	}
 	protected Fragment getFragmentAt(int pos) {
 		return null;
 	}
@@ -39,6 +45,7 @@ public class ViewPagerTabHost extends Fragment {
 		mPagerAdapter.notifyDataSetChanged();
 	}
 
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View mView = inflater.inflate(R.layout.viewpager_tabhost, null);
@@ -48,7 +55,8 @@ public class ViewPagerTabHost extends Fragment {
 		mLinearLayout = (LinearLayout) mView.findViewById(R.id.indicator_LinearLayout);
 		addIndicators();
 		// 初始化，第一项被选中
-		setIndicatorViewSelected(0);
+		setIndicatorViewSelected(mCurViewPos);
+		Log.e(TAG_LOG, "当前显示page is" + mCurViewPos);
 
 		mPagerAdapter = new MyFragmentPagerAdapter(getFragmentManager());
 		mViewPager.setAdapter(mPagerAdapter);

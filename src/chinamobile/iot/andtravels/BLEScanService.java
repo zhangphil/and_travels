@@ -134,7 +134,7 @@ public class BLEScanService extends Service implements Runnable {
 				}
 			}
 
-			// 如果手机和beacon的距离小于2米，就播放音频
+			// 如果手机和beacon的距离小于1米，就播放音频
 			if ((new BigDecimal(minDistance)).compareTo(new BigDecimal(compareDistance)) < 0) {
 				minIndex = index;
 			}
@@ -150,12 +150,28 @@ public class BLEScanService extends Service implements Runnable {
 			// ((Beacon)list.get(index).get("beacon")).getProximityUUID();
 			strBeaconName = list.get(minIndex).getName();
 			Log.e(TAG, "找到的距离最短的beacon name: " + strBeaconName);
-			if (strBeaconName.contains("AprilBeacon")) {
+			if (strBeaconName.contains("abeacon_FACA")) {
 				strBeaconID += 1;
-			} else if (strBeaconName.contains("BrtBeacon")) {
+			}else if (strBeaconName.contains("abeacon_FB2A")) {
 				strBeaconID += 2;
-			} else {
+			}else if (strBeaconName.contains("abeacon_FB7D")) {
 				strBeaconID += 3;
+			}else if (strBeaconName.contains("abeacon_FB3E")) {
+				strBeaconID += 4;
+			}else if (strBeaconName.contains("abeacon_FAFB")) {
+				strBeaconID += 5;
+			}else if (strBeaconName.contains("abeacon_FB10")) {
+				strBeaconID += 6;
+			}else if (strBeaconName.contains("abeacon_FAE9")) {
+				strBeaconID += 7;
+			}else if (strBeaconName.contains("abeacon_FB71")) {
+				strBeaconID += 8;
+			}else if (strBeaconName.contains("abeacon_FA9C")) {
+				strBeaconID += 9;
+			}else if (strBeaconName.contains("abeacon_FB24")) {
+				strBeaconID += 10;
+			}else {
+				strBeaconID += 11;
 			}
 			Log.e(TAG, "找到最新的index:" + minIndex);
 		}
@@ -197,7 +213,7 @@ public class BLEScanService extends Service implements Runnable {
 						Log.i(TAG, "power = " + beacon.getPower());
 
 						// 只处理四月兄弟的beacon
-						// if(beacon.getName().contains("AprilBeacon"))
+						if(beacon.getName().contains("abeacon_"))
 						{
 							mfindBeacons.add(beacon);
 						}
