@@ -18,6 +18,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class ChangePhoneNumActivity extends Activity {
@@ -26,17 +28,19 @@ public class ChangePhoneNumActivity extends Activity {
 	private String strPhoneNum;
 	private EditText editTextLogin;
 	private EditText editTextPhoneNum;
-	private Button submitButton;
+	private TextView submitButton;
+	private ImageView backView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.change_phone_num);
 
-		editTextLogin = (EditText) findViewById(R.id.loginPassword);
-		editTextPhoneNum = (EditText) findViewById(R.id.changePhoneNum);
-		submitButton = (Button) findViewById(R.id.submit);
-
+		editTextLogin = (EditText) findViewById(R.id.editPassword);
+		editTextPhoneNum = (EditText) findViewById(R.id.editNum);
+		submitButton = (TextView) findViewById(R.id.submit);
+		backView = (ImageView) findViewById(R.id.back);
+		
 		submitButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -70,6 +74,16 @@ public class ChangePhoneNumActivity extends Activity {
 					}
 
 				}).show();
+
+			}
+		});
+		
+		backView.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				finish();
 
 			}
 		});

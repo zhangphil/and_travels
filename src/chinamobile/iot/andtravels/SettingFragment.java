@@ -53,8 +53,6 @@ public class SettingFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		// super.onCreate(savedInstanceState);
-		// super.onCreateView(inflater, container, savedInstanceState);
 		View view = inflater.inflate(R.layout.setting, null);
 
 		ListView listView = (ListView) view.findViewById(R.id.ShareSetting);
@@ -108,7 +106,6 @@ public class SettingFragment extends Fragment {
 
 		});
 
-		// initTabMenuView();
 		return view;
 	}
 
@@ -256,7 +253,7 @@ public class SettingFragment extends Fragment {
 		}
 	}
 
-	private void initTabMenuView() {
+	/*private void initTabMenuView() {
 		FragmentManager mfragmentManager = this.getFragmentManager();// getSupportFragmentManager();
 		FragmentTransaction fragmentTransaction = mfragmentManager.beginTransaction();
 		TabMenuFragment fragment1 = new TabMenuFragment();
@@ -264,7 +261,7 @@ public class SettingFragment extends Fragment {
 		fragmentTransaction.addToBackStack(null);
 		fragmentTransaction.commit();
 
-	}
+	}*/
 	
 }
 
