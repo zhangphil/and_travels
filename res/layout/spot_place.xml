@@ -53,7 +53,7 @@
                 android:id="@+id/centerLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/tabcard_background"
+                android:background="@color/and_travels_light_grey"
                 android:alpha="0.8"
                 android:gravity="right"
                 android:orientation="horizontal"

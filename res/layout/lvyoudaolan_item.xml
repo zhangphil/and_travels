@@ -32,7 +32,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_centerVertical="true"
-                android:textColor="@color/and_travels_titlebar"
+                android:textColor="@color/and_travels_light_blue"
                 android:text="青羊宫" />
 
              <TextView

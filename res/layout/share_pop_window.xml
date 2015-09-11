@@ -63,7 +63,7 @@
                    android:layout_weight="1"
                    android:button="@null"
                    android:checked="false"
-                   android:drawableTop="@drawable/a_selected"
+                   android:drawableTop="@drawable/weixin11"
                    android:gravity="center_horizontal|bottom"
                    android:paddingTop="1dp" />
 		
@@ -75,7 +75,7 @@
                    android:layout_weight="1"
                    android:button="@null"
                    android:checked="false"
-                   android:drawableTop="@drawable/b_selected"
+                   android:drawableTop="@drawable/pengyouquan1"
                    android:gravity="center_horizontal|bottom"
                    android:paddingTop="1dp" />
 		
@@ -87,7 +87,7 @@
                    android:layout_weight="1"
                    android:button="@null"
                    android:checked="false"
-                   android:drawableTop="@drawable/c_selected"
+                   android:drawableTop="@drawable/qq"
                    android:gravity="center_horizontal|bottom"
                    android:paddingTop="1dp" />
 		
@@ -99,7 +99,7 @@
                    android:layout_weight="1"
                    android:button="@null"
                    android:checked="false"
-                   android:drawableTop="@drawable/d_selected"
+                   android:drawableTop="@drawable/xinlangweibo"
                    android:gravity="center_horizontal|bottom"
                    android:paddingTop="1dp" />
        </RadioGroup>

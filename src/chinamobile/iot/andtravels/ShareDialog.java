@@ -9,6 +9,7 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,6 +23,8 @@ import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.sina.weibo.SinaWeibo;
+import cn.sharesdk.wechat.friends.Wechat;
+import cn.sharesdk.onekeyshare.OnekeyShare;
 
 public class ShareDialog extends Dialog {
 	
@@ -45,7 +48,7 @@ public class ShareDialog extends Dialog {
          
 		shareImage1.setOnClickListener(new View.OnClickListener() {  
             public void onClick(View v) {  
-            	showShareApp(SinaWeibo.NAME);   
+            	showShareApp(Wechat.NAME);   
             }  
         }); 
 		
@@ -72,7 +75,9 @@ public class ShareDialog extends Dialog {
 	
 	private void showShareApp(String title){
 		
-		ShareSDK.initSDK(mContext, LOG_TAG);
+		Log.e(LOG_TAG, "点击APP分享了");
+		String APP_ID ="a55bdf374ef0";
+		ShareSDK.initSDK(mContext, APP_ID);
 		shareApp(title);
 		
 	}
@@ -85,7 +90,8 @@ public class ShareDialog extends Dialog {
 		if(shareName.equalsIgnoreCase(SinaWeibo.NAME)){
 			 sp = new SinaWeibo.ShareParams();  
 		     sharePlatform = ShareSDK.getPlatform(mContext, shareName); 
-		}else if(shareName.equalsIgnoreCase(SinaWeibo.NAME)){
+		}else if(shareName.equalsIgnoreCase(Wechat.NAME)){
+			Log.e(LOG_TAG, "APP微信分享开始了");
 			sp = new SinaWeibo.ShareParams();  
 		    sharePlatform = ShareSDK.getPlatform(mContext, shareName); 
 		}else if(shareName.equalsIgnoreCase(SinaWeibo.NAME)){
@@ -96,7 +102,9 @@ public class ShareDialog extends Dialog {
 		    sharePlatform = ShareSDK.getPlatform(mContext, shareName); 
 		}
         
-  
+ 
+		//sp.setSiteUrl(siteUrl);
+		sp.setImageUrl("content://media/external/images/media/8899");
         // 设置分享事件回调  
         sharePlatform.setPlatformActionListener(new PlatformActionListener() {  
   
