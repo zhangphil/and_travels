@@ -24,7 +24,6 @@ import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.wechat.friends.Wechat;
-import cn.sharesdk.onekeyshare.OnekeyShare;
 
 public class ShareDialog extends Dialog {
 	
