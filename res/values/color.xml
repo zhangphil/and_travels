@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<color name="and_travels_titlebar">#29b6f6</color>
-    <color name="tabcard_background">#EFEFEF</color>
+	<color name="and_travels_light_blue">#4fc3f7</color>
+    <color name="and_travels_light_grey">#EFEFEF</color>
 	<color name="lightgray">#e0e0e0</color>
 </resources>

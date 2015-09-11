@@ -629,7 +629,7 @@ public class SpotPlaceActivity extends FragmentActivity {
 		GroundOverlayOptions goGround = new GroundOverlayOptions();
 		goGround.positionFromBounds(bounds);
 		goGround.image(bdGround);
-		goGround.transparency(0.6f);
+		goGround.transparency(0.8f);
 
 		mBaiduMap.addOverlay(goGround);
 

@@ -236,7 +236,8 @@ int color abc_secondary_text_material_dark 0x7f060045
 int color abc_secondary_text_material_light 0x7f060046
 int color accent_material_dark 0x7f060011
 int color accent_material_light 0x7f060010
-int color and_travels_titlebar 0x7f06003a
+int color and_travels_light_blue 0x7f06003a
+int color and_travels_light_grey 0x7f06003b
 int color background_floating_material_dark 0x7f060008
 int color background_floating_material_light 0x7f060009
 int color background_material_dark 0x7f060006
@@ -292,7 +293,6 @@ int color switch_thumb_material_dark 0x7f060047
 int color switch_thumb_material_light 0x7f060048
 int color switch_thumb_normal_material_dark 0x7f060014
 int color switch_thumb_normal_material_light 0x7f060015
-int color tabcard_background 0x7f06003b
 int dimen abc_action_bar_content_inset_material 0x7f07002a
 int dimen abc_action_bar_default_height_material 0x7f070029
 int dimen abc_action_bar_default_padding_end_material 0x7f07002c
