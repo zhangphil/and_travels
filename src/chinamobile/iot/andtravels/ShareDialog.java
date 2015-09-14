@@ -29,11 +29,7 @@ import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.Toast;
 import chinamobile.iot.andtravels.wxapi.WXEntryActivity;
-import cn.sharesdk.framework.Platform;
-import cn.sharesdk.framework.PlatformActionListener;
-import cn.sharesdk.framework.ShareSDK;
-import cn.sharesdk.sina.weibo.SinaWeibo;
-import cn.sharesdk.wechat.friends.Wechat;
+
 
 public class ShareDialog extends Dialog {
 	
@@ -139,51 +135,5 @@ public class ShareDialog extends Dialog {
 	    params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, "http://baidu.com");
 	    mTencent.shareToQzone((Activity) mContext, params, new BaseUiListener());
 	}
-	
-	
-	private void shareApp(String shareName){  
-		
-		 Platform.ShareParams sp;
-		 Platform sharePlatform;
-		if(shareName.equalsIgnoreCase(SinaWeibo.NAME)){
-			 sp = new SinaWeibo.ShareParams();  
-		     sharePlatform = ShareSDK.getPlatform(mContext, shareName); 
-		}else if(shareName.equalsIgnoreCase(Wechat.NAME)){
-			Log.e(LOG_TAG, "APP微信分享开始了");
-			sp = new SinaWeibo.ShareParams();  
-		    sharePlatform = ShareSDK.getPlatform(mContext, shareName); 
-		}else if(shareName.equalsIgnoreCase(SinaWeibo.NAME)){
-			sp = new SinaWeibo.ShareParams();  
-		    sharePlatform = ShareSDK.getPlatform(mContext, shareName); 
-		}else{
-			sp = new SinaWeibo.ShareParams();  
-		    sharePlatform = ShareSDK.getPlatform(mContext, shareName); 
-		}
-        
- 
-		//sp.setSiteUrl(siteUrl);
-		sp.setImageUrl("content://media/external/images/media/8899");
-        // 设置分享事件回调  
-        sharePlatform.setPlatformActionListener(new PlatformActionListener() {  
-  
-            public void onError(Platform platform, int action, Throwable t) {  
-               Toast.makeText(mContext, "分享失败", action);
-                
-            }  
-  
-            public void onComplete(Platform platform, int action,  
-                    HashMap<String, Object> res) {  
-            	Toast.makeText(mContext, "分享成功", action);
-            }  
-  
-            public void onCancel(Platform platform, int action) {  
-                // 操作取消的处理代码  
-            }  
-  
-        });  
-  
-        sharePlatform.share(sp);  
-    }  
-
 	
 }
