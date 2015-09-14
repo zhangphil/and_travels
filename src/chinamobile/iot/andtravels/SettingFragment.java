@@ -16,10 +16,13 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -28,6 +31,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 public class SettingFragment extends Fragment {
 
 	private final String LOG_TAG = "SettingActivity";
@@ -35,6 +39,8 @@ public class SettingFragment extends Fragment {
 	private int listItemNum = 9;
 	private ListViewAdapter listViewAdapter;
 	private List<Map<String, Object>> listItems;
+	private ShareDialog mPopDialog;
+	
 	private Integer[] imgeIDs = { R.drawable.darkhead, R.drawable.darkhead, R.drawable.share1, R.drawable.save,
 			R.drawable.save, R.drawable.save, R.drawable.talk, R.drawable.talk, R.drawable.share1 };
 	private String[] titleNames = { "昵称", "", "我的分享", "我的景点收藏", "", "我的状态收藏", "我的评论", "", "分享App" };
@@ -47,8 +53,6 @@ public class SettingFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		// super.onCreate(savedInstanceState);
-		// super.onCreateView(inflater, container, savedInstanceState);
 		View view = inflater.inflate(R.layout.setting, null);
 
 		ListView listView = (ListView) view.findViewById(R.id.ShareSetting);
@@ -56,36 +60,52 @@ public class SettingFragment extends Fragment {
 		listItems = getListItems();
 		listViewAdapter = new ListViewAdapter(mActivity, listItems); // 创建适配器
 		listView.setAdapter(listViewAdapter);
+		
+		
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
+				Intent intent;
 				if (position == 0) {
+					
+				}else if (position == 2  ) {
+					Log.e(LOG_TAG, "我的分享行被点击！！！！！！！！！！！！");
+					intent = new Intent(mActivity,GeneralActivity.class);
+					intent.putExtra("title", "我的分享");
+					mActivity.startActivity(intent);
 
-					// 进入个人设置中心
-					// Intent intent=new Intent(mActivity,
-					// PersonSettingActivity.class);
-					// mActivity.startActivity(intent);
+				}else if (position == 3) {
+					Log.e(LOG_TAG, "我的景点收藏行被点击！！！！！！！！！！！！");
+					intent = new Intent(mActivity,GeneralActivity.class);
+					intent.putExtra("title", "我的景点收藏");
+					mActivity.startActivity(intent);
+				}else if (position == 5) {
+					Log.e(LOG_TAG, "我的状态收藏行被点击！！！！！！！！！！！！");
+					intent = new Intent(mActivity,GeneralActivity.class);
+					intent.putExtra("title", "我的状态收藏");
+					mActivity.startActivity(intent);
+				}else if(position == 6){
+					Log.e(LOG_TAG, "我的评论行被点击！！！！！！！！！！！！");
+					intent = new Intent(mActivity,GeneralActivity.class);
+					intent.putExtra("title", "我的评论");
+					mActivity.startActivity(intent);
+				}else if(position == 8 ){
+					Log.e(LOG_TAG, "分享App行被点击！！！！！！！！！！！！");
+					
+					mPopDialog = new ShareDialog(mActivity);
+					mPopDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+					mPopDialog.show();  
+	                
 
-				} else if (position == 1) {
-
-				} else if (position == 2) {
-
-				} else if (position == 3) {
-
-				} else if (position == 4) {
-
-				} else if (position == 5) {
-
-				} else {
-
+				}else{
+					
 				}
 			}
 
 		});
 
-		// initTabMenuView();
 		return view;
 	}
 
@@ -224,7 +244,6 @@ public class SettingFragment extends Fragment {
 
 			} else {
 				listItemView.showImage.setBackgroundResource((Integer) listItems.get(position).get("showImage"));
-				Log.e("test", (String) listItems.get(position).get("title"));
 				listItemView.title.setText((String) listItems.get(position).get("title"));
 				listItemView.touchImage.setBackgroundResource((Integer) listItems.get(position).get("touchImage"));
 
@@ -234,7 +253,7 @@ public class SettingFragment extends Fragment {
 		}
 	}
 
-	private void initTabMenuView() {
+	/*private void initTabMenuView() {
 		FragmentManager mfragmentManager = this.getFragmentManager();// getSupportFragmentManager();
 		FragmentTransaction fragmentTransaction = mfragmentManager.beginTransaction();
 		TabMenuFragment fragment1 = new TabMenuFragment();
@@ -242,20 +261,7 @@ public class SettingFragment extends Fragment {
 		fragmentTransaction.addToBackStack(null);
 		fragmentTransaction.commit();
 
-	}
-
-	/*
-	 * @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
-	 * 
-	 * // TODO Auto-generated method stub if(keyCode == KeyEvent.KEYCODE_BACK){
-	 * if(getFragmentManager().getBackStackEntryCount() > 0){
-	 * getFragmentManager().popBackStackImmediate(); Log.e(LOG_TAG,
-	 * "Fragment 个数不为0"); return false; } else{ return super.onKeyDown(keyCode,
-	 * event); }
-	 * 
-	 * } else{ return super.onKeyDown(keyCode, event); }
-	 * 
-	 * }
-	 */
-
+	}*/
+	
 }
+

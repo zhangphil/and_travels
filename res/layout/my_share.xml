@@ -1,0 +1,54 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:background="#f4f2f2"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/myShare"
+        android:layout_width="match_parent"
+        android:layout_height="70dip"
+        android:background="#007cc8"
+        android:orientation="horizontal" >
+        
+        <ImageView   
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_alignParentLeft="true"
+            android:maxWidth="20dip"
+            android:maxHeight="20dip"
+            android:adjustViewBounds="true"
+            android:layout_marginLeft="10dip"
+            android:src="@drawable/back"/>
+        
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_centerVertical="true"
+            android:layout_centerInParent="true"
+            android:textColor="#ffffff"
+            android:textSize="15sp"/>
+        
+    </RelativeLayout>
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" 
+        android:layout_below="@+id/myShare">
+        
+        <ListView
+	        android:id="@+id/myShareList"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:divider="#f4f2f2"
+	        android:dividerHeight="10px"/>
+        
+    </RelativeLayout>
+    
+
+</RelativeLayout>

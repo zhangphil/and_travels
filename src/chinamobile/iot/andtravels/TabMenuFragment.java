@@ -34,7 +34,8 @@ public class TabMenuFragment extends Fragment {
 		View view = inflater.inflate(R.layout.tab_menu_fragment, container, false);
 		viewTabMenuGroup = (RadioGroup) view.findViewById(R.id.tab_menu);
 		viewTabMenuGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-        int pos = 0;
+			int pos = 0;
+			Intent intent; 
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				// TODO Auto-generated method stub
@@ -42,10 +43,10 @@ public class TabMenuFragment extends Fragment {
 				case R.id.daoLan:
 					// 此处先检查客户端是否注册,先暂时不处理
 					if (mIsLogin) {
-						Intent daoLanIntent = new Intent();
-						daoLanIntent.setAction("chinamobile.iot.andtravels.communication.BeaconService");
-						daoLanIntent.setPackage(getActivity().getPackageName());
-						getActivity().startService(daoLanIntent);
+						pos = 0;
+						intent = new Intent(getActivity(), ContainerActivity.class);
+						intent.putExtra("curViewPos", pos);
+						getActivity().startActivity(intent);
 					} else {
 						new AlertDialog.Builder(getActivity()).setTitle("")
 
@@ -71,24 +72,30 @@ public class TabMenuFragment extends Fragment {
 					break;
 				case R.id.youJi:
 					pos = 1;
+					intent = new Intent(getActivity(), ContainerActivity.class);
+					intent.putExtra("curViewPos", pos);
+					getActivity().startActivity(intent);
+
 					break;
 				case R.id.set:
-					pos = 1;
-					Intent setIntent = new Intent(getActivity(), ContainerActivity.class);
-					setIntent.putExtra("curViewPos", pos);
-					getActivity().startActivity(setIntent);
+					pos = 2;
+					intent = new Intent(getActivity(), ContainerActivity.class);
+					intent.putExtra("curViewPos", pos);
+					getActivity().startActivity(intent);
 
 					break;
 				case R.id.person:
-					pos = 2;
-					Intent personIntent = new Intent(getActivity(), ContainerActivity.class);
-					personIntent.putExtra("curViewPos", pos);
-					getActivity().startActivity(personIntent);
+					pos = 3;
+					intent = new Intent(getActivity(), ContainerActivity.class);
+					intent.putExtra("curViewPos", pos);
+					getActivity().startActivity(intent);
+
 					break;
 				default:
 					break;
 				}
-
+				
+				
 			}
 
 		});

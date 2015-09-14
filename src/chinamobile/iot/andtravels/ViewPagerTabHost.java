@@ -19,6 +19,7 @@ public class ViewPagerTabHost extends Fragment {
 	private ViewPager mViewPager;
 	private LinearLayout mLinearLayout;
 	protected int mCurViewPos = 0;
+	private View mView;
 
 	public ViewPagerTabHost(int pos){
 		mCurViewPos = pos;
@@ -45,42 +46,53 @@ public class ViewPagerTabHost extends Fragment {
 		mPagerAdapter.notifyDataSetChanged();
 	}
 
+	@Override
+	public void onDestroyView() {
+		((ViewGroup)mView.getParent()).removeView(mView);
+		super.onDestroyView();
+	}
+
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View mView = inflater.inflate(R.layout.viewpager_tabhost, null);
+		if(mView == null){
+			mView = inflater.inflate(R.layout.viewpager_tabhost, null);
 
-		mViewPager = (ViewPager) mView.findViewById(R.id.viewpager);
+			mViewPager = (ViewPager) mView.findViewById(R.id.viewpager);
 
-		mLinearLayout = (LinearLayout) mView.findViewById(R.id.indicator_LinearLayout);
-		addIndicators();
-		// 初始化，第一项被选中
-		setIndicatorViewSelected(mCurViewPos);
-		Log.e(TAG_LOG, "当前显示page is" + mCurViewPos);
+			mLinearLayout = (LinearLayout) mView.findViewById(R.id.indicator_LinearLayout);
+			addIndicators();
+			// 初始化，第一项被选中
+			setIndicatorViewSelected(mCurViewPos);
+			
+			Log.e(TAG_LOG, "当前显示page is" + mCurViewPos);
 
-		mPagerAdapter = new MyFragmentPagerAdapter(getFragmentManager());
-		mViewPager.setAdapter(mPagerAdapter);
-		mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+			mPagerAdapter = new MyFragmentPagerAdapter(getFragmentManager());
+			mViewPager.setAdapter(mPagerAdapter);
+			mViewPager.setCurrentItem(mCurViewPos);
+			mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
-			@Override
-			public void onPageSelected(int pos) {
-				setIndicatorViewSelected(pos);
-			}
+				@Override
+				public void onPageSelected(int pos) {
+					setIndicatorViewSelected(pos);
+				}
 
-			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				@Override
+				public void onPageScrolled(int arg0, float arg1, int arg2) {
 
-			}
+				}
 
-			@Override
-			public void onPageScrollStateChanged(int arg0) {
+				@Override
+				public void onPageScrollStateChanged(int arg0) {
 
-			}
-		});
-
+				}
+			});
+		}
+		
 		return mView;
 	}
 
+	
 	private void addIndicators() {
 		// 添加Tab选项卡
 		for (int i = 0; i < getItemsCount(); i++) {

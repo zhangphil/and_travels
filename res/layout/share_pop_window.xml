@@ -1,0 +1,108 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/popupWindowScrollView"
+    android:layout_width="match_parent"
+    android:layout_height="150dip"
+    android:background="#ffffff"
+    android:orientation="vertical" >
+
+   <RelativeLayout
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal">
+        
+     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dip"
+        android:text="分享给您的朋友吧！"
+        android:textSize="12sp" />
+    
+     <ImageView
+            android:id="@+id/quit"
+            android:layout_width="10dip"
+            android:layout_height="10dip" 
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"/>
+     
+   </RelativeLayout>
+   
+   <View
+      android:id="@+id/divide"
+	  android:layout_width="fill_parent"
+	  android:layout_height="1dip"
+	  android:layout_marginLeft="5dip"
+	  android:layout_marginRight="5dip"
+	  android:layout_below="@+id/title"
+	  android:orientation="horizontal"
+	  android:layout_marginTop="10dip"
+	  android:background="#f4f2f2"/>
+
+   <RelativeLayout
+       android:id="@+id/shareImage"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_alignParentLeft="true"
+       android:layout_below="@+id/divide"
+       android:layout_marginTop="26dp"
+       android:background="#ffffff"
+       android:orientation="horizontal" >
+
+       <RadioGroup
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal" >
+		       <RadioButton
+		           android:id="@+id/share1"
+		           android:layout_width="0dp"
+            	   android:layout_height="wrap_content"
+                   android:layout_gravity="center"
+                   android:layout_weight="1"
+                   android:button="@null"
+                   android:checked="false"
+                   android:drawableTop="@drawable/weixin11"
+                   android:gravity="center_horizontal|bottom"
+                   android:paddingTop="1dp" />
+		
+		       <RadioButton
+		           android:id="@+id/share2"
+		           android:layout_width="0dp"
+            	   android:layout_height="wrap_content"
+                   android:layout_gravity="center"
+                   android:layout_weight="1"
+                   android:button="@null"
+                   android:checked="false"
+                   android:drawableTop="@drawable/pengyouquan1"
+                   android:gravity="center_horizontal|bottom"
+                   android:paddingTop="1dp" />
+		
+		       <RadioButton
+		           android:id="@+id/share3"
+		           android:layout_width="0dp"
+            	   android:layout_height="wrap_content"
+                   android:layout_gravity="center"
+                   android:layout_weight="1"
+                   android:button="@null"
+                   android:checked="false"
+                   android:drawableTop="@drawable/qq"
+                   android:gravity="center_horizontal|bottom"
+                   android:paddingTop="1dp" />
+		
+		       <RadioButton
+		           android:id="@+id/share4"
+		           android:layout_width="0dp"
+            	   android:layout_height="wrap_content"
+                   android:layout_gravity="center"
+                   android:layout_weight="1"
+                   android:button="@null"
+                   android:checked="false"
+                   android:drawableTop="@drawable/xinlangweibo"
+                   android:gravity="center_horizontal|bottom"
+                   android:paddingTop="1dp" />
+       </RadioGroup>
+   </RelativeLayout>
+   
+</RelativeLayout>

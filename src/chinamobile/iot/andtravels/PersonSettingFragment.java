@@ -1,25 +1,37 @@
 package chinamobile.iot.andtravels;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -28,10 +40,13 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import chinamobile.iot.andtravels.SettingFragment.ListViewAdapter;
 import chinamobile.iot.andtravels.SettingFragment.ListViewAdapter.ListItemView;
+import zhangphil.iosdialog.widget.ActionSheetDialog;
+import zhangphil.iosdialog.widget.ActionSheetDialog.OnSheetItemClickListener;
+import zhangphil.iosdialog.widget.ActionSheetDialog.SheetItemColor;
 
 public class PersonSettingFragment extends Fragment {
 
-	private final String LOG_TAG = "PersonSettingActivity";
+	
 	private int listItemNum = 6;
 	private ListViewAdapter listViewAdapter;
 	private List<Map<String, Object>> mListItems;
@@ -40,6 +55,13 @@ public class PersonSettingFragment extends Fragment {
 	private String[] titleNames = { "头像", "个人资料", "昵称", "手机", "账号完全", "修改密码" };
 
 	private Activity mActivity;
+	private View mView;
+	private AlertDialog dialog;
+	private Uri fileUri;
+	private int requestImageFromAlbum = 1;
+	private int requestImageFromCamera = 2;
+	private final static String LOG_TAG = "PersonSettingActivity";
+
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -50,10 +72,9 @@ public class PersonSettingFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// setContentView(R.layout.personsetting);
-		View view = inflater.inflate(R.layout.personsetting, null);
+		mView = inflater.inflate(R.layout.personsetting, null);
 
-		ListView listView = (ListView) view.findViewById(R.id.PersonSetting);
+		ListView listView = (ListView) mView.findViewById(R.id.PersonSetting);
 
 		mListItems = getListItems();
 		listViewAdapter = new ListViewAdapter(mActivity, mListItems); // 创建适配器
@@ -63,30 +84,47 @@ public class PersonSettingFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// TODO Auto-generated method stub
+				Intent intent;
 				if (position == 0) {
 					// 修改头像
-					// Intent intent=new Intent(mActivity,
-					// PersonSettingActivity.class);
-					// mActivity.startActivity(intent);
+					new ActionSheetDialog(mActivity)  
+					                   .builder() 
+					                   .setCancelable(true)  
+					                   .setCanceledOnTouchOutside(true)  
+					                   .addSheetItem("相册", SheetItemColor.Red,
+					                		   new OnSheetItemClickListener() {  
+					                               @Override  
+					                               public void onClick(int which) {  
+					                            	   getImageFromAlbum();
+					                               }  
+					                            })
+					                   .addSheetItem("照相", SheetItemColor.Red,
+					                		   new OnSheetItemClickListener() {  
+					                               @Override  
+					                               public void onClick(int which) {  
+					                            	   getImageFromCamera();
+					                               }  
+					                            }).show();
 
 				} else if (position == 1) {
 					//
 
 				} else if (position == 2) {
 					// 修改昵称
-					Intent intent = new Intent(mActivity, ChangeNameActivity.class);
+					intent = new Intent(mActivity, ChangeNameActivity.class);
 					mActivity.startActivity(intent);
 
 				} else if (position == 3) {
 					// 修改手机号
-					// Intent intent=new Intent(mActivity,
-					// ChangePhoneNumActivity.class);
-					// mActivity.startActivity(intent);
+					intent = new Intent(mActivity,ChangePhoneNumActivity.class);
+					mActivity.startActivity(intent);
 
 				} else if (position == 4) {
 
 				} else if (position == 5) {
-
+					intent = new Intent(mActivity,SubmitChangePhoneNumActivity.class);
+					mActivity.startActivity(intent);
+					
 				} else {
 
 				}
@@ -95,12 +133,108 @@ public class PersonSettingFragment extends Fragment {
 		});
 
 		// initTabMenuView();
-		return view;
+		return mView;
 	}
 
-	/**
-	 * 初始化商品信息
-	 */
+	private void getImageFromAlbum(){
+		Intent intent = new Intent();  
+        intent.setType("image/*");  
+        intent.setAction(Intent.ACTION_GET_CONTENT);  
+        startActivityForResult(intent, requestImageFromAlbum);
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) { 
+		if( requestCode == requestImageFromAlbum){
+			if (resultCode == Activity.RESULT_OK) {  
+	            Uri uri = data.getData();  
+	            Log.e("LOG_TAG", "获取到图片uri：" + uri.toString());  
+	            ContentResolver cr = mActivity.getContentResolver();  
+	            try {  
+	                Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));  
+	                CircleImageView imageView = (CircleImageView) mView.findViewById(R.id.manImage);  
+	                /* 将Bitmap设定到ImageView */ 
+	                imageView.setBackgroundResource(0);
+	                imageView.setImageBitmap(bitmap); 
+	            } catch (FileNotFoundException e) {  
+	                Log.e("Exception", e.getMessage(),e);  
+	            }  
+	        }  
+		}else if( requestCode == requestImageFromCamera){
+			if (resultCode == Activity.RESULT_OK) {  
+				
+				try{
+					if(data!=null){
+						Bitmap bitmap = data.getParcelableExtra("data");
+						CircleImageView imageView = (CircleImageView) mView.findViewById(R.id.manImage);  
+		                /* 将Bitmap设定到ImageView */ 
+		                imageView.setBackgroundResource(0);
+		                imageView.setImageBitmap(bitmap);
+					}else{
+						ContentResolver cr = mActivity.getContentResolver();  
+			            try {  
+			                Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(fileUri));  
+			                CircleImageView imageView = (CircleImageView) mView.findViewById(R.id.manImage);  
+			                /* 将Bitmap设定到ImageView */ 
+			                imageView.setBackgroundResource(0);
+			                imageView.setImageBitmap(bitmap); 
+			            } catch (FileNotFoundException e) {  
+			                Log.e("Exception", e.getMessage(),e);  
+			            }  
+					}
+				}catch(Exception e){
+					Log.e("Exception", e.getMessage(),e);
+				}
+				
+	        }  
+		}else{
+			
+		}
+        
+        super.onActivityResult(requestCode, resultCode, data);  
+    }  
+	
+	private void getImageFromCamera(){
+		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        fileUri = Uri.fromFile(getOutputMediaFile());
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+        startActivityForResult(intent, requestImageFromCamera);
+	}
+	
+	private static File getOutputMediaFile()
+    {
+        File mediaStorageDir = null;
+        try
+        {
+            mediaStorageDir = new File( Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                    "AndTravels");
+
+            Log.d(LOG_TAG, "Successfully created mediaStorageDir: " + mediaStorageDir);
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            Log.d(LOG_TAG, "Error in Creating mediaStorageDir: " + mediaStorageDir);
+        }
+
+        if (!mediaStorageDir.exists())
+        {
+            if (!mediaStorageDir.mkdirs())
+            {
+                Log.d(LOG_TAG,
+                        "failed to create directory, check if you have the WRITE_EXTERNAL_STORAGE permission");
+                return null;
+            }
+        }
+
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File mediaFile;
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator
+                + "IMG_" + timeStamp + ".jpg");
+        
+        return mediaFile;
+    }
 	private List<Map<String, Object>> getListItems() {
 		List<Map<String, Object>> listItems = new ArrayList<Map<String, Object>>();
 
@@ -124,7 +258,7 @@ public class PersonSettingFragment extends Fragment {
 		private LayoutInflater listContainer; // 视图容器
 
 		public final class ListItemView { // 自定义控件集合
-			public ImageView manImage;
+			public CircleImageView manImage;
 			public TextView title;
 			public ImageView touchImage;
 		}
@@ -192,7 +326,7 @@ public class PersonSettingFragment extends Fragment {
 
 					// 获取控件对象
 					listItemView.title = (TextView) convertView.findViewById(R.id.title);
-					listItemView.manImage = (ImageView) convertView.findViewById(R.id.manImage);
+					listItemView.manImage = (CircleImageView) convertView.findViewById(R.id.manImage);
 					listItemView.touchImage = (ImageView) convertView.findViewById(R.id.touchImage);
 					// 设置控件集到convertView
 					convertView.setTag(listItemView);
@@ -244,17 +378,5 @@ public class PersonSettingFragment extends Fragment {
 			return convertView;
 		}
 	}
-
-	// private void initTabMenuView()
-	// {
-	// FragmentManager mfragmentManager = getFragmentManager();
-	// FragmentTransaction fragmentTransaction =
-	// mfragmentManager.beginTransaction();
-	// TabMenuFragment fragment1 = new TabMenuFragment();
-	// fragmentTransaction.replace(R.id.tab_menu_frame, fragment1);
-	// fragmentTransaction.addToBackStack(null);
-	// fragmentTransaction.commit();
-	//
-	// }
 
 }
