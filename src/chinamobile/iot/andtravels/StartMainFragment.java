@@ -38,10 +38,8 @@ public class StartMainFragment extends Fragment implements OnPageChangeListener{
 	private ImageAdapter mImageAdapter;
 	private Handler handler;
 	private final int MESSAGE_WHAT_CHANGED = 100;
-
 	private  CircleIndicatorView mCircleIndicatorView;
 	private final int mViewPageNum = 4;
-
 
 	private boolean mIsLogin = false;
 
@@ -52,25 +50,7 @@ public class StartMainFragment extends Fragment implements OnPageChangeListener{
 		View view = inflater.inflate(R.layout.start_main, null);
 		
 		viewPager = (ViewPager) view.findViewById(R.id.viewpager);
-
-		final CircleIndicatorView circleIndicatorView =  (CircleIndicatorView) view.findViewById(R.id.circleIndicatorView);
-		handler = new Handler() {
-			public void handleMessage(Message msg) {
-				super.handleMessage(msg);
-				switch (msg.what) {
-				case MESSAGE_WHAT_CHANGED:
-					circleIndicatorView.setCircleCount(mImageAdapter.getCount());
-					circleIndicatorView.setCircleSelectedPosition(viewPager.getCurrentItem());
-					circleIndicatorView.setCircleSelectedColor(Color.RED);
-					circleIndicatorView.drawCircleView();
-					
-
-					break;
-				}
-			};
-		};
 		
-
 		ImageView view1 = (ImageView) inflater.inflate(R.layout.viewpage_item, null).findViewById(R.id.imageViewPage);
 		ImageView view2 = (ImageView) inflater.inflate(R.layout.viewpage_item02, null)
 				.findViewById(R.id.imageViewPage02);
@@ -93,12 +73,10 @@ public class StartMainFragment extends Fragment implements OnPageChangeListener{
 		mImageAdapter = new ImageAdapter(views);
 		viewPager.setAdapter(mImageAdapter);
 		viewPager.setOnPageChangeListener(this);
-
 		viewPager.setCurrentItem(Integer.MAX_VALUE / 2);
 	
 		initDaoLanView(view);
 		
-
 	    mCircleIndicatorView =  (CircleIndicatorView) view.findViewById(R.id.circleIndicatorView);
 
 		return view;
@@ -137,7 +115,7 @@ public class StartMainFragment extends Fragment implements OnPageChangeListener{
 				position = viewlist.size() + position;
 			}
 			ImageView view = viewlist.get(position);
-
+			
 			mCircleIndicatorView.setCircleCount(mViewPageNum);
 			mCircleIndicatorView.setCircleSelectedPosition(position);
 			mCircleIndicatorView.drawCircleView();
@@ -202,7 +180,8 @@ public class StartMainFragment extends Fragment implements OnPageChangeListener{
 
 	@Override
 	public void onPageSelected(int arg0) {
-	
+		// TODO Auto-generated method stub
+		
 	}
 
 

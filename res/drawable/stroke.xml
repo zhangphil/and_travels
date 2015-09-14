@@ -15,7 +15,7 @@
     <!-- 描边 -->
     <stroke
         android:width="2dp"
-        android:color="#007CC8" 
+        android:color="#4fc3f7" 
         />   
              
     <!-- 圆角 -->

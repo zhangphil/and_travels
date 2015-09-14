@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class SubmitChangePhoneNumActivity extends Activity {
@@ -24,16 +25,16 @@ public class SubmitChangePhoneNumActivity extends Activity {
 	private String strName;
 	private EditText editTextLogin;
 	private EditText editTextChangeNum;
-	private Button submitButton;
+	private TextView submitButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.submit_password);
 
-		// editTextLogin = (EditText)findViewById(R.id.newPassword);
-		// editTextChangeNum = (EditText)findViewById(R.id.secondNewPassword);
-		submitButton = (Button) findViewById(R.id.submit);
+		editTextLogin = (EditText)findViewById(R.id.editNum);
+		editTextChangeNum = (EditText)findViewById(R.id.editRepeatNum);
+		submitButton = (TextView) findViewById(R.id.submit);
 
 		submitButton.setOnClickListener(new OnClickListener() {
 
