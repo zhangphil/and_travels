@@ -13,12 +13,13 @@
        android:textSize="12sp"
        />
        
-    <ImageView
+    <chinamobile.iot.andtravels.CircleImageView
        android:id="@+id/manImage"
        android:layout_width="45dip"
        android:layout_height="45dip"
        android:layout_alignParentRight="true"
        android:layout_centerVertical="true"
+       android:scaleType="centerCrop"
        android:layout_marginRight="35dip" />
     
       <ImageView

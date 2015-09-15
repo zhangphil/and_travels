@@ -25,7 +25,7 @@
             android:checked="false"
             android:drawableTop="@drawable/tab_daolan"
             android:gravity="center_horizontal|bottom"
-            android:paddingTop="2dp"
+            android:paddingTop="1dp"
             android:textSize="12sp"
             android:text="旅游导览"/>
         
@@ -39,7 +39,7 @@
             android:checked="false"
             android:drawableTop="@drawable/tab_youji"
             android:gravity="center_horizontal|bottom"
-            android:paddingTop="2dp"
+            android:paddingTop="1dp"
             android:textSize="12sp"
             android:text="游记"/>
         
@@ -53,7 +53,7 @@
             android:checked="false"
             android:drawableTop="@drawable/tab_set"
             android:gravity="center_horizontal|bottom"
-            android:paddingTop="2dp"
+            android:paddingTop="1dp"
             android:textSize="12sp"
             android:text="设置" />
 	    
@@ -67,7 +67,7 @@
             android:checked="false"
             android:drawableTop="@drawable/tab_person"
             android:gravity="center_horizontal|bottom"
-            android:paddingTop="2dp"
+            android:paddingTop="1dp"
             android:textSize="12sp"
             android:text="我的"/>
         
