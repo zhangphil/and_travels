@@ -32,6 +32,7 @@
         android:orientation="horizontal" >
 
         <ImageView
+            android:padding="2dip"
             android:id="@+id/playerImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -41,8 +42,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:maxWidth="30dip"
-            android:maxHeight="30dip"
+            android:gravity="center"
+            android:maxWidth="20dip"
+            android:maxHeight="20dip"
             android:adjustViewBounds="true"
             android:src="@drawable/loc_gray" />
 
@@ -50,6 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:layout_gravity="center"
             android:text="武侯祠"
             android:textColor="@android:color/white" />
     </LinearLayout>

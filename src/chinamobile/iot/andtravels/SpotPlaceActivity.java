@@ -39,6 +39,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -49,8 +50,9 @@ import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import chinamobile.iot.andtravels.utils.Constants.WuHouCiGeoPoint;
 import chinamobile.iot.andtravels.utils.Utils;
 
@@ -131,6 +133,33 @@ public class SpotPlaceActivity extends FragmentActivity {
 		backImageView();
 
 		initMyBaiduMap();
+		
+		final	ImageView more=(ImageView) containerView.findViewById(R.id.more);
+		
+		final	Context context=this;
+		RelativeLayout share_RelativeLayout=(RelativeLayout)containerView.findViewById(R.id.share_RelativeLayout);
+		share_RelativeLayout.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				ShareDialog share=new ShareDialog(context);
+				share.requestWindowFeature(Window.FEATURE_NO_TITLE);
+				share.show(); 
+			}
+		});
+		
+		
+//		more.setOnClickListener(new View.OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				Toast.makeText(context, "test", Toast.LENGTH_SHORT).show();
+//				
+//				ShareDialog share=new ShareDialog(context);
+//				share.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//				share.show();  
+//			}
+//		});
 	}
 
 	private void backImageView() {
@@ -412,7 +441,7 @@ public class SpotPlaceActivity extends FragmentActivity {
 	}
 	
 	private void pop() {
-		int blank_w = 100, hight = 400;
+		int blank_w = 180, hight = 500;
 		DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 		int w = displayMetrics.widthPixels;
 
@@ -450,8 +479,10 @@ public class SpotPlaceActivity extends FragmentActivity {
 		});
 
 		PopupWindow popWindow = new PopupWindow(this);
-		// ColorDrawable dw = new ColorDrawable(-00000);
-		// popWindow.setBackgroundDrawable(dw);
+		
+		//popWindow.setBackgroundDrawable(this.getDrawable(R.drawable.round));
+		//ColorDrawable dw = new ColorDrawable(0x757575);
+		//popWindow.setBackgroundDrawable(dw);
 		popWindow.setFocusable(true);
 		popWindow.setTouchable(true);// PopupWindow可触摸
 		popWindow.setOutsideTouchable(true); // 设置非PopupWindow区域可触摸

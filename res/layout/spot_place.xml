@@ -163,6 +163,7 @@
     </FrameLayout>
 
     <RelativeLayout
+        android:id="@+id/share_RelativeLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
@@ -172,9 +173,9 @@
         android:alpha="0.8"
         android:background="@drawable/round"
         android:padding="5dip" >
-        
-         <ImageView
-            android:id="@+id/ImageView1"
+
+        <ImageView
+            android:id="@+id/imageView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -185,12 +186,12 @@
             android:src="@drawable/location" />
 
         <TextView
-            android:layout_toRightOf="@+id/ImageView1"
             android:id="@+id/placeName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/imageView1"
             android:text="宽窄巷子"
             android:textColor="#757575"
             android:textSize="13sp"
@@ -200,28 +201,29 @@
             android:id="@+id/textViewDistance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/more"
             android:layout_alignParentTop="true"
             android:layout_centerVertical="true"
-            android:textColor="#757575"
+            android:layout_toLeftOf="@+id/divider"
             android:text="12.4km"
+            android:textColor="#757575"
             android:textSize="9sp" />
-        
-        <View 
-            android:layout_marginLeft="2dip"
-            android:layout_toRightOf="@+id/textViewDistance"
-            android:layout_centerVertical="true"
+
+        <View
+            android:id="@+id/divider"
             android:layout_width="1dip"
             android:layout_height="35dip"
-            android:background="#616161"/>
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="2dip"
+            android:layout_toLeftOf="@+id/more"
+            android:background="#616161" />
 
-        <ImageView 
+        <ImageView
             android:id="@+id/more"
+            android:padding="2dip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:src="@drawable/ic_more_horiz_2x"/>
-        
+            android:src="@drawable/ic_more_horiz_2x" />
     </RelativeLayout>
 
 </FrameLayout>
