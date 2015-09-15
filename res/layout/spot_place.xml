@@ -48,22 +48,23 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:clickable="true" />
-            
+
             <LinearLayout
                 android:id="@+id/centerLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/and_travels_light_grey"
                 android:alpha="0.8"
+                android:background="@color/and_travels_light_grey"
                 android:gravity="right"
                 android:orientation="horizontal"
-                android:padding="3dip">
+                android:padding="3dip" >
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dip"
                     android:orientation="vertical" >
+
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -71,6 +72,7 @@
                         android:maxHeight="20dip"
                         android:maxWidth="20dip"
                         android:src="@drawable/collect" />
+
                     <TextView
                         android:id="@+id/textView_Collect"
                         android:layout_width="wrap_content"
@@ -85,6 +87,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dip"
                     android:orientation="vertical" >
+
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -92,6 +95,7 @@
                         android:maxHeight="20dip"
                         android:maxWidth="20dip"
                         android:src="@drawable/favorite" />
+
                     <TextView
                         android:id="@+id/textView_Favorite"
                         android:layout_width="wrap_content"
@@ -123,15 +127,10 @@
                         android:text="评论"
                         android:textSize="8sp" />
                 </LinearLayout>
-                
             </LinearLayout>
-            
-            
         </RelativeLayout>
-        
     </LinearLayout>
 
-    
     <FrameLayout
         android:id="@+id/daoyouFrameLayout"
         android:layout_width="wrap_content"
@@ -155,12 +154,74 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/daoyouImageView"
-                android:text="导游"
-                android:gravity="center"
                 android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:text="导游"
                 android:textSize="10sp" >
             </TextView>
         </RelativeLayout>
     </FrameLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="10dip"
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="10dip"
+        android:alpha="0.8"
+        android:background="@drawable/round"
+        android:padding="5dip" >
+        
+         <ImageView
+            android:id="@+id/ImageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:adjustViewBounds="true"
+            android:maxHeight="15dip"
+            android:maxWidth="15dip"
+            android:src="@drawable/location" />
+
+        <TextView
+            android:layout_toRightOf="@+id/ImageView1"
+            android:id="@+id/placeName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
+            android:text="宽窄巷子"
+            android:textColor="#757575"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/more"
+            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
+            android:textColor="#757575"
+            android:text="12.4km"
+            android:textSize="9sp" />
+        
+        <View 
+            android:layout_marginLeft="2dip"
+            android:layout_toRightOf="@+id/textViewDistance"
+            android:layout_centerVertical="true"
+            android:layout_width="1dip"
+            android:layout_height="35dip"
+            android:background="#616161"/>
+
+        <ImageView 
+            android:id="@+id/more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_more_horiz_2x"/>
+        
+    </RelativeLayout>
 
 </FrameLayout>
