@@ -124,11 +124,11 @@
 	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
 	<uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
     <uses-permission android:name="android.permission.CAMERA" /> 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     
     
     
-    
-    
+  
     <!-- 百度地图权限和相关配置 -->
     <permission android:name="android.permission.BAIDU_LOCATION_SERVICE" >
     </permission>

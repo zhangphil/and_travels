@@ -19,7 +19,7 @@
           android:layout_height="wrap_content"
           android:layout_toRightOf="@+id/personImage"
           android:layout_centerVertical="true"
-          android:layout_marginLeft="30dip"
+          android:layout_marginLeft="20dip"
           android:text="昵称"
           android:textSize="12sp"
           />

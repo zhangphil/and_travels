@@ -8,7 +8,7 @@
         android:id="@+id/myShare"
         android:layout_width="match_parent"
         android:layout_height="70dip"
-        android:background="#007cc8"
+        android:background="#4fc3f7"
         android:orientation="horizontal" >
         
         <ImageView   

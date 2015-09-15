@@ -150,7 +150,14 @@ public class BLEScanService extends Service implements Runnable {
 			// ((Beacon)list.get(index).get("beacon")).getProximityUUID();
 			strBeaconName = list.get(minIndex).getName();
 			Log.e(TAG, "找到的距离最短的beacon name: " + strBeaconName);
-			if (strBeaconName.contains("abeacon_FACA")) {
+			if (strBeaconName.contains("abeacon_FA9C")) {
+			strBeaconID += 1;
+			}else if (strBeaconName.contains("abeacon_FB10")) {
+				strBeaconID += 2;
+			}else {
+				strBeaconID += 3;
+			}
+			/*if (strBeaconName.contains("abeacon_FACA")) {
 				strBeaconID += 1;
 			}else if (strBeaconName.contains("abeacon_FB2A")) {
 				strBeaconID += 2;
@@ -172,7 +179,7 @@ public class BLEScanService extends Service implements Runnable {
 				strBeaconID += 10;
 			}else {
 				strBeaconID += 11;
-			}
+			}*/
 			Log.e(TAG, "找到最新的index:" + minIndex);
 		}
 
