@@ -59,6 +59,8 @@ public class MainActivity extends Activity {
 	
 	private void goToContainerActivity() {
 		Intent intent = new Intent(this, ContainerActivity.class);
+		int pos = 0;
+		intent.putExtra("curViewPos", pos);
 		startActivity(intent);
 	}
 }
