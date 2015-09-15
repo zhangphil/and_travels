@@ -41,7 +41,7 @@
         
          <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="65dip" 
+            android:layout_height="60dip" 
             android:layout_alignParentBottom="true"
             android:orientation="vertical" >
 	          <fragment
@@ -94,9 +94,9 @@
         
 	<FrameLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
-        android:layout_marginLeft="80dip"
-        android:layout_marginTop="300dip">
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="100dip"
+        android:layout_marginTop="350dip">
 		
 	    <RadioGroup
 	    android:id="@+id/kaiShiDaoLan"
@@ -106,16 +106,16 @@
 	    
 		    <RadioButton
 	            android:id="@+id/kaiShiDaoLanButtom"
-	            android:layout_width="213dip"
-	            android:layout_height="82dip"
-	            android:layout_gravity="bottom"
+	            android:layout_width="150dip"
+	            android:layout_height="50dip"
+	            android:layout_gravity="center"
 	            android:layout_weight="1"
 	            android:button="@null"
 	            android:checked="false"
 	            android:gravity="center_horizontal"
-	            android:paddingTop="20dp"
 	            android:text="开始导游"
-	            android:textSize="30sp"
+	            android:textSize="20sp"
+	            android:paddingTop="10dp"
 	            android:background="@drawable/corner"/>
 	    </RadioGroup>
 
@@ -149,11 +149,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_weight="1"
+            android:enabled="false"
             android:button="@null"
-            android:checked="false"
+            android:checked="true"
             android:drawableLeft="@drawable/tab_daolan"
             android:gravity="center_vertical"
             android:paddingTop="2dp"
+            android:textSize="12sp"
+            android:textColor="@android:color/black"
             android:text="成都"/>
         
         </RadioGroup>

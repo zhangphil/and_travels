@@ -44,7 +44,7 @@ public class TabMenuFragment extends Fragment {
 					// 此处先检查客户端是否注册,先暂时不处理
 					if (mIsLogin) {
 						pos = 0;
-						intent = new Intent(getActivity(), ContainerActivity.class);
+						intent = new Intent(getActivity(), MainActivity.class);
 						intent.putExtra("curViewPos", pos);
 						getActivity().startActivity(intent);
 					} else {
