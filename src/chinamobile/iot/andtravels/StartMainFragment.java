@@ -61,9 +61,9 @@ public class StartMainFragment extends Fragment implements OnPageChangeListener{
 				.findViewById(R.id.imageViewPage04);
 
 		view1.setImageResource(R.drawable.start_view01);
-		view2.setImageResource(R.drawable.start_view01);
-		view3.setImageResource(R.drawable.start_view01);
-		view4.setImageResource(R.drawable.start_view01);
+		view2.setImageResource(R.drawable.start_view02);
+		view3.setImageResource(R.drawable.start_view03);
+		view4.setImageResource(R.drawable.start_view04);
 
 		ArrayList<ImageView> views = new ArrayList<ImageView>();
 		views.add(view1);

@@ -167,7 +167,7 @@ public class BLEScanService extends Service implements Runnable {
 				strBeaconID += 4;
 			}else if (strBeaconName.contains("abeacon_FAFB")) {
 				strBeaconID += 5;
-			}else if (strBeaconName.contains("abeacon_FB10")) {
+			}else if (strBeaconName.contains("abeacon_FB10")) {	
 				strBeaconID += 6;
 			}else if (strBeaconName.contains("abeacon_FAE9")) {
 				strBeaconID += 7;
