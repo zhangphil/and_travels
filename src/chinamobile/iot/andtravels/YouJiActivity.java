@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.ViewSwitcher;
 
 
 public class YouJiActivity extends Activity{
@@ -21,6 +22,10 @@ public class YouJiActivity extends Activity{
 		LayoutInflater mLayoutInflater=LayoutInflater.from(this);
 		
 		View view=View.inflate(this, R.layout.youji_activity, null);
+		
+		ViewSwitcher viewSwitcher = (ViewSwitcher) view.findViewById(R.id.viewSwitcher); 
+		viewSwitcher.setVisibility(View.VISIBLE);
+		viewSwitcher.setDisplayedChild(0);
 		
 		ListView listView=(ListView) view.findViewById(android.R.id.list);
 		ArrayAdapter adapter=new MyArrayAdapter(this,-1);

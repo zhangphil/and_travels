@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 public class YouJiFragment extends ListFragment {
 
@@ -46,6 +47,12 @@ public class YouJiFragment extends ListFragment {
 		View v = inflater.inflate(R.layout.youji_fragment, null);
 		TextView tv = (TextView) v.findViewById(R.id.title_text);
 		tv.setText("游记");
+		
+		ViewSwitcher viewSwitcher = (ViewSwitcher) v.findViewById(R.id.viewSwitcher); 
+		viewSwitcher.setVisibility(View.VISIBLE);
+		
+		viewSwitcher.setDisplayedChild(0);
+		
 		return v;
 	}
 
