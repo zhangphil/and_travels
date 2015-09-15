@@ -70,9 +70,7 @@ public class StartActivity extends FragmentActivity {
 
 		setContentView(R.layout.start_main_fragment);
 		
-
 		newFragment = new StartMainFragment();
-
 
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.fragment, newFragment);

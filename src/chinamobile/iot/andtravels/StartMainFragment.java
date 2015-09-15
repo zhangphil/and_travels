@@ -2,7 +2,8 @@ package chinamobile.iot.andtravels;
 
 import java.util.ArrayList;
 
-
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -145,13 +146,32 @@ public class StartMainFragment extends Fragment implements OnPageChangeListener{
 					Log.i("DaoLanView", "On Click");
 
 					if (!mIsLogin) {
-						Intent daoLanIntent = new Intent();
-						daoLanIntent.setAction("chinamobile.iot.andtravels.communication.BeaconService");
-						daoLanIntent.setPackage(getActivity().getPackageName());
-						getActivity().startService(daoLanIntent);
+						new AlertDialog.Builder(getActivity()).setTitle("")
+
+						.setMessage("您还没有加入我们的圈子！").setNegativeButton("返回", new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+
+								// TODO Auto-generated method stub
+
+							}
+
+						}).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+
+								// TODO Auto-generated method stub
+								Intent intent = new Intent(getActivity(), LoginActivity.class);
+								getActivity().startActivity(intent);
+							}
+
+						}).show();
 					} else {
 						//提示用户需要付费才能使用
-						
+						int pos = 0;
+						Intent intent = new Intent(getActivity(), ContainerActivity.class);
+						intent.putExtra("curViewPos", pos);
+						getActivity().startActivity(intent);
 
 					}
 					break;
@@ -183,19 +203,5 @@ public class StartMainFragment extends Fragment implements OnPageChangeListener{
 		// TODO Auto-generated method stub
 		
 	}
-
-
-
-	/*
-	 * //@Override public boolean onKeyDown(int keyCode, KeyEvent event) { //
-	 * TODO Auto-generated method stub if(keyCode == KeyEvent.KEYCODE_BACK){
-	 * ToQuitTheApp(); return false; } else{ return super.onKeyDown(keyCode,
-	 * event); }
-	 * 
-	 * 
-	 * }
-	 */
-
-	
 
 }
