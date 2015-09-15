@@ -51,7 +51,7 @@ public class StartMainFragment extends Fragment implements OnPageChangeListener{
 		View view = inflater.inflate(R.layout.start_main, null);
 		
 		viewPager = (ViewPager) view.findViewById(R.id.viewpager);
-		
+		ImageView personView = (ImageView)view.findViewById(R.id.personImage);
 		ImageView view1 = (ImageView) inflater.inflate(R.layout.viewpage_item, null).findViewById(R.id.imageViewPage);
 		ImageView view2 = (ImageView) inflater.inflate(R.layout.viewpage_item02, null)
 				.findViewById(R.id.imageViewPage02);
@@ -79,6 +79,20 @@ public class StartMainFragment extends Fragment implements OnPageChangeListener{
 		initDaoLanView(view);
 		
 	    mCircleIndicatorView =  (CircleIndicatorView) view.findViewById(R.id.circleIndicatorView);
+	    
+	    personView.setOnClickListener(new View.OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				//进入我的界面去
+				int pos = 3;
+				Intent intent = new Intent(getActivity(), ContainerActivity.class);
+				intent.putExtra("curViewPos", pos);
+				getActivity().startActivity(intent);
+			}
+	    	
+	    });
 
 		return view;
 	}

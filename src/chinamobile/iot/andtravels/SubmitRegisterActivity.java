@@ -37,16 +37,16 @@ public class SubmitRegisterActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.submit_password);
+		setContentView(R.layout.submit_register);
 
 		firstEditText = (EditText) findViewById(R.id.password);
-		secondEditText = (EditText) findViewById(R.id.secondPassword);
+		secondEditText = (EditText) findViewById(R.id.identifyCode);
 
 		Intent intent = getIntent();
 		Bundle bundle = intent.getBundleExtra("bundle");
 		strPhoneNum = bundle.getString("PhoneNum");
 
-		regButton = (TextView) findViewById(R.id.login);
+		regButton = (TextView) findViewById(R.id.register);
 
 		backView = (ImageView) findViewById(R.id.back);
 
@@ -58,7 +58,10 @@ public class SubmitRegisterActivity extends Activity {
 
 				// TODO Auto-generated method stub
 				// 发送客户信息到服务器
+				String strPassword = firstEditText.toString();
+				String strIdentifyCode = secondEditText.toString();
 				// Register();
+				int pos = 0;
 				Intent intent = new Intent(mActivity, MainActivity.class);
 				startActivity(intent);
 

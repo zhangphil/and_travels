@@ -45,7 +45,7 @@ public class TabMenuFragment extends Fragment {
 					if (mIsLogin) {
 						pos = 0;
 						intent = new Intent(getActivity(), MainActivity.class);
-						intent.putExtra("curViewPos", pos);
+						//intent.putExtra("curViewPos", pos);
 						getActivity().startActivity(intent);
 					} else {
 						new AlertDialog.Builder(getActivity()).setTitle("")
