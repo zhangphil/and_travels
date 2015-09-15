@@ -410,7 +410,7 @@ public class SpotPlaceActivity extends FragmentActivity {
 			return arg0 == arg1;
 		}
 	}
-
+	
 	private void pop() {
 		int blank_w = 100, hight = 400;
 		DisplayMetrics displayMetrics = getResources().getDisplayMetrics();

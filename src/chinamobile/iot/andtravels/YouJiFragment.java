@@ -143,33 +143,4 @@ public class YouJiFragment extends ListFragment {
 			return mItems.size();
 		}
 	}
-
-	// public class ImageAdapter extends ArrayAdapter {
-	//
-	// private LayoutInflater mLayoutInflater;
-	// private int[] images;
-	//
-	// public ImageAdapter(Context context, int resource, int[] images) {
-	// super(context, resource);
-	// mLayoutInflater = LayoutInflater.from(context);
-	// this.images = images;
-	// }
-	//
-	// @Override
-	// public View getView(int pos, View convertView, ViewGroup parent) {
-	// if (convertView == null)
-	// convertView = mLayoutInflater.inflate(R.layout.image_layout, null);
-	//
-	// ImageView image = (ImageView) convertView.findViewById(R.id.image);
-	// image.setImageResource(images[pos]);
-	//
-	// return convertView;
-	// }
-	//
-	// @Override
-	// public int getCount() {
-	// return images.length;
-	// }
-	// }
-
 }
