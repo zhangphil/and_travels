@@ -52,7 +52,6 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import chinamobile.iot.andtravels.utils.Constants.WuHouCiGeoPoint;
 import chinamobile.iot.andtravels.utils.Utils;
 
@@ -660,7 +659,7 @@ public class SpotPlaceActivity extends FragmentActivity {
 		GroundOverlayOptions goGround = new GroundOverlayOptions();
 		goGround.positionFromBounds(bounds);
 		goGround.image(bdGround);
-		goGround.transparency(0.8f);
+		//goGround.transparency(0.8f);
 
 		mBaiduMap.addOverlay(goGround);
 
