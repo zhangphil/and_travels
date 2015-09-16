@@ -54,7 +54,6 @@ public class SubmitRegisterActivity extends Activity {
 		Intent intent = getIntent();
 		Bundle bundle = intent.getBundleExtra("bundle");
 		mStrPhoneNum = bundle.getString("PhoneNum");
-		mStrIdentifyCode = bundle.getString("IdentifyCode");
 		
 		Log.e(LOG_TAG, "获取的手机号码：" + mStrPhoneNum + "验证码：" + mStrIdentifyCode);
 
@@ -70,19 +69,15 @@ public class SubmitRegisterActivity extends Activity {
 
 				// TODO Auto-generated method stub
 				// 发送客户信息到服务器
-				String strPassword = mFirstEditText.toString();
-				String strIdentifyCode = mSecondEditText.toString();
-				if(strPassword.contentEquals(strIdentifyCode)){
-					try {
-						submit(strPassword);
-					} catch (JSONException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}else{
-					Toast.makeText(mActivity, "两次输入的密码不相同，请重新输入", Toast.LENGTH_LONG).show();
+				String strPassword = mFirstEditText.getText().toString();
+				mStrIdentifyCode = mSecondEditText.getText().toString();
+				try {
+					submitRegisterInfo(strPassword);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-
+					
 			}
 
 		});

@@ -72,7 +72,7 @@ public class RegisterActivity extends Activity {
 
 						// TODO Auto-generated method stub
 						// 获取号码，切换到输入密码界面
-						strPhoneNum = editText.toString();
+						strPhoneNum = editText.getText().toString();
 						if( strPhoneNum.isEmpty() ){
 							Toast.makeText(mActivity, "请输入手机号码", Toast.LENGTH_LONG).show();
 						}else{
@@ -109,7 +109,7 @@ public class RegisterActivity extends Activity {
 	 * @throws JSONException 
 	 */
 	private void submitRegister(String strNum) throws JSONException{
-		
+		Log.e(LOG_TAG, "客户注册的手机号码：" + strNum);
 		String url = "http://172.16.0.138:8080/AndTravel/sms/requestforcode/";
 		url = url + strNum;
 	   	HttpGet httpGet = new HttpGet(url);
@@ -129,7 +129,6 @@ public class RegisterActivity extends Activity {
 		        	Intent intent = new Intent(mActivity, SubmitRegisterActivity.class);
 					Bundle bundle = new Bundle();
 					bundle.putString("PhoneNum", strPhoneNum);
-					bundle.putString("IdentifyCode", message);
 					intent.putExtra("bundle", bundle);
 					startActivity(intent);
 		        }

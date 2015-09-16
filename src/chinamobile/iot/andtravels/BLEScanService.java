@@ -54,6 +54,7 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.os.StrictMode;
 import android.util.Log;
+import android.widget.Toast;
 
 public class BLEScanService extends Service implements Runnable {
 
@@ -78,6 +79,8 @@ public class BLEScanService extends Service implements Runnable {
 
 	public static final String strACT = "chinamobile.iot.andtravels.BLEScanService.UserAction";
 	private UserActionReceiver recv;
+	//区分是否是demo版本
+	private boolean mTest = true;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -148,15 +151,21 @@ public class BLEScanService extends Service implements Runnable {
 		if (minIndex >= 0) {
 			// strBeaconID =
 			// ((Beacon)list.get(index).get("beacon")).getProximityUUID();
-			strBeaconName = list.get(minIndex).getName();
-			Log.e(TAG, "找到的距离最短的beacon name: " + strBeaconName);
-			if (strBeaconName.contains("abeacon_FA9C")) {
-			strBeaconID += 1;
-			}else if (strBeaconName.contains("abeacon_FB10")) {
-				strBeaconID += 2;
-			}else {
-				strBeaconID += 3;
+			if(mTest){
+				strBeaconName = list.get(minIndex).getName();
+				Log.e(TAG, "找到的距离最短的beacon name: " + strBeaconName);
+				if (strBeaconName.contains("abeacon_FA9C")) {
+				strBeaconID += 1;
+				}else if (strBeaconName.contains("abeacon_FB10")) {
+					strBeaconID += 2;
+				}else {
+					strBeaconID += 3;
+				}
+			}else{
+				strBeaconID = ((Beacon)list.get(index)).getProximityUUID();
 			}
+			
+			
 			/*if (strBeaconName.contains("abeacon_FACA")) {
 				strBeaconID += 1;
 			}else if (strBeaconName.contains("abeacon_FB2A")) {
@@ -180,6 +189,7 @@ public class BLEScanService extends Service implements Runnable {
 			}else {
 				strBeaconID += 11;
 			}*/
+			
 			Log.e(TAG, "找到最新的index:" + minIndex);
 		}
 
@@ -234,7 +244,17 @@ public class BLEScanService extends Service implements Runnable {
 					// 找到了就播放相应的音频文件
 					// GetUrl(mFoundUUID);
 					if (!mFoundUUID.equalsIgnoreCase("")) {
-						getUrlForTest(mFoundUUID);
+						if(mTest){
+							getUrlForTest(mFoundUUID);
+						}else{
+							try {
+								fetchPlayAudioUrl(mFoundUUID);
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+						
 					}
 
 				} else {
@@ -338,11 +358,53 @@ public class BLEScanService extends Service implements Runnable {
 
 	}
 
+	private void fetchPlayAudioUrl(String strBeaconId ) throws JSONException{
+		String url = "http://172.16.0.138:8080/AndTravel/spot/getcontent/bybeacon/";
+		url = url + strBeaconId;
+		
+	   	HttpGet httpGet = new HttpGet(url);
+	   	HttpResponse httpResponse;
+	   	try {
+			httpResponse = new DefaultHttpClient().execute(httpGet);
+			if (httpResponse.getStatusLine().getStatusCode() == 200)
+			{
+		        String result = EntityUtils.toString(httpResponse.getEntity());
+		        JSONObject jsonObject = new JSONObject(result.toString());
+		        
+		        int resultCode = jsonObject.getInt("code");
+		        if(resultCode == 1 ){
+		        	JSONObject message = jsonObject.getJSONObject("message");
+		        	JSONArray contentArray = message.getJSONArray("content");
+		        	if(contentArray.length() > 0){
+		        		JSONObject content = (JSONObject) contentArray.get(0);
+		        		String audioUrl = content.getString("contentUrl");
+		        		
+		        		Log.e(TAG, "从服务器获取到播放音频数据URL：" + audioUrl);
+		        		if(audioUrl.isEmpty()){
+		        			Log.e(TAG, "从服务器获取到播放音频数据URL为空");
+		        		}else{
+		        			playMedia(audioUrl);
+		        		}
+		        	}
+		        	
+		        }else{
+		        	Toast.makeText(this, "从服务器获取导览的语音数据失败", Toast.LENGTH_SHORT).show();
+		        }
+		        
+		    }else{
+		    	Log.e(TAG, "向服务器获取蓝牙Beacon对应的数据失败");
+		    }
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	public void playMedia(String url) {
-		// url
-		// ="http://play.baidu.com/?__m=mboxCtrl.playSong&__a=130238461&__o=song/130238461||playBtn&fr=-1||www.sowang.com#";
-
-		// Uri uri = Uri.parse(url);
+	
 		Log.e(TAG, "播放音频文件" + url);
 		try {
 			mediaPlayer = new MediaPlayer();
