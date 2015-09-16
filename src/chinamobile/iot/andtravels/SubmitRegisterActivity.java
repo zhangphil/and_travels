@@ -1,6 +1,14 @@
 package chinamobile.iot.andtravels;
 
+import java.io.IOException;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.android.volley.RequestQueue;
@@ -22,15 +30,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SubmitRegisterActivity extends Activity {
 
 	private final String LOG_TAG = "SubmitRegisterActivity";
-	private String strPhoneNum;
-	private EditText firstEditText;
-	private EditText secondEditText;
-	private TextView regButton;
-	private ImageView backView;
+	private String mStrPhoneNum, mStrIdentifyCode;
+	private EditText mFirstEditText;
+	private EditText mSecondEditText;
+	private TextView mRegButton;
+	private ImageView mBackView;
 
 	private final SubmitRegisterActivity mActivity = this;
 
@@ -39,18 +48,21 @@ public class SubmitRegisterActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.submit_register);
 
-		firstEditText = (EditText) findViewById(R.id.password);
-		secondEditText = (EditText) findViewById(R.id.identifyCode);
+		mFirstEditText = (EditText) findViewById(R.id.password);
+		mSecondEditText = (EditText) findViewById(R.id.identifyCode);
 
 		Intent intent = getIntent();
 		Bundle bundle = intent.getBundleExtra("bundle");
-		strPhoneNum = bundle.getString("PhoneNum");
+		mStrPhoneNum = bundle.getString("PhoneNum");
+		mStrIdentifyCode = bundle.getString("IdentifyCode");
+		
+		Log.e(LOG_TAG, "获取的手机号码：" + mStrPhoneNum + "验证码：" + mStrIdentifyCode);
 
-		regButton = (TextView) findViewById(R.id.register);
+		mRegButton = (TextView) findViewById(R.id.register);
 
-		backView = (ImageView) findViewById(R.id.back);
+		mBackView = (ImageView) findViewById(R.id.back);
 
-		regButton.setOnClickListener(new OnClickListener() {
+		mRegButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -58,18 +70,24 @@ public class SubmitRegisterActivity extends Activity {
 
 				// TODO Auto-generated method stub
 				// 发送客户信息到服务器
-				String strPassword = firstEditText.toString();
-				String strIdentifyCode = secondEditText.toString();
-				// Register();
-				int pos = 0;
-				Intent intent = new Intent(mActivity, MainActivity.class);
-				startActivity(intent);
+				String strPassword = mFirstEditText.toString();
+				String strIdentifyCode = mSecondEditText.toString();
+				if(strPassword.contentEquals(strIdentifyCode)){
+					try {
+						submit(strPassword);
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}else{
+					Toast.makeText(mActivity, "两次输入的密码不相同，请重新输入", Toast.LENGTH_LONG).show();
+				}
 
 			}
 
 		});
 
-		backView.setOnClickListener(new OnClickListener() {
+		mBackView.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -81,7 +99,7 @@ public class SubmitRegisterActivity extends Activity {
 
 	}
 
-	private void Register() {
+	private void register(String strPassword) {
 		String url = "http://172.16.0.11:8080/AndTravel/beacondatasearch/onekeyguide/";
 		RequestQueue mQueue = Volley.newRequestQueue(this);
 
@@ -113,5 +131,104 @@ public class SubmitRegisterActivity extends Activity {
 
 		mQueue.add(jsonObjectRequest);
 	}
-
+	
+	
+	private void submitRegisterInfo(String strPassword) throws JSONException{
+		
+		String url;// = "http://172.16.0.138:8080/AndTravel/uservalidation/checkidentity/";
+		boolean bTest = true;
+		if(bTest){
+			url = "http://172.16.0.138:8080/AndTravel/uservalidation/validate/usingplaintext/";
+			url = url + mStrPhoneNum + "/" + strPassword;
+		}else{
+			url = "http://172.16.0.138:8080/AndTravel/uservalidation/checkidentity/";
+			url = url + mStrPhoneNum + "/" + strPassword + "/" + mStrIdentifyCode;
+		}
+		
+	   	HttpGet httpGet = new HttpGet(url);
+	   	HttpResponse httpResponse;
+	   	try {
+			httpResponse = new DefaultHttpClient().execute(httpGet);
+			if (httpResponse.getStatusLine().getStatusCode() == 200)
+			{
+		        String result = EntityUtils.toString(httpResponse.getEntity());
+		        JSONObject jsonObject = new JSONObject(result.toString());
+		        
+		        int resultCode = jsonObject.getInt("code");
+		        String message = jsonObject.getString("message");
+		        if(resultCode == -1 ){
+		        	Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+		        }else if(resultCode == 1){
+		        	Intent intent = new Intent(mActivity, MainActivity.class);
+					startActivity(intent);
+		        }else{
+		        	Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+		        }
+		        
+		    }else{
+		    	Log.e(LOG_TAG, "向服务器注册用户信息失败");
+		    }
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private void registerForTest(String strPassword) {
+		//用户注册时，先核对验证码后，再存入用户名密码
+		//1 核对验证码
+		try {
+			if(checkSmsCode()){
+				submitRegisterInfo(strPassword);
+			}else{
+				/*短信验证码核对失败了，就暂时不提交用户注册信息到服务器*/
+				Toast.makeText(this, "短信验证码验证失败，请稍候重试", Toast.LENGTH_SHORT).show();
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private boolean checkSmsCode() throws JSONException{
+		boolean checkResult = false;
+		String url = "http://172.16.0.138:8080/AndTravel/sms/checksmscode/";
+		url = url + mStrPhoneNum + "/" + mStrIdentifyCode;
+	   	HttpGet httpGet = new HttpGet(url);
+	   	HttpResponse httpResponse;
+	   	try {
+			httpResponse = new DefaultHttpClient().execute(httpGet);
+			if (httpResponse.getStatusLine().getStatusCode() == 200)
+			{
+		        String result = EntityUtils.toString(httpResponse.getEntity());
+		        JSONObject jsonObject = new JSONObject(result.toString());
+		        
+		        int resultCode = jsonObject.getInt("code");
+		        String message = jsonObject.getString("message");
+		        if(resultCode == -1 ){
+		        	checkResult = false;
+		        }else{
+		        	checkResult = true;
+		        }
+		        
+		    }else{
+		    	Log.e(LOG_TAG, "向服务器注册用户信息失败");
+		    }
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			checkResult = false;
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			checkResult = false;
+		}
+		
+	   	return checkResult;
+	}
+	
 }

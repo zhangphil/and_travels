@@ -1,6 +1,14 @@
 package chinamobile.iot.andtravels;
 
+import java.io.IOException;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.android.volley.RequestQueue;
@@ -56,7 +64,12 @@ public class LoginActivity extends Activity {
 				if (strPhoneNum == null || strPassword == null) {
 					Toast.makeText(LoginActivity.this, "手机号码或密码为空，请输入！", Toast.LENGTH_SHORT).show();
 				} else {
-					Login();
+					try {
+						login(strPhoneNum,strPassword);
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 
 			}
@@ -113,6 +126,45 @@ public class LoginActivity extends Activity {
 		 *           mQueue.add(jsonObjectRequest);
 		 * 
 		 **/
+	}
+
+private void login(String strNum,String strPassword) throws JSONException{
+		
+		String url = "http://172.16.0.138:8080/AndTravel/uservalidation/checkidentity/";
+		url = url + strNum + "/" + strPassword;
+		
+		
+	   	HttpGet httpGet = new HttpGet(url);
+	   	HttpResponse httpResponse;
+	   	try {
+			httpResponse = new DefaultHttpClient().execute(httpGet);
+			if (httpResponse.getStatusLine().getStatusCode() == 200)
+			{
+		        String result = EntityUtils.toString(httpResponse.getEntity());
+		        JSONObject jsonObject = new JSONObject(result.toString());
+		        
+		        int resultCode = jsonObject.getInt("code");
+		        String message = jsonObject.getString("message");
+		        if(resultCode == -1 ){
+		        	Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+		        }else if(resultCode == 1){
+		        	Intent intent = new Intent(mActivity, MainActivity.class);
+					startActivity(intent);
+		        }else{
+		        	Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+		        }
+		        
+		    }else{
+		    	Log.e(LOG_TAG, "向服务器注册用户信息失败");
+		    }
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 	@Override
