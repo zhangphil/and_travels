@@ -15,10 +15,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class GeneralFragment extends Fragment {
 
@@ -69,6 +71,9 @@ public class GeneralFragment extends Fragment {
 
 			}
 		});
+		
+		
+		
 		return view;
 	}
 
@@ -173,8 +178,8 @@ public class GeneralFragment extends Fragment {
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					//Intent intent = new Intent(getActivity(), MainActivity.class);
-					//getActivity().startActivity(intent);
+					Intent intent = new Intent(mActivity, SpotPlaceActivity.class);
+					startActivity(intent);
 				}
 				
 			});

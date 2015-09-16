@@ -251,8 +251,8 @@ public class MyCommentFragment extends Fragment {
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
-						//Intent intent = new Intent(getActivity(), MainActivity.class);
-						//getActivity().startActivity(intent);
+						Intent intent = new Intent(mActivity, SpotPlaceActivity.class);
+						startActivity(intent);
 					}
 					
 				});
