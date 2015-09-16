@@ -154,9 +154,9 @@ public class BLEScanService extends Service implements Runnable {
 			if(mTest){
 				strBeaconName = list.get(minIndex).getName();
 				Log.e(TAG, "找到的距离最短的beacon name: " + strBeaconName);
-				if (strBeaconName.contains("abeacon_FA9C")) {
+				if (strBeaconName.contains("abeacon_FB3E")) {
 				strBeaconID += 1;
-				}else if (strBeaconName.contains("abeacon_FB10")) {
+				}else if (strBeaconName.contains("abeacon_FAE9")) {
 					strBeaconID += 2;
 				}else {
 					strBeaconID += 3;
@@ -408,16 +408,26 @@ public class BLEScanService extends Service implements Runnable {
 		Log.e(TAG, "播放音频文件" + url);
 		try {
 			mediaPlayer = new MediaPlayer();
-			File file = new File(url);
-			FileInputStream fis = new FileInputStream(file);
-			mediaPlayer.setDataSource(fis.getFD());
-			// mediaPlayer.setDataSource(url);
+			if(mTest){
+				try{
+					File file = new File(url);
+					FileInputStream fis = new FileInputStream(file);
+					mediaPlayer.setDataSource(fis.getFD());
+					fis.close();
+				}catch(Exception e){
+					Log.e(TAG,"打开音频文件异常：" + e);
+				}
+			}else{
+				mediaPlayer.setDataSource(url);
+			}
+			
 			mediaPlayer.prepare();
 			mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
 				@Override
 				public void onCompletion(MediaPlayer mp) {
 					// TODO Auto-generated method stub
 					// 音频播放完了就启动扫描
+					Log.e(TAG, "景区的音频文件播放完了！！！！");
 					mediaPlayer.release();
 					mediaPlayer = null;
 					startScanBle();

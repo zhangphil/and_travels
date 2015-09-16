@@ -188,7 +188,7 @@ public class GeneralFragment extends Fragment {
 		}
 	}
 
-	public void SetResource(){
+	public void fetchSource(){
 		
 	}
 }

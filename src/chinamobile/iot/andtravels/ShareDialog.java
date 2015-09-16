@@ -17,6 +17,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,16 +42,11 @@ public class ShareDialog extends Dialog {
 		mContext = context;
 	}
 	private Intent intent;
-	
-	private static Tencent mTencent;
-	private String mShareQQZoneAPPId = "1104785615";
-	
+
 	@Override
     protected void onCreate(Bundle savedInstanceState) { 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.share_pop_window);
-        
-        mTencent = Tencent.createInstance(mShareQQZoneAPPId, mContext);
         
         shareImage1 = (RadioButton)findViewById(R.id.share1);  
 		shareImage2 = (RadioButton)findViewById(R.id.share2); 
@@ -82,7 +78,8 @@ public class ShareDialog extends Dialog {
 		
 		shareImage3.setOnClickListener(new View.OnClickListener() {  
             public void onClick(View v) { 
-            	showShareAppToQQZone();
+            	//intent = new Intent(mContext,QQZoneShare.class);
+            	//mContext.startActivity(intent); 
             	dismiss();
                  
             }  
@@ -97,43 +94,13 @@ public class ShareDialog extends Dialog {
         }); 
         
     }
-	/**
-	 * 分享到QQ空间的回调函数
-	 * @author JoeyZhang
-	 *
-	 */
-	private class BaseUiListener implements IUiListener {
-
-		@Override
-		public void onCancel() {
-			// TODO Auto-generated method stub
-			Log.e(LOG_TAG, "QQ空间分享时，用户选择了取消！");
-		}
-
-		@Override
-		public void onComplete(Object arg0) {
-			// TODO Auto-generated method stub
-			Log.e(LOG_TAG, "QQ空间分享成功！！！");
-		}
-
-		@Override
-		public void onError(UiError arg0) {
-			// TODO Auto-generated method stub
-			Log.e(LOG_TAG, "QQ空间分享失败，原因：" + arg0 );
-		}
-		
-	}
 	
-	private void showShareAppToQQZone(){
-		
-		Log.e(LOG_TAG, "点击APP分享到QQ空间");
-		//分享类型
-		final Bundle params = new Bundle();
-		params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE,QzoneShare.SHARE_TO_QZONE_TYPE_IMAGE_TEXT);
-	    params.putString(QzoneShare.SHARE_TO_QQ_TITLE, "分享APP给你的朋友吧！！！");
-	    params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, "");
-	    params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, "http://baidu.com");
-	    mTencent.shareToQzone((Activity) mContext, params, new BaseUiListener());
-	}
+	@Override
+    public void dismiss() {
+        super.dismiss();
+    }
+	
+	
+	
 	
 }
