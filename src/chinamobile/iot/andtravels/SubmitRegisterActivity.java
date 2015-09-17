@@ -71,12 +71,11 @@ public class SubmitRegisterActivity extends Activity {
 				// 发送客户信息到服务器
 				String strPassword = mFirstEditText.getText().toString();
 				mStrIdentifyCode = mSecondEditText.getText().toString();
-				try {
-					submitRegisterInfo(strPassword);
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				if (strPassword == null || mStrIdentifyCode == null) {
+					Toast.makeText(mActivity, "密码或验证码为空，请输入！", Toast.LENGTH_SHORT).show();
+				} else{ 
+					register(strPassword);
+				} 
 					
 			}
 
@@ -95,7 +94,16 @@ public class SubmitRegisterActivity extends Activity {
 	}
 
 	private void register(String strPassword) {
-		String url = "http://172.16.0.11:8080/AndTravel/beacondatasearch/onekeyguide/";
+		String url;
+		boolean bTest = true;
+		if(bTest){
+			url = "http://172.16.0.138:8080/AndTravel/uservalidation/validate/usingplaintext/";
+			url = url + mStrPhoneNum + "/" + strPassword;
+		}else{
+			url = "http://172.16.0.138:8080/AndTravel/uservalidation/checkidentity/";
+			url = url + mStrPhoneNum + "/" + strPassword + "/" + mStrIdentifyCode;
+		}
+		
 		RequestQueue mQueue = Volley.newRequestQueue(this);
 
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
@@ -109,7 +117,9 @@ public class SubmitRegisterActivity extends Activity {
 						mActivity.startActivity(intent);
 
 					} else {
-						/* 没有获取到数据就不处理了 */
+						//登录失败后，提示用户
+						String message = response.getString("message");
+						Toast.makeText(mActivity, message, Toast.LENGTH_SHORT).show();
 					}
 				} catch (Exception e) {
 					Log.e(LOG_TAG, e.toString());
@@ -120,7 +130,7 @@ public class SubmitRegisterActivity extends Activity {
 			@Override
 			public void onErrorResponse(VolleyError error) {
 				// TODO Auto-generated method stub
-				Log.e(LOG_TAG, "注册客户信息失败");
+				Log.e(LOG_TAG, "注册客户信息失败：" + error.toString());
 			}
 		});
 

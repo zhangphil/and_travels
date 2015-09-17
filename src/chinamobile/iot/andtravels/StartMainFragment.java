@@ -160,12 +160,10 @@ public class StartMainFragment extends Fragment implements OnPageChangeListener{
 					Log.i("DaoLanView", "On Click");
 
 					if (!mIsLogin) {
-						new AlertDialog.Builder(getActivity()).setTitle("")
-
+						AlertDialog dialog =new AlertDialog.Builder(getActivity()).setTitle("")
 						.setMessage("您还没有加入我们的圈子！").setNegativeButton("返回", new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
-
 								// TODO Auto-generated method stub
 
 							}
@@ -177,6 +175,8 @@ public class StartMainFragment extends Fragment implements OnPageChangeListener{
 								// TODO Auto-generated method stub
 								Intent intent = new Intent(getActivity(), LoginActivity.class);
 								getActivity().startActivity(intent);
+								
+								dialog.dismiss();
 							}
 
 						}).show();

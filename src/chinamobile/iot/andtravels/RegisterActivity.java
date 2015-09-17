@@ -4,12 +4,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -73,17 +77,12 @@ public class RegisterActivity extends Activity {
 						// TODO Auto-generated method stub
 						// 获取号码，切换到输入密码界面
 						strPhoneNum = editText.getText().toString();
-						if( strPhoneNum.isEmpty() ){
+						if (strPhoneNum.isEmpty()) {
 							Toast.makeText(mActivity, "请输入手机号码", Toast.LENGTH_LONG).show();
-						}else{
-							try {
-								submitRegister(strPhoneNum);
-							} catch (JSONException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
+						} else {
+							register(strPhoneNum);
+
 						}
-						
 
 					}
 
@@ -103,47 +102,74 @@ public class RegisterActivity extends Activity {
 		});
 
 	}
+
 	/**
 	 * 向服务器请求验证码
+	 * 
 	 * @param strNum
-	 * @throws JSONException 
+	 * @throws JSONException
 	 */
-	private void submitRegister(String strNum) throws JSONException{
+	/*
+	 * private void submitRegister(String strNum) throws JSONException{
+	 * Log.e(LOG_TAG, "客户注册的手机号码：" + strNum); String url =
+	 * "http://172.16.0.138:8080/AndTravel/sms/requestforcode/"; url = url +
+	 * strNum; HttpGet httpGet = new HttpGet(url); HttpResponse httpResponse;
+	 * try { httpResponse = new DefaultHttpClient().execute(httpGet); if
+	 * (httpResponse.getStatusLine().getStatusCode() == 200) { String result =
+	 * EntityUtils.toString(httpResponse.getEntity()); JSONObject jsonObject =
+	 * new JSONObject(result.toString());
+	 * 
+	 * int resultCode = jsonObject.getInt("code"); String message =
+	 * jsonObject.getString("message"); if(resultCode == -1 ){
+	 * Toast.makeText(this, message, Toast.LENGTH_SHORT).show(); }else{ Intent
+	 * intent = new Intent(mActivity, SubmitRegisterActivity.class); Bundle
+	 * bundle = new Bundle(); bundle.putString("PhoneNum", strPhoneNum);
+	 * intent.putExtra("bundle", bundle); startActivity(intent); }
+	 * 
+	 * }else{ Log.e(LOG_TAG, "从服务器获取验证码失败"); } } catch (ClientProtocolException
+	 * e) { // TODO Auto-generated catch block e.printStackTrace(); } catch
+	 * (IOException e) { // TODO Auto-generated catch block e.printStackTrace();
+	 * }
+	 * 
+	 * }
+	 */
+
+	private void register(String strNum) {
+
 		Log.e(LOG_TAG, "客户注册的手机号码：" + strNum);
 		String url = "http://172.16.0.138:8080/AndTravel/sms/requestforcode/";
 		url = url + strNum;
-	   	HttpGet httpGet = new HttpGet(url);
-	   	HttpResponse httpResponse;
-		try {
-			httpResponse = new DefaultHttpClient().execute(httpGet);
-			if (httpResponse.getStatusLine().getStatusCode() == 200)
-			{
-		        String result = EntityUtils.toString(httpResponse.getEntity());
-		        JSONObject jsonObject = new JSONObject(result.toString());
-		        
-		        int resultCode = jsonObject.getInt("code");
-		        String message = jsonObject.getString("message");
-		        if(resultCode == -1 ){
-		        	Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-		        }else{
-		        	Intent intent = new Intent(mActivity, SubmitRegisterActivity.class);
-					Bundle bundle = new Bundle();
-					bundle.putString("PhoneNum", strPhoneNum);
-					intent.putExtra("bundle", bundle);
-					startActivity(intent);
-		        }
-		        
-		    }else{
-		    	Log.e(LOG_TAG, "从服务器获取验证码失败");
-		    }
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-			
+		Log.e(LOG_TAG, "url = " + url);
+		RequestQueue mQueue = Volley.newRequestQueue(this);
+		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
+			@Override
+			public void onResponse(JSONObject response) {
+				Log.d(LOG_TAG, "服务器返回验证码");
+				try {
+					String message = response.getString("message");
+					if (response.getString("code").equals("1")) {
+						Intent intent = new Intent(mActivity, SubmitRegisterActivity.class);
+						Bundle bundle = new Bundle();
+						bundle.putString("PhoneNum", strPhoneNum);
+						intent.putExtra("bundle", bundle);
+						startActivity(intent);
+					} else {
+						Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_SHORT).show();
+					}
+				} catch (Exception e) {
+					Log.e(LOG_TAG, e.toString());
+				}
+			}
+		}, new Response.ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				Log.e(LOG_TAG, "error = " + error.toString());
+				Log.e(LOG_TAG, "从服务器获取验证码失败");
+			}
+		});
+
+		mQueue.add(jsonObjectRequest);
+
 	}
 
 }

@@ -5,15 +5,20 @@ import com.aprilbrother.aprilbrothersdk.BeaconManager;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,7 +55,9 @@ import android.media.MediaPlayer.OnSeekCompleteListener;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.os.RemoteException;
 import android.os.StrictMode;
 import android.util.Log;
@@ -79,8 +86,11 @@ public class BLEScanService extends Service implements Runnable {
 
 	public static final String strACT = "chinamobile.iot.andtravels.BLEScanService.UserAction";
 	private UserActionReceiver recv;
+	private RequestQueue mRequestQueue;
+	private final int PLAY_AUDIO_MESSAGE = 10000;
+	private Handler handler;
 	//区分是否是demo版本
-	private boolean mTest = true;
+	private boolean mTest = false;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -91,16 +101,28 @@ public class BLEScanService extends Service implements Runnable {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads().detectDiskWrites()
-				.detectNetwork().penaltyLog().build());
-		StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects()
-				.detectLeakedClosableObjects().penaltyLog().penaltyDeath().build());
 		initBeaconScanDistance();
 		initService();
 		// 初始化接受用户动作
 		IntentFilter filter = new IntentFilter(strACT);
 		recv = new UserActionReceiver();
 		registerReceiver(recv, filter);
+		
+		 mRequestQueue = Volley.newRequestQueue(getApplicationContext());
+		 
+		 handler = new Handler(){
+			@Override  
+	        public void handleMessage(Message msg) {
+				super.handleMessage(msg);
+				switch (msg.what) {
+				case PLAY_AUDIO_MESSAGE:
+					playMedia(mCurPlayUrl);
+					break;
+				}
+	             
+	             
+	        } 
+		 };
 	}
 
 	@Override
@@ -162,33 +184,8 @@ public class BLEScanService extends Service implements Runnable {
 					strBeaconID += 3;
 				}
 			}else{
-				strBeaconID = ((Beacon)list.get(index)).getProximityUUID();
+				strBeaconID = ((Beacon)list.get(index)).getName();
 			}
-			
-			
-			/*if (strBeaconName.contains("abeacon_FACA")) {
-				strBeaconID += 1;
-			}else if (strBeaconName.contains("abeacon_FB2A")) {
-				strBeaconID += 2;
-			}else if (strBeaconName.contains("abeacon_FB7D")) {
-				strBeaconID += 3;
-			}else if (strBeaconName.contains("abeacon_FB3E")) {
-				strBeaconID += 4;
-			}else if (strBeaconName.contains("abeacon_FAFB")) {
-				strBeaconID += 5;
-			}else if (strBeaconName.contains("abeacon_FB10")) {	
-				strBeaconID += 6;
-			}else if (strBeaconName.contains("abeacon_FAE9")) {
-				strBeaconID += 7;
-			}else if (strBeaconName.contains("abeacon_FB71")) {
-				strBeaconID += 8;
-			}else if (strBeaconName.contains("abeacon_FA9C")) {
-				strBeaconID += 9;
-			}else if (strBeaconName.contains("abeacon_FB24")) {
-				strBeaconID += 10;
-			}else {
-				strBeaconID += 11;
-			}*/
 			
 			Log.e(TAG, "找到最新的index:" + minIndex);
 		}
@@ -237,18 +234,24 @@ public class BLEScanService extends Service implements Runnable {
 
 					}
 
-					mFoundUUID = getRecentBeacon(mfindBeacons);
+					String strFoundUUID = getRecentBeacon(mfindBeacons);
 					// mFoundUUID = beacon.getProximityUUID();
-					Log.i(TAG, "获取到最近的蓝牙Id：" + mFoundUUID);
+					Log.i(TAG, "获取到最近的蓝牙Id：" + strFoundUUID);
 
 					// 找到了就播放相应的音频文件
 					// GetUrl(mFoundUUID);
-					if (!mFoundUUID.equalsIgnoreCase("")) {
+					if (!strFoundUUID.equalsIgnoreCase("")) {
 						if(mTest){
-							getUrlForTest(mFoundUUID);
+							getUrlForTest(strFoundUUID);
 						}else{
 							try {
-								fetchPlayAudioUrl(mFoundUUID);
+								if (mIsScanning && (mFoundUUID == null || (mFoundUUID != null && !mFoundUUID.equalsIgnoreCase(strFoundUUID)))) {
+									mFoundUUID = strFoundUUID;
+									fetchPlayAudioUrl(strFoundUUID);
+									// 在播放音频时，停止Ble扫描
+									stopScanBle();
+								}
+								
 							} catch (JSONException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -308,8 +311,7 @@ public class BLEScanService extends Service implements Runnable {
 
 	private void getUrl(String strId) {
 		String url = "http://172.16.0.11:8080/AndTravel/beacondatasearch/onekeyguide/" + strId;
-		RequestQueue mQueue = Volley.newRequestQueue(this);
-
+		
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
 			@Override
 			public void onResponse(JSONObject response) {
@@ -340,7 +342,7 @@ public class BLEScanService extends Service implements Runnable {
 			}
 		});
 
-		mQueue.add(jsonObjectRequest);
+		mRequestQueue.add(jsonObjectRequest);
 
 	}
 
@@ -361,48 +363,110 @@ public class BLEScanService extends Service implements Runnable {
 	private void fetchPlayAudioUrl(String strBeaconId ) throws JSONException{
 		String url = "http://172.16.0.138:8080/AndTravel/spot/getcontent/bybeacon/";
 		url = url + strBeaconId;
-		
-	   	HttpGet httpGet = new HttpGet(url);
-	   	HttpResponse httpResponse;
-	   	try {
-			httpResponse = new DefaultHttpClient().execute(httpGet);
-			if (httpResponse.getStatusLine().getStatusCode() == 200)
-			{
-		        String result = EntityUtils.toString(httpResponse.getEntity());
-		        JSONObject jsonObject = new JSONObject(result.toString());
-		        
-		        int resultCode = jsonObject.getInt("code");
-		        if(resultCode == 1 ){
-		        	JSONObject message = jsonObject.getJSONObject("message");
-		        	JSONArray contentArray = message.getJSONArray("content");
-		        	if(contentArray.length() > 0){
-		        		JSONObject content = (JSONObject) contentArray.get(0);
-		        		String audioUrl = content.getString("contentUrl");
-		        		
-		        		Log.e(TAG, "从服务器获取到播放音频数据URL：" + audioUrl);
-		        		if(audioUrl.isEmpty()){
-		        			Log.e(TAG, "从服务器获取到播放音频数据URL为空");
-		        		}else{
-		        			playMedia(audioUrl);
-		        		}
-		        	}
-		        	
-		        }else{
-		        	Toast.makeText(this, "从服务器获取导览的语音数据失败", Toast.LENGTH_SHORT).show();
-		        }
-		        
-		    }else{
-		    	Log.e(TAG, "向服务器获取蓝牙Beacon对应的数据失败");
-		    }
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	
+		Log.e(TAG, "获取到最近的蓝牙BeaconID对应音频文件地址：" + url);
+	   	RequestQueue mQueue = Volley.newRequestQueue(this);
+		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
+			@Override
+			public void onResponse(JSONObject response) {
+				Log.d(TAG, "从服务器获取到蓝牙Beacon对应音频文件");
+				try {
+					if (response.getString("code").equals("1")) {
+						Log.d(TAG, "从服务器已经成功获取到蓝牙Beacon对应音频文件了！！！！");
+						JSONObject message = response.getJSONObject("message");
+			        	JSONArray contentArray = message.getJSONArray("content");
+			        	if(contentArray.length() > 0){
+			        		Log.d(TAG, "从服务器已经成功获取到蓝牙Beacon对应文件大小：" + contentArray.length());
+			        		for(int i = 0; i < contentArray.length(); i++){
+			        			JSONObject content = (JSONObject) contentArray.get(i);
+			        			if(content.getString("contentType").equals("1")){
+			        				String audioUrl = content.getString("contentUrl");
+			        				Log.e(TAG, "从服务器获取到播放音频数据URL：" + audioUrl);
+					        		if(audioUrl.isEmpty()){
+					        			Log.e(TAG, "从服务器获取到播放音频数据URL为空");
+					        		}else{
+					        			//暂时先从服务器下载音频文件到本地，然后在进行播放
+					        			FetchAudioFile(audioUrl);
+					        			//playMedia(filePath);
+					        		}
+			        			}else{
+			        				/*服务只处理音频文件*/
+			        			}
+			        		}
+			        	}else{
+			        		Log.e(TAG, "从服务器获取到播放音频数据为空");
+			        	}
+					} else {
+						Toast.makeText(BLEScanService.this, "从服务器获取导览的语音数据失败", Toast.LENGTH_SHORT).show();
+					}
+				} catch (Exception e) {
+					Log.e(TAG, e.toString());
+				}
+			}
+		}, new Response.ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				Log.e(TAG, "error = " + error.toString());
+				Log.e(TAG, "从服务器获取导览音频文件失败");
+			}
+		});
+
+		mQueue.add(jsonObjectRequest);
 		
 	}
+	
+	private void  FetchAudioFile(String audioUrl){
+		String audioPath = null;
+		final String remoteAudioUrl = audioUrl;
+		if(!remoteAudioUrl.isEmpty()){
+			new Thread(new Runnable(){
+
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					File filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
+					Random ran = new Random(System.currentTimeMillis()); 
+					int randomNum = ran.nextInt(10000);
+					String audioPath = filePath.getPath() + "/" + randomNum + ".m4a";
+					
+					File file = new File(audioPath);  
+					Log.e(TAG,"存储到手机上的音频文件的路径 :"+audioPath); 
+					if(file.exists())  
+					{  
+					    file.delete();  
+					}  
+					try {  
+				         URL httpUrl = new URL(remoteAudioUrl);      
+				         URLConnection con = httpUrl.openConnection();  
+				         int contentLength = con.getContentLength();  
+				         Log.e(TAG,"从服务器上获取音频文件的长度 :"+contentLength);  
+				         InputStream is = con.getInputStream();    
+				         byte[] bs = new byte[1024];     
+				         int len;     
+				         OutputStream os = new FileOutputStream(audioPath);     
+				         while ((len = is.read(bs)) != -1) {     
+				             os.write(bs, 0, len);     
+				         } 
+				         os.close();    
+				         is.close();  
+				         
+				         mCurPlayUrl = audioPath;
+				         
+				         handler.sendEmptyMessage(PLAY_AUDIO_MESSAGE);
+					              
+					} catch (Exception e) { 
+						Log.e(TAG, "从服务器下载音频文件时，写入手机上出错了！！！" + e.toString());
+					       
+					}  
+				}
+				
+			}).start();
+		}else{
+			Log.e(TAG, "从服务器获取到音频文件Url为空");
+		}
+	
+	}
+	
 	public void playMedia(String url) {
 	
 		Log.e(TAG, "播放音频文件" + url);
