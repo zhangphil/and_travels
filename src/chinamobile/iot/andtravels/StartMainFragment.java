@@ -28,7 +28,6 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import chinamobile.iot.andtravels.SettingFragment.ListViewAdapter;
-import chinamobile.iot.andtravels.TabMenuFragment.UserLoginReceiver;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -46,27 +45,17 @@ public class StartMainFragment extends Fragment implements OnPageChangeListener{
 	private  CircleIndicatorView mCircleIndicatorView;
 	private final int mViewPageNum = 4;
 
-	public static final String strBroadcastMessage = "chinamobile.iot.andtravels.SetLogin";
-	private UserLoginReceiver recv;
-	LocalBroadcastManager mBroadcastManager;
 	private boolean mIsLogin = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		// 初始化用户登录的广播
-		mBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
-		IntentFilter filter = new IntentFilter(strBroadcastMessage);
-		recv = new UserLoginReceiver();
-		mBroadcastManager.registerReceiver(recv, filter);
-		
 	}
 	
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		mBroadcastManager.unregisterReceiver(recv);
+		
 	}
 	
 	@Override
@@ -183,7 +172,7 @@ public class StartMainFragment extends Fragment implements OnPageChangeListener{
 					// 此处先检查客户端是否注册,先暂时不处理
 					Log.i("DaoLanView", "On Click");
 
-					if (!mIsLogin) {
+					if (!(boolean)((StartActivity) getActivity()).getUserIsLogin()) {
 						AlertDialog dialog =new AlertDialog.Builder(getActivity()).setTitle("")
 						.setMessage("您还没有加入我们的圈子！").setNegativeButton("返回", new DialogInterface.OnClickListener() {
 							@Override
@@ -242,14 +231,4 @@ public class StartMainFragment extends Fragment implements OnPageChangeListener{
 		
 	}
 	
-	public class UserLoginReceiver extends BroadcastReceiver {
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			// TODO Auto-generated method stub
-			Log.i(LOG_TAG, "接收到广播：用户已经登录了！！！");
-			mIsLogin = true;
-		}
-	}
-
 }

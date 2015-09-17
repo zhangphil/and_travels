@@ -11,6 +11,7 @@ import com.aprilbrother.aprilbrothersdk.BeaconManager;
 
 import chinamobile.iot.andtravels.BLEScanService;
 import chinamobile.iot.andtravels.ContainerActivity.MyViewPagerTabHost;
+import chinamobile.iot.andtravels.utils.Constants;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -52,6 +53,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 
 public class StartActivity extends FragmentActivity {
 
@@ -62,6 +64,10 @@ public class StartActivity extends FragmentActivity {
 	private BluetoothAdapter mBluetoothAdapter;
 	private BeaconManager beaconManager = new BeaconManager(this);
 	private Fragment newFragment;
+	
+	public static final String strBroadcastMessage = "chinamobile.iot.andtravels.SetLogin";
+	private UserLoginReceiver recv;
+	private boolean mIsLogin = false;
 
 	
 	@Override
@@ -77,6 +83,15 @@ public class StartActivity extends FragmentActivity {
 		transaction.commit();
 		
 		startBle();
+		
+		// 初始化用户登录的广播
+		Log.e(LOG_TAG, "注册广播了哈！！！！");
+		IntentFilter userLoginfilter = new IntentFilter(strBroadcastMessage);
+		recv = new UserLoginReceiver();
+		registerReceiver(recv, userLoginfilter);
+		IntentFilter curCityfilter = new IntentFilter(Constants.ACTION_CHINAMOBILE_IOT_ANDTRAVELS_BROADCAST);
+		registerReceiver(recv, curCityfilter);
+		
 	}
 
 	@Override
@@ -132,6 +147,8 @@ public class StartActivity extends FragmentActivity {
 		daoLanIntent.setAction("chinamobile.iot.andtravels.communication.BeaconService");
 		daoLanIntent.setPackage(getPackageName());
 		stopService(daoLanIntent);
+		
+		unregisterReceiver(recv);
 
 		super.onDestroy();
 	}
@@ -139,5 +156,27 @@ public class StartActivity extends FragmentActivity {
 	@Override
 	protected void onStop() {
 		super.onStop();
+	}
+	
+	public boolean getUserIsLogin(){
+		return mIsLogin;
+	}
+	
+	public class UserLoginReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			String intentAction = intent.getAction();
+			if(intentAction.equals("chinamobile.iot.andtravels.SetLogin")){
+				Log.i(LOG_TAG, "接收到广播：用户已经登录了！！！");
+				mIsLogin = true;
+			}else if(intentAction.equals(Constants.ACTION_CHINAMOBILE_IOT_ANDTRAVELS_BROADCAST) ){
+				
+			}else{
+				
+			}
+			
+		}
 	}
 }

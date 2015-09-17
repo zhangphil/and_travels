@@ -26,20 +26,11 @@ public class TabMenuFragment extends Fragment {
 	private final String LOG_TAG = "TabMenuFragment";
 	private RadioGroup viewTabMenuGroup;
 	private boolean mIsLogin = false;
-	public static final String strBroadcastMessage = "chinamobile.iot.andtravels.SetLogin";
-	private UserLoginReceiver recv;
-	LocalBroadcastManager mBroadcastManager;
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		// 初始化用户登录的广播
-		mBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
-		IntentFilter filter = new IntentFilter(strBroadcastMessage);
-		recv = new UserLoginReceiver();
-		mBroadcastManager.registerReceiver(recv, filter);
-		
+
 	}
 
 	@Override
@@ -55,7 +46,7 @@ public class TabMenuFragment extends Fragment {
 				switch (checkedId) {
 				case R.id.daoLan:
 					// 此处先检查客户端是否注册,先暂时不处理
-					if (mIsLogin) {
+					if ((boolean)((StartActivity) getActivity()).getUserIsLogin()) {
 						pos = 0;
 						intent = new Intent(getActivity(), MainActivity.class);
 						//intent.putExtra("curViewPos", pos);
@@ -124,17 +115,7 @@ public class TabMenuFragment extends Fragment {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		mBroadcastManager.unregisterReceiver(recv);
 	}
 	
-	public class UserLoginReceiver extends BroadcastReceiver {
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			// TODO Auto-generated method stub
-			Log.i(LOG_TAG, "接收到广播：用户已经登录了！！！");
-			mIsLogin = true;
-		}
-	}
-
+	
 }

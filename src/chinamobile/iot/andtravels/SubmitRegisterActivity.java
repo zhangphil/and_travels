@@ -112,13 +112,13 @@ public class SubmitRegisterActivity extends Activity {
 				// 此处只处理景点的声音
 				try {
 					if (response.getString("code").equals("1")) {
-						Intent intent = new Intent(mActivity, MainActivity.class);
-						mActivity.startActivity(intent);
-						
 						//广播用户已经登录了
 						Intent broadcastIntent = new Intent("chinamobile.iot.andtravels.SetLogin");
 						sendBroadcast(broadcastIntent);
-
+						
+						Intent intent = new Intent(mActivity, MainActivity.class);
+						mActivity.startActivity(intent);
+							
 					} else {
 						//登录失败后，提示用户
 						String message = response.getString("message");
