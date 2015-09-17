@@ -101,6 +101,11 @@ public class LoginActivity extends Activity {
 					if (response.getString("code").equals("1")) {
 						Intent intent = new Intent(mActivity, MainActivity.class);
 						startActivity(intent);
+						
+						//广播用户已经登录了
+						Intent broadcastIntent = new Intent("chinamobile.iot.andtravels.SetLogin");
+						sendBroadcast(broadcastIntent);
+						
 					} else {
 						Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
 					}
