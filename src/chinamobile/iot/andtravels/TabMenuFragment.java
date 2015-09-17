@@ -6,10 +6,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -17,16 +19,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import chinamobile.iot.andtravels.BLEScanService.UserActionReceiver;
 
 public class TabMenuFragment extends Fragment {
 
 	private final String LOG_TAG = "TabMenuFragment";
 	private RadioGroup viewTabMenuGroup;
 	private boolean mIsLogin = false;
+	public static final String strBroadcastMessage = "chinamobile.iot.andtravels.SetLogin";
+	private UserLoginReceiver recv;
+	LocalBroadcastManager mBroadcastManager;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		// 初始化用户登录的广播
+		mBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
+		IntentFilter filter = new IntentFilter(strBroadcastMessage);
+		recv = new UserLoginReceiver();
+		mBroadcastManager.registerReceiver(recv, filter);
+		
 	}
 
 	@Override
@@ -99,12 +112,29 @@ public class TabMenuFragment extends Fragment {
 			}
 
 		});
+			
 		return view;
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		mBroadcastManager.unregisterReceiver(recv);
+	}
+	
+	public class UserLoginReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			Log.i(LOG_TAG, "接收到广播：用户已经登录了！！！");
+			mIsLogin = true;
+		}
 	}
 
 }

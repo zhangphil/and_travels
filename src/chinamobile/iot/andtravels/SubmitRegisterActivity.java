@@ -1,6 +1,8 @@
 package chinamobile.iot.andtravels;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -11,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -95,16 +98,12 @@ public class SubmitRegisterActivity extends Activity {
 
 	private void register(String strPassword) {
 		String url;
-		boolean bTest = true;
-		if(bTest){
-			url = "http://172.16.0.138:8080/AndTravel/uservalidation/validate/usingplaintext/";
-			url = url + mStrPhoneNum + "/" + strPassword;
-		}else{
-			url = "http://172.16.0.138:8080/AndTravel/uservalidation/checkidentity/";
-			url = url + mStrPhoneNum + "/" + strPassword + "/" + mStrIdentifyCode;
-		}
-		
+		url = "http://172.16.0.138:8080/AndTravel/uservalidation/register";
+		url = url + "/" + mStrPhoneNum + "/" + strPassword;
 		RequestQueue mQueue = Volley.newRequestQueue(this);
+		//Map<String, String> params = new HashMap<String, String>();
+		//params.put(mStrPhoneNum, strPassword);
+		//params.put("password", strPassword);
 
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
 			@Override
@@ -115,6 +114,10 @@ public class SubmitRegisterActivity extends Activity {
 					if (response.getString("code").equals("1")) {
 						Intent intent = new Intent(mActivity, MainActivity.class);
 						mActivity.startActivity(intent);
+						
+						//广播用户已经登录了
+						Intent broadcastIntent = new Intent("chinamobile.iot.andtravels.SetLogin");
+						sendBroadcast(broadcastIntent);
 
 					} else {
 						//登录失败后，提示用户
