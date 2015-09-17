@@ -50,32 +50,32 @@ public class Utils {
 		return bmp;
 	}
 
-	
-//	public static Bitmap getAssetImage(Context context, String filename) {
-//	    AssetManager assets = context.getResources().getAssets();
-//	    InputStream is = null;
-//		try {
-//			is = assets.open("drawable/" + filename + ".png");
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		BitmapFactory.Options options = new BitmapFactory.Options(); 
-//        options.inPurgeable = true;
-//        BufferedInputStream buffer = new BufferedInputStream(is);
-//	    Bitmap bitmap = BitmapFactory.decodeStream(buffer ,null, options);
-//	    return	bitmap;
-//	    //return new BitmapDrawable(context.getResources(), bitmap);
-//	}
-	
-//	public static Bitmap getBitmapNonOOM(Context context, int resId) {
-//
-//		BitmapFactory.Options options = new BitmapFactory.Options();
-//
-//		// 将原图缩小n倍
-//		options.inSampleSize = 4;
-//
-//		Bitmap bmp = BitmapFactory.decodeResource(context.getResources(), resId, options);
-//
-//		return bmp;
-//	}
+	// public static Bitmap getAssetImage(Context context, String filename) {
+	// AssetManager assets = context.getResources().getAssets();
+	// InputStream is = null;
+	// try {
+	// is = assets.open("drawable/" + filename + ".png");
+	// } catch (IOException e) {
+	// e.printStackTrace();
+	// }
+	// BitmapFactory.Options options = new BitmapFactory.Options();
+	// options.inPurgeable = true;
+	// BufferedInputStream buffer = new BufferedInputStream(is);
+	// Bitmap bitmap = BitmapFactory.decodeStream(buffer ,null, options);
+	// return bitmap;
+	// //return new BitmapDrawable(context.getResources(), bitmap);
+	// }
+
+	// public static Bitmap getBitmapNonOOM(Context context, int resId) {
+	//
+	// BitmapFactory.Options options = new BitmapFactory.Options();
+	//
+	// // 将原图缩小n倍
+	// options.inSampleSize = 4;
+	//
+	// Bitmap bmp = BitmapFactory.decodeResource(context.getResources(), resId,
+	// options);
+	//
+	// return bmp;
+	// }
 }

@@ -1,5 +1,10 @@
 package chinamobile.iot.andtravels;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,19 +14,17 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import chinamobile.iot.andtravels.utils.Constants;
 
 public class MainActivity extends Activity {
+
+	private LocationClient mLocationClient = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_main);
-
-		// ActionBar actionBar = getSupportActionBar();
-		// actionBar.setDisplayShowCustomEnabled(true);
-		// actionBar.setCustomView(R.layout.title);
-		// actionBar.setBackgroundDrawable(getResources().getDrawable(R.color.and_travels_titlebar));
 
 		ListView lv = (ListView) findViewById(R.id.listView);
 		String[] city = this.getResources().getStringArray(R.array.city);
@@ -42,8 +45,6 @@ public class MainActivity extends Activity {
 			}
 		});
 
-		// final Activity mActivity = this;
-
 		LinearLayout mLinearLayout = (LinearLayout) findViewById(R.id.chooseCity);
 		mLinearLayout.setOnClickListener(new View.OnClickListener() {
 
@@ -52,15 +53,44 @@ public class MainActivity extends Activity {
 				goToContainerActivity();
 			}
 		});
+
+		MyLocationListenner myListener = new MyLocationListenner();
+		mLocationClient = new LocationClient(this);
+		LocationClientOption option = new LocationClientOption(); 
+		option.setIsNeedAddress(true);
+		option.setAddrType("all");
+		mLocationClient.setLocOption(option);
+		mLocationClient.registerLocationListener(myListener);
+		mLocationClient.start();
 	}
 
-	//private	class	MyArratAdapter
-	
-	
+	@Override
+	public void onDestroy() {
+		mLocationClient.stop();
+		super.onDestroy();
+	}
+
 	private void goToContainerActivity() {
 		Intent intent = new Intent(this, ContainerActivity.class);
 		int pos = 0;
 		intent.putExtra("curViewPos", pos);
 		startActivity(intent);
+	}
+
+	public class MyLocationListenner implements BDLocationListener {
+		@Override
+		public void onReceiveLocation(BDLocation location) {
+			try {
+				String province=location.getProvince();
+				String city = location.getCity();
+				
+				Intent intent = new Intent();
+				intent.setAction(Constants.ACTION_CHINAMOBILE_IOT_ANDTRAVELS_BROADCAST);
+				intent.putExtra(Constants.LOCATION_CITY, city); 
+				sendBroadcast(intent);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
