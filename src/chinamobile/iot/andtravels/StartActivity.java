@@ -99,7 +99,7 @@ public class StartActivity extends FragmentActivity {
 		super.onResume();
 
 		Log.e(LOG_TAG, "onResume 重新绘制fragment");
-		newFragment = new StartMainFragment();
+		//newFragment = new StartMainFragment();
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.fragment, newFragment);
 		transaction.commit();
