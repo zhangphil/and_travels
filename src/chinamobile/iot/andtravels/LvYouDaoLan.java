@@ -45,12 +45,12 @@ public class LvYouDaoLan extends Fragment {
 	private Handler handler;
 	private final int MESSAGE_WHAT_CHANGED = 100;
 
-	private Context context;
+	//private Context context;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		context = this.getContext();
+		//context = this.getContext();
 	}
 
 	@Override
@@ -139,23 +139,6 @@ public class LvYouDaoLan extends Fragment {
 		handler.sendEmptyMessage(MESSAGE_WHAT_CHANGED);
 	}
 
-	// private void getJsonFromServer(String url,final JSONObject response) {
-	// AsyncHttpClient client = new AsyncHttpClient();
-	// client.get(url, null, new JsonHttpResponseHandler() {
-	//
-	// @Override
-	// public void onSuccess(int statusCode, Header[] headers, JSONObject resp)
-	// {
-	// response=resp;
-	// }
-	//
-	// @Override
-	// public void onSuccess(int statusCode, Header[] headers, JSONArray resp) {
-	//
-	// }
-	// });
-	// }
-
 	private class MyFragmentPagerAdapter extends PagerAdapter {
 
 		private ArrayList<ImageView> mItems = null;
@@ -193,11 +176,8 @@ public class LvYouDaoLan extends Fragment {
 								JSONObject joo = ja.getJSONObject(i);
 								
 								ImageView image = new ImageView(getContext());
-								//image.setImageResource(res[i]);
-								//image.setScaleType(ScaleType.FIT_XY);
-								//image.setim
 								String url=joo.getString("contentUrl");
-								Glide.with(context).load(url).placeholder(R.drawable.loading).centerCrop().into(image);  
+								Glide.with(context).load(url).placeholder(R.drawable.loading).crossFade(1000).centerCrop().into(image);  
 								mItems.add(image);
 							}
 						}
