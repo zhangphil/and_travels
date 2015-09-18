@@ -2,16 +2,14 @@ package chinamobile.iot.andtravels;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.android.volley.toolbox.NetworkImageView;
+import com.bumptech.glide.Glide;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -162,8 +160,9 @@ public class LvYouDaoLan extends Fragment {
 
 		private ArrayList<ImageView> mItems = null;
 
-		public MyFragmentPagerAdapter(Context context) {
-
+		public MyFragmentPagerAdapter(final Context context) {
+			mItems=new ArrayList<ImageView>();
+			
 			String url = "http://172.16.0.138:8080/AndTravel/area/getallarea/成都";
 			AsyncHttpClient client = new AsyncHttpClient();
 			client.get(url, null, new JsonHttpResponseHandler() {
@@ -192,7 +191,14 @@ public class LvYouDaoLan extends Fragment {
 							JSONArray ja = new JSONArray(s);
 							for (int i = 0; i < ja.length(); i++) {
 								JSONObject joo = ja.getJSONObject(i);
-								Log.d(this.getClass().getName(), joo.getString("contentUrl"));
+								
+								ImageView image = new ImageView(getContext());
+								//image.setImageResource(res[i]);
+								//image.setScaleType(ScaleType.FIT_XY);
+								//image.setim
+								String url=joo.getString("contentUrl");
+								Glide.with(context).load(url).placeholder(R.drawable.loading).centerCrop().into(image);  
+								mItems.add(image);
 							}
 						}
 
@@ -203,14 +209,14 @@ public class LvYouDaoLan extends Fragment {
 				}
 			});
 
-			mItems = new ArrayList<ImageView>();
-			int[] res = { R.drawable.ic_launcher, R.drawable.ic_launcher, R.drawable.ic_launcher };
-			for (int i = 0; i < 3; i++) {
-				ImageView image = new ImageView(getContext());
-				image.setImageResource(res[i]);
-				image.setScaleType(ScaleType.FIT_XY);
-				mItems.add(image);
-			}
+			
+//			int[] res = { R.drawable.ic_launcher, R.drawable.ic_launcher, R.drawable.ic_launcher };
+//			for (int i = 0; i < 3; i++) {
+//				ImageView image = new ImageView(getContext());
+//				image.setImageResource(res[i]);
+//				image.setScaleType(ScaleType.FIT_XY);
+//				mItems.add(image);
+//			}
 		}
 
 		@Override
