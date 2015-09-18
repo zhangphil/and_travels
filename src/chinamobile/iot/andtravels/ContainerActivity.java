@@ -2,17 +2,11 @@ package chinamobile.iot.andtravels;
 
 import java.util.ArrayList;
 
-import com.aprilbrother.aprilbrothersdk.BeaconManager;
-
-import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentManager.BackStackEntry;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,20 +35,17 @@ public class ContainerActivity extends FragmentActivity {
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.fragment, newFragment);
 		transaction.commit();
-		
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		
 	}
 	
 	public static class MyViewPagerTabHost extends ViewPagerTabHost {
 
 		public MyViewPagerTabHost(int pos) {
 			super(pos);
-			// TODO Auto-generated constructor stub
 		}
 
 		private ArrayList<Fragment> mArrayList;

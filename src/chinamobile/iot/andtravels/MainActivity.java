@@ -56,7 +56,7 @@ public class MainActivity extends Activity {
 
 		MyLocationListenner myListener = new MyLocationListenner();
 		mLocationClient = new LocationClient(this);
-		LocationClientOption option = new LocationClientOption(); 
+		LocationClientOption option = new LocationClientOption();
 		option.setIsNeedAddress(true);
 		option.setAddrType("all");
 		mLocationClient.setLocOption(option);
@@ -81,12 +81,12 @@ public class MainActivity extends Activity {
 		@Override
 		public void onReceiveLocation(BDLocation location) {
 			try {
-				String province=location.getProvince();
+				String province = location.getProvince();
 				String city = location.getCity();
-				
+
 				Intent intent = new Intent();
 				intent.setAction(Constants.ACTION_CHINAMOBILE_IOT_ANDTRAVELS_BROADCAST);
-				intent.putExtra(Constants.LOCATION_CITY, city); 
+				intent.putExtra(Constants.LOCATION_CITY, city);
 				sendBroadcast(intent);
 			} catch (Exception e) {
 				e.printStackTrace();

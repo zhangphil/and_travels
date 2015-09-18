@@ -1,6 +1,19 @@
 package chinamobile.iot.andtravels;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +23,7 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +35,8 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+import chinamobile.iot.andtravels.model.GSONAllAreaOfCity;
 import chinamobile.iot.andtravels.utils.Utils;
 
 public class LvYouDaoLan extends Fragment {
@@ -31,9 +47,12 @@ public class LvYouDaoLan extends Fragment {
 	private Handler handler;
 	private final int MESSAGE_WHAT_CHANGED = 100;
 
+	private Context context;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		context = this.getContext();
 	}
 
 	@Override
@@ -51,7 +70,7 @@ public class LvYouDaoLan extends Fragment {
 		});
 
 		mViewPager = (ViewPager) view.findViewById(R.id.viewpager_head);
-		mPagerAdapter = new MyFragmentPagerAdapter();
+		mPagerAdapter = new MyFragmentPagerAdapter(this.getContext());
 		mViewPager.setAdapter(mPagerAdapter);
 		mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
@@ -108,6 +127,11 @@ public class LvYouDaoLan extends Fragment {
 		return view;
 	}
 
+	@Override
+	public void onStop() {
+		super.onStop();
+	}
+
 	private void back() {
 		Utils.onKeyEvent(KeyEvent.KEYCODE_BACK);
 	}
@@ -117,13 +141,70 @@ public class LvYouDaoLan extends Fragment {
 		handler.sendEmptyMessage(MESSAGE_WHAT_CHANGED);
 	}
 
+	// private void getJsonFromServer(String url,final JSONObject response) {
+	// AsyncHttpClient client = new AsyncHttpClient();
+	// client.get(url, null, new JsonHttpResponseHandler() {
+	//
+	// @Override
+	// public void onSuccess(int statusCode, Header[] headers, JSONObject resp)
+	// {
+	// response=resp;
+	// }
+	//
+	// @Override
+	// public void onSuccess(int statusCode, Header[] headers, JSONArray resp) {
+	//
+	// }
+	// });
+	// }
+
 	private class MyFragmentPagerAdapter extends PagerAdapter {
 
 		private ArrayList<ImageView> mItems = null;
 
-		public MyFragmentPagerAdapter() {
+		public MyFragmentPagerAdapter(Context context) {
+
+			String url = "http://172.16.0.138:8080/AndTravel/area/getallarea/成都";
+			AsyncHttpClient client = new AsyncHttpClient();
+			client.get(url, null, new JsonHttpResponseHandler() {
+
+				@Override
+				public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+
+					try {
+						JSONObject jobj = (JSONObject) response.get("message");
+						JSONArray ja = (JSONArray) jobj.get("info");
+						for (int i = 0; i < ja.length(); i++) {
+							JSONObject jo = ja.getJSONObject(i);
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+
+					try {
+						JSONObject jobj = (JSONObject) response.get("message");
+						JSONObject jo = (JSONObject) jobj.get("content");
+
+						Iterator<String> iter = jo.keys();
+						while (iter.hasNext()) {
+							String id = (String) iter.next();
+							String s = jo.getString(id);
+							JSONArray ja = new JSONArray(s);
+							for (int i = 0; i < ja.length(); i++) {
+								JSONObject joo = ja.getJSONObject(i);
+								Log.d(this.getClass().getName(), joo.getString("contentUrl"));
+							}
+						}
+
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+
+				}
+			});
+
 			mItems = new ArrayList<ImageView>();
-			int[] res = { R.drawable.cd1, R.drawable.cd2, R.drawable.cd3 };
+			int[] res = { R.drawable.ic_launcher, R.drawable.ic_launcher, R.drawable.ic_launcher };
 			for (int i = 0; i < 3; i++) {
 				ImageView image = new ImageView(getContext());
 				image.setImageResource(res[i]);
