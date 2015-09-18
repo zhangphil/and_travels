@@ -41,6 +41,9 @@ public class RegisterActivity extends Activity {
 	private String strPhoneNum;
 	private final Activity mActivity = this;
 	private ImageView backView;
+	
+	//设置是否和服务器进行通信
+	private boolean mTest = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +83,16 @@ public class RegisterActivity extends Activity {
 						if (strPhoneNum.isEmpty()) {
 							Toast.makeText(mActivity, "请输入手机号码", Toast.LENGTH_LONG).show();
 						} else {
-							register(strPhoneNum);
+							if(mTest){
+								Intent intent = new Intent(mActivity, SubmitRegisterActivity.class);
+								Bundle bundle = new Bundle();
+								bundle.putString("PhoneNum", strPhoneNum);
+								intent.putExtra("bundle", bundle);
+								startActivity(intent);
+							}else{
+								register(strPhoneNum);
+							}
+							
 
 						}
 

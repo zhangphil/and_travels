@@ -45,6 +45,8 @@ public class SubmitRegisterActivity extends Activity {
 	private ImageView mBackView;
 
 	private final SubmitRegisterActivity mActivity = this;
+	//设置是否和服务器进行通信
+	private boolean mTest = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +79,16 @@ public class SubmitRegisterActivity extends Activity {
 				if (strPassword == null || mStrIdentifyCode == null) {
 					Toast.makeText(mActivity, "密码或验证码为空，请输入！", Toast.LENGTH_SHORT).show();
 				} else{ 
-					register(strPassword);
+					if(mTest){
+						Intent broadcastIntent = new Intent("chinamobile.iot.andtravels.SetLogin");
+						sendBroadcast(broadcastIntent);
+						
+						Intent intent = new Intent(mActivity, MainActivity.class);
+						mActivity.startActivity(intent);
+					}else{
+						register(strPassword);
+					}
+					
 				} 
 					
 			}

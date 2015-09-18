@@ -42,6 +42,8 @@ public class LoginActivity extends Activity {
 	private TextView regTextView;
 
 	private final LoginActivity mActivity = this;
+	//设置是否和服务器进行通信
+	private boolean mTest = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,12 +66,17 @@ public class LoginActivity extends Activity {
 				if (strPhoneNum == null || strPassword == null) {
 					Toast.makeText(LoginActivity.this, "手机号码或密码为空，请输入！", Toast.LENGTH_SHORT).show();
 				} else {
-					//广播用户已经登录了
-					//Log.e(LOG_TAG, "发送了用户已经登录的广播了");
-					//Intent broadcastIntent = new Intent("chinamobile.iot.andtravels.SetLogin");
-					//sendBroadcast(broadcastIntent);
+					if(mTest){
+						//广播用户已经登录了
+						Intent broadcastIntent = new Intent("chinamobile.iot.andtravels.SetLogin");
+						sendBroadcast(broadcastIntent);
+						
+						Intent intent = new Intent(mActivity, MainActivity.class);
+						startActivity(intent);
+					}else{
+						login(strPhoneNum,strPassword);
+					}
 					
-					login(strPhoneNum,strPassword);
 				}
 
 			}
