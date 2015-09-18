@@ -108,9 +108,9 @@ public class BLEScanService extends Service implements Runnable {
 		recv = new UserActionReceiver();
 		registerReceiver(recv, filter);
 		
-		 mRequestQueue = Volley.newRequestQueue(getApplicationContext());
+		mRequestQueue = Volley.newRequestQueue(getApplicationContext());
 		 
-		 handler = new Handler(){
+		handler = new Handler(){
 			@Override  
 	        public void handleMessage(Message msg) {
 				super.handleMessage(msg);
