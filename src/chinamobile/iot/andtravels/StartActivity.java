@@ -22,6 +22,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -43,8 +44,11 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.android.volley.toolbox.ImageLoader.ImageCache;
+import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.aprilbrother.aprilbrothersdk.Beacon;
 import com.aprilbrother.aprilbrothersdk.BeaconManager.MonitoringListener;
 import com.aprilbrother.aprilbrothersdk.BeaconManager.RangingListener;
@@ -54,6 +58,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.util.LruCache;
 
 public class StartActivity extends FragmentActivity {
 
@@ -68,6 +73,12 @@ public class StartActivity extends FragmentActivity {
 	public static final String strBroadcastMessage = "chinamobile.iot.andtravels.SetLogin";
 	private UserLoginReceiver recv;
 	private boolean mIsLogin = false;
+	
+	//增加缓存机制，用户存放从服务器上获取的图片
+	ImageLoader mImageLoader;
+	RequestQueue mQueue;
+	private ImageBitmapCache mImageCache = new ImageBitmapCache();
+	private ArrayList<String> mImageUrlList = new ArrayList<String>();
 
 	
 	@Override
@@ -179,4 +190,128 @@ public class StartActivity extends FragmentActivity {
 			
 		}
 	}
+	
+	public void fetchImageFile(ArrayList<ImageView> imageViews){
+	
+		if(mImageUrlList.isEmpty()){
+			fetchImageSource(mImageUrlList);
+		}else{
+			;
+		}
+		
+		/*imageUrlList.add("http://img.my.csdn.net/uploads/201404/13/1397393290_5765.jpeg");
+		imageUrlList.add("http://img3.cache.netease.com/photo/0005/2015-09-15/B3HFSCD30ACR0005.jpg");
+		imageUrlList.add("http://img3.cache.netease.com/photo/0005/2015-09-15/900x600_B3HFRSGH0ACR0005.jpg");
+		imageUrlList.add("http://img2.cache.netease.com/photo/0008/2014-12-08/ACUUN0C85BD20008.jpg");*/
+		
+		if(mQueue==null){
+			Log.e(LOG_TAG, "mQueue为空，需要在创建了");
+			mQueue = Volley.newRequestQueue(this);
+		}else{
+			Log.e(LOG_TAG, "mQueue不为空，不需要在创建了");
+		}
+		
+		if(mImageLoader==null){
+			Log.e(LOG_TAG, "mImageLoader为空，需要在创建了");
+			mImageLoader = new ImageLoader(mQueue, mImageCache);
+		}else{
+			Log.e(LOG_TAG, "mImageLoader不为空，不需要在创建了");
+		}
+			
+		for(int i = 0; i < mImageUrlList.size();i++){
+			ImageListener listener = null;
+			listener = ImageLoader.getImageListener(imageViews.get(i),0, 0);
+
+			if(listener != null){
+				mImageLoader.get(mImageUrlList.get(i), listener); 
+			}else{
+				Log.e(LOG_TAG, "创建的ImageListener失败了");
+				
+			}
+			
+		}
+		
+	}
+	
+	public class ImageBitmapCache implements ImageCache {  
+		  
+	    private LruCache<String, Bitmap> mCache;  
+	  
+	    public ImageBitmapCache() {  
+	        int maxSize = 10 * 1024 * 1024;  
+	        mCache = new LruCache<String, Bitmap>(maxSize) {  
+	            @Override  
+	            protected int sizeOf(String key, Bitmap bitmap) {  
+	                return bitmap.getRowBytes() * bitmap.getHeight();  
+	            }  
+	        };  
+	    }  
+	  
+	    @Override  
+	    public Bitmap getBitmap(String url) {  
+	    	Log.e(LOG_TAG, "从缓存中获取图片资源！！！");
+	    	if( mCache.get(url) == null ){
+	    		Log.e(LOG_TAG, "从缓存中获取图片资源为空！！！！！");
+	    	}else{
+	    		Log.e(LOG_TAG, "从缓存中获取到了图片资源！！！！！");
+	    	}
+	        return mCache.get(url);  
+	    }  
+	  
+	    @Override  
+	    public void putBitmap(String url, Bitmap bitmap) { 
+	    	Log.e(LOG_TAG, "往缓存中添加图片资源！！！");
+	        mCache.put(url, bitmap);  
+	    }  
+	  
+	} 
+	
+	/**
+	 * 首页需要从服务器上获取最新推荐的景区图片
+	 */
+	private void fetchImageSource(ArrayList<String> imageUrlList){
+		
+		String url = "http://172.16.0.138:8080/AndTravel/content/introductory/";
+		
+		RequestQueue mQueue = Volley.newRequestQueue(this);
+		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
+			@Override
+			public void onResponse(JSONObject response) {
+				try {
+					if (response.getString("code").equals("1")) {
+						Log.d(LOG_TAG, "首页从服务器获取到了相关的图片！！！！");
+						//JSONObject message = response.getJSONObject("Value");
+			        	JSONArray contentArray = response.getJSONArray("message");
+			        	if(contentArray.length() > 0){
+			        		for(int i = 0; i < contentArray.length(); i++){	
+		        				String imageUrl = contentArray.get(i).toString();
+		        				Log.e(LOG_TAG, "从服务器获取到图片的URL：" + imageUrl);
+				        		if(imageUrl.isEmpty()){
+				        			Log.e(LOG_TAG, "从服务器获取到播放音频数据URL为空");
+				        		}else{
+				        			mImageUrlList.add(imageUrl);			
+				        		}
+			        			
+			        		}
+	
+						} else {
+							Toast.makeText(StartActivity.this,"首页从服务器上获取的图片位空！！！", Toast.LENGTH_SHORT).show();
+						}
+					}
+				} catch (Exception e) {
+					Log.e(LOG_TAG, e.toString());
+				}
+			}
+		}, new Response.ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				Log.e(LOG_TAG, "error = " + error.toString());
+				Log.e(LOG_TAG, "Login Activity 没有从服务器上获取到首页图片！！！！");
+			}
+		});
+
+		mQueue.add(jsonObjectRequest);
+			
+	}
+	
 }

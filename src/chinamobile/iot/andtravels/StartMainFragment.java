@@ -75,15 +75,9 @@ public class StartMainFragment extends Fragment implements OnPageChangeListener{
 	private final int mViewPageNum = 4;
 
 	private boolean mIsLogin = false;
-	private final boolean mTest = true;
+	private final boolean mTest = false;
 	private ArrayList<ImageView> mImageViews = new ArrayList<ImageView>();
 
-	
-	//增加缓存机制，用户存放从服务器上获取的图片
-	ImageLoader mImageLoader;
-	RequestQueue mQueue;
-	private ImageBitmapCache mImageCache = new ImageBitmapCache();
-	private ArrayList<String> mImageUrlList = new ArrayList<String>();
 	ImageView mView1, mView2, mView3,mView4; 
 	
 	@Override
@@ -107,6 +101,7 @@ public class StartMainFragment extends Fragment implements OnPageChangeListener{
 		ImageView personView = (ImageView)view.findViewById(R.id.personImage);
 		
 		initImageSource(inflater);
+		
 		mImageAdapter = new ImageAdapter(mImageViews);
 		viewPager.setAdapter(mImageAdapter);
 		viewPager.setOnPageChangeListener(this);
@@ -268,7 +263,14 @@ public class StartMainFragment extends Fragment implements OnPageChangeListener{
 			mView4.setImageResource(R.drawable.start_view04);
 
 		}else{
-			fetchImageSource();
+			//fetchImageSource();
+			ArrayList<ImageView> imageViews = new  ArrayList<ImageView>();
+			imageViews.add(mView1);
+			imageViews.add(mView2);
+			imageViews.add(mView3);
+			imageViews.add(mView4);
+			
+			((StartActivity) getActivity()).fetchImageFile(imageViews);
 		}
 		
 		mImageViews.add(mView1);
@@ -277,132 +279,6 @@ public class StartMainFragment extends Fragment implements OnPageChangeListener{
 		mImageViews.add(mView4);
 		
 	}
-	
-	/**
-	 * 首页需要从服务器上获取最新推荐的景区图片
-	 */
-	private void fetchImageSource(){
-		
-		String url = "http://172.16.0.138:8080/AndTravel/content/introductory/";
-		
-		if(mImageUrlList.isEmpty()){
-			RequestQueue mQueue = Volley.newRequestQueue(getActivity());
-			JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
-				@Override
-				public void onResponse(JSONObject response) {
-					try {
-						if (response.getString("code").equals("1")) {
-							Log.d(LOG_TAG, "首页从服务器获取到了相关的图片！！！！");
-							//JSONObject message = response.getJSONObject("Value");
-				        	JSONArray contentArray = response.getJSONArray("message");
-				        	if(contentArray.length() > 0){
-				        		for(int i = 0; i < contentArray.length(); i++){	
-			        				String imageUrl = contentArray.get(i).toString();
-			        				Log.e(LOG_TAG, "从服务器获取到图片的URL：" + imageUrl);
-					        		if(imageUrl.isEmpty()){
-					        			Log.e(LOG_TAG, "从服务器获取到播放音频数据URL为空");
-					        		}else{
-					        			mImageUrlList.add(imageUrl);			
-					        		}
-				        			
-				        		}
-				        		
-				        		fetchImageFile(mImageUrlList);
-		
-						} else {
-							Toast.makeText(getActivity(), "首页从服务器上获取的图片位空！！！", Toast.LENGTH_SHORT).show();
-						}
-					}
-					} catch (Exception e) {
-						Log.e(LOG_TAG, e.toString());
-					}
-				}
-			}, new Response.ErrorListener() {
-				@Override
-				public void onErrorResponse(VolleyError error) {
-					Log.e(LOG_TAG, "error = " + error.toString());
-					Log.e(LOG_TAG, "Login Activity 没有从服务器上获取到首页图片！！！！");
-				}
-			});
-
-			mQueue.add(jsonObjectRequest);
-		}else{
-			fetchImageFile(mImageUrlList);
-		}
-		
-	}
-	
-	private void  fetchImageFile(ArrayList<String> imageUrlList){
-		
-		if(mQueue==null){
-			Log.e(LOG_TAG, "mQueue为空，需要在创建了");
-			mQueue = Volley.newRequestQueue(getActivity());
-		}else{
-			Log.e(LOG_TAG, "mQueue不为空，不需要在创建了");
-		}
-		
-		if(mImageLoader==null){
-			Log.e(LOG_TAG, "mImageLoader为空，需要在创建了");
-			mImageLoader = new ImageLoader(mQueue, mImageCache);
-		}else{
-			Log.e(LOG_TAG, "mImageLoader不为空，不需要在创建了");
-		}
-			
-		for(int i = 0; i < imageUrlList.size();i++){
-			ImageListener listener = null;
-			if(i==0){
-				listener = ImageLoader.getImageListener(mView1,0, 0);
-			}else if(i==1){
-				listener = ImageLoader.getImageListener(mView2,0, 0);
-			}else if(i==2){
-				listener = ImageLoader.getImageListener(mView3,0, 0);
-			}else if(i==3){
-				listener = ImageLoader.getImageListener(mView4,0, 0);
-			}else{
-				;
-			}
-			
-			if(listener != null){
-				mImageLoader.get(imageUrlList.get(i), listener); 
-			}else{
-				Log.e(LOG_TAG, "创建的ImageListener失败了");
-				
-			}
-			
-		}
-		
-  }
-	
-	public class ImageBitmapCache implements ImageCache {  
-		  
-	    private LruCache<String, Bitmap> mCache;  
-	  
-	    public ImageBitmapCache() {  
-	        int maxSize = 10 * 1024 * 1024;  
-	        mCache = new LruCache<String, Bitmap>(maxSize) {  
-	            @Override  
-	            protected int sizeOf(String key, Bitmap bitmap) {  
-	                return bitmap.getRowBytes() * bitmap.getHeight();  
-	            }  
-	        };  
-	    }  
-	  
-	    @Override  
-	    public Bitmap getBitmap(String url) {  
-	    	Log.e(LOG_TAG, "从缓存中获取图片资源！！！");
-	    	if( mCache.get(url) == null ){
-	    		Log.e(LOG_TAG, "从缓存中获取图片资源为空！！！！！");
-	    	}
-	        return mCache.get(url);  
-	    }  
-	  
-	    @Override  
-	    public void putBitmap(String url, Bitmap bitmap) { 
-	    	Log.e(LOG_TAG, "往缓存中添加图片资源！！！");
-	        mCache.put(url, bitmap);  
-	    }  
-	  
-	}  
 	
 }
 	
