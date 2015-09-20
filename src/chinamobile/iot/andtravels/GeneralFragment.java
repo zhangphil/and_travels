@@ -4,6 +4,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +21,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +31,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
+import chinamobile.iot.andtravels.StartActivity.ImageBitmapCache;
 
 public class GeneralFragment extends Fragment {
 
@@ -29,6 +42,7 @@ public class GeneralFragment extends Fragment {
 	private int listItemNum = 9;
 	private ListViewAdapter listViewAdapter;
 	private List<Map<String, Object>> listItems;
+	//为了demo版本，临时增加的一些数据
 	private Integer[] imgeIDs = { R.drawable.caotang_samll, R.drawable.kuanzhaixiangzi_small, R.drawable.kuanzhaixiangzi_small, 
 			R.drawable.kuanzhaixiangzi_small,R.drawable.kuanzhaixiangzi_small, R.drawable.kuanzhaixiangzi_small, 
 			R.drawable.kuanzhaixiangzi_small, R.drawable.kuanzhaixiangzi_small, R.drawable.kuanzhaixiangzi_small };
@@ -38,6 +52,13 @@ public class GeneralFragment extends Fragment {
 	private ImageView backView;
 	private TextView  mTextViewName;
 	private String mTitle;
+	private boolean mTest = true;
+	
+	//从服务器上获取收藏的数据
+	private ImageLoader mImageLoader;
+	private RequestQueue mQueue;
+	//private ImageBitmapCache mImageCache = new ImageBitmapCache();
+	
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -58,8 +79,16 @@ public class GeneralFragment extends Fragment {
 
 		ListView listView = (ListView) view.findViewById(R.id.myShareList);
 		backView = (ImageView) view.findViewById(R.id.back);
-		listItems = getListItems();
-		listViewAdapter = new ListViewAdapter(mActivity, listItems); 
+		
+		if(mTest){
+			listItems = getListItems();
+			listViewAdapter = new ListViewAdapter(mActivity, listItems); 
+		}else{
+			ArrayList<ItemView> sourceList = new ArrayList<ItemView>();
+			fetchSource(sourceList);
+			listViewAdapter = new ListViewAdapter(sourceList); 
+		}
+		
 		listView.setAdapter(listViewAdapter);
 	
 		backView.setOnClickListener(new OnClickListener() {
@@ -98,11 +127,12 @@ public class GeneralFragment extends Fragment {
 
 	public class ListViewAdapter extends BaseAdapter {
 		LayoutInflater inflater;
-		private Context context; // 运行上下文
-		private List<Map<String, Object>> listItems; // 商品信息集合
-		private LayoutInflater listContainer; // 视图容器
+		private Context context; 
+		private List<Map<String, Object>> listItems; 
+		private List<ItemView> listViewItems;
+		private LayoutInflater listContainer; 
 
-		public final class ListItemView { // 自定义控件集合
+		public final class ListItemView { 
 			public ImageView showImage;
 			public TextView travelName;
 			public TextView time;
@@ -118,9 +148,20 @@ public class GeneralFragment extends Fragment {
 			this.listItems = listItems;
 		}
 
+		public ListViewAdapter(List<ItemView> listItems) {
+			this.context = getActivity();
+			listContainer = LayoutInflater.from(context);
+			this.listViewItems = listItems;
+		}
+		
 		public int getCount() {
 			// TODO Auto-generated method stub
-			return listItems.size();
+			if(mTest){
+				return listItems.size();
+			}else{
+				return listViewItems.size();
+			}
+			
 		}
 
 		public Object getItem(int arg0) {
@@ -166,11 +207,21 @@ public class GeneralFragment extends Fragment {
 
 			}else {
 				listItemView = (ListItemView) convertView.getTag();
+
 			}
 
-			listItemView.showImage.setBackgroundResource((Integer) listItems.get(position).get("showImage"));
-			listItemView.travelName.setText((String) listItems.get(position).get("title"));
-			listItemView.time.setText((String) listItems.get(position).get("time"));
+			if(mTest){
+				listItemView.showImage.setBackgroundResource((Integer) listItems.get(position).get("showImage"));
+				listItemView.travelName.setText((String) listItems.get(position).get("title"));
+				listItemView.time.setText((String) listItems.get(position).get("time"));
+				
+			}else{
+				//listItemView.showImage.setImageUrl((String)listViewItems.get(position).get("imageUrl"), ImageCacheManager.getInstance().getImageLoader());
+				//listItemView.showImage.setBackgroundResource((Integer) listItems.get(position).get("showImage"));
+				listItemView.travelName.setText((String)listViewItems.get(position).get("name"));
+				listItemView.time.setText((String) listViewItems.get(position).get("time"));
+				
+			}
 			
 			TextView openView = (TextView)convertView.findViewById(R.id.open);
 			openView.setOnClickListener(new OnClickListener(){
@@ -188,7 +239,54 @@ public class GeneralFragment extends Fragment {
 		}
 	}
 
-	public void fetchSource(){
-		
+	public final class ItemView{
+		public String imageUrl;
+		public String name;
+		public String time;
+		public String get(String string) {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	}
+	
+private void fetchSource(final ArrayList<ItemView> sourceList){
+		
+		String url = "http://172.16.0.138:8080/AndTravel/content/introductory/";
+		
+		RequestQueue mQueue = Volley.newRequestQueue(getActivity());
+		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
+			@Override
+			public void onResponse(JSONObject response) {
+				try {
+					if (response.getString("code").equals("1")) {
+			        	JSONArray contentArray = response.getJSONArray("message");
+			        	if(contentArray.length() > 0){
+			        		for(int i = 0; i < contentArray.length(); i++){	
+			        			ItemView item = new ItemView();
+			        			item.imageUrl = contentArray.get(i).toString();
+		        				item.name = contentArray.get(i).toString();
+		        				item.time = contentArray.get(i).toString();
+		        				sourceList.add(item);	
+			        		}
+	
+						} else {
+							Toast.makeText(getActivity(),"GeneralFragment从服务器上资源为空！！！", Toast.LENGTH_SHORT).show();
+						}
+					}
+				} catch (Exception e) {
+					Log.e(LOG_TAG, e.toString());
+				}
+			}
+		}, new Response.ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				Log.e(LOG_TAG, "error = " + error.toString());
+				Log.e(LOG_TAG, "GeneralFragment 没有从服务器上获取到资源！！！！");
+			}
+		});
+
+		mQueue.add(jsonObjectRequest);
+			
+	}
+	
 }

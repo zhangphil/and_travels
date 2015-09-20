@@ -75,8 +75,8 @@ public class StartActivity extends FragmentActivity {
 	private boolean mIsLogin = false;
 	
 	//增加缓存机制，用户存放从服务器上获取的图片
-	ImageLoader mImageLoader;
-	RequestQueue mQueue;
+	private ImageLoader mImageLoader;
+	private RequestQueue mQueue;
 	private ImageBitmapCache mImageCache = new ImageBitmapCache();
 	private ArrayList<String> mImageUrlList = new ArrayList<String>();
 
@@ -238,7 +238,7 @@ public class StartActivity extends FragmentActivity {
 	    private LruCache<String, Bitmap> mCache;  
 	  
 	    public ImageBitmapCache() {  
-	        int maxSize = 10 * 1024 * 1024;  
+	        int maxSize = 2 * 1024 * 1024;  
 	        mCache = new LruCache<String, Bitmap>(maxSize) {  
 	            @Override  
 	            protected int sizeOf(String key, Bitmap bitmap) {  
