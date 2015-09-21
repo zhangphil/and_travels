@@ -80,7 +80,7 @@ public class StartActivity extends FragmentActivity {
 	private ImageBitmapCache mImageCache = new ImageBitmapCache();
 	private ArrayList<String> mImageUrlList = new ArrayList<String>();
 	private Handler handle;
-	private final int DOWN_LOAD_IMAGE = 1000;
+	private final int DOWN_LOAD_IMAGE = 1100;
 	private ArrayList<ImageView> mImageViewList = new ArrayList<ImageView>();
 	
 
