@@ -207,12 +207,14 @@ public class StartActivity extends FragmentActivity {
 	
 	public void fetchImageFile(ArrayList<ImageView> imageViews){
 	
-		mImageViewList = imageViews;
-		
-		if(mImageUrlList.isEmpty()){
-			fetchImageSource();
-		}else{
-			;
+		synchronized(this){
+			mImageViewList = imageViews;
+			
+			if(mImageUrlList.isEmpty()){
+				fetchImageSource();
+			}else{
+				;
+			}
 		}
 			
 	}
@@ -256,7 +258,7 @@ public class StartActivity extends FragmentActivity {
 	    private LruCache<String, Bitmap> mCache;  
 	  
 	    public ImageBitmapCache() {  
-	        int maxSize = 2 * 1024 * 1024;  
+	        int maxSize = 1 * 1024 * 1024;  
 	        mCache = new LruCache<String, Bitmap>(maxSize) {  
 	            @Override  
 	            protected int sizeOf(String key, Bitmap bitmap) {  

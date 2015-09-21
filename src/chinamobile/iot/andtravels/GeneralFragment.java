@@ -13,14 +13,18 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.android.volley.toolbox.ImageLoader.ImageCache;
+import com.android.volley.toolbox.ImageLoader.ImageListener;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,7 +61,7 @@ public class GeneralFragment extends Fragment {
 	//从服务器上获取收藏的数据
 	private ImageLoader mImageLoader;
 	private RequestQueue mQueue;
-	//private ImageBitmapCache mImageCache = new ImageBitmapCache();
+	private ImageBitmapCache mImageCache = new ImageBitmapCache();
 	
 
 	@Override
@@ -84,6 +88,8 @@ public class GeneralFragment extends Fragment {
 			listItems = getListItems();
 			listViewAdapter = new ListViewAdapter(mActivity, listItems); 
 		}else{
+			mQueue = Volley.newRequestQueue(getActivity());
+			mImageLoader = new ImageLoader(mQueue, mImageCache);
 			ArrayList<ItemView> sourceList = new ArrayList<ItemView>();
 			fetchSource(sourceList);
 			listViewAdapter = new ListViewAdapter(sourceList); 
@@ -193,21 +199,19 @@ public class GeneralFragment extends Fragment {
 			ListItemView listItemView = null;
 			if(convertView == null) {
 				inflater = LayoutInflater.from(context);
-				
-					convertView = inflater.inflate(R.layout.my_share_list_item, parent, false);
-					listItemView = new ListItemView();
+				convertView = inflater.inflate(R.layout.my_share_list_item, parent, false);
+				listItemView = new ListItemView();
 
-					// 获取控件对象
-					listItemView.showImage = (ImageView) convertView.findViewById(R.id.travelImage);
-					listItemView.travelName = (TextView) convertView.findViewById(R.id.travelName);
-					listItemView.time = (TextView) convertView.findViewById(R.id.time);
-					// 设置控件集到convertView
-					convertView.setTag(listItemView);
-				
+				// 获取控件对象
+				listItemView.showImage = (ImageView) convertView.findViewById(R.id.travelImage);
+				listItemView.travelName = (TextView) convertView.findViewById(R.id.travelName);
+				listItemView.time = (TextView) convertView.findViewById(R.id.time);
+				// 设置控件集到convertView
+				convertView.setTag(listItemView);
+			
 
 			}else {
 				listItemView = (ListItemView) convertView.getTag();
-
 			}
 
 			if(mTest){
@@ -216,6 +220,10 @@ public class GeneralFragment extends Fragment {
 				listItemView.time.setText((String) listItems.get(position).get("time"));
 				
 			}else{
+				ImageListener listener = null;
+				listener = ImageLoader.getImageListener(listItemView.showImage,0, 0);
+				mImageLoader.get(listViewItems.get(position).get("imageUrl"), listener); 
+				
 				//listItemView.showImage.setImageUrl((String)listViewItems.get(position).get("imageUrl"), ImageCacheManager.getInstance().getImageLoader());
 				//listItemView.showImage.setBackgroundResource((Integer) listItems.get(position).get("showImage"));
 				listItemView.travelName.setText((String)listViewItems.get(position).get("name"));
@@ -253,7 +261,6 @@ private void fetchSource(final ArrayList<ItemView> sourceList){
 		
 		String url = "http://172.16.0.138:8080/AndTravel/content/introductory/";
 		
-		RequestQueue mQueue = Volley.newRequestQueue(getActivity());
 		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
 			@Override
 			public void onResponse(JSONObject response) {
@@ -288,5 +295,38 @@ private void fetchSource(final ArrayList<ItemView> sourceList){
 		mQueue.add(jsonObjectRequest);
 			
 	}
+
+	public class ImageBitmapCache implements ImageCache {  
+		  
+	    private LruCache<String, Bitmap> mCache;  
+	  
+	    public ImageBitmapCache() {  
+	        int maxSize = 2 * 1024 * 1024;  
+	        mCache = new LruCache<String, Bitmap>(maxSize) {  
+	            @Override  
+	            protected int sizeOf(String key, Bitmap bitmap) {  
+	                return bitmap.getRowBytes() * bitmap.getHeight();  
+	            }  
+	        };  
+	    }  
+	  
+	    @Override  
+	    public Bitmap getBitmap(String url) {  
+	    	Log.e(LOG_TAG, "从缓存中获取图片资源！！！");
+	    	if( mCache.get(url) == null ){
+	    		Log.e(LOG_TAG, "从缓存中获取图片资源为空！！！！！");
+	    	}else{
+	    		Log.e(LOG_TAG, "从缓存中获取到了图片资源！！！！！");
+	    	}
+	        return mCache.get(url);  
+	    }  
+	  
+	    @Override  
+	    public void putBitmap(String url, Bitmap bitmap) { 
+	    	Log.e(LOG_TAG, "往缓存中添加图片资源！！！");
+	        mCache.put(url, bitmap);  
+	    }  
+	  
+	} 
 	
 }
