@@ -8,7 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.android.volley.toolbox.NetworkImageView;
 import com.bumptech.glide.Glide;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -30,12 +29,10 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-import chinamobile.iot.andtravels.model.GSONAllAreaOfCity;
 import chinamobile.iot.andtravels.utils.Utils;
+
 
 public class LvYouDaoLan extends Fragment {
 
@@ -45,12 +42,9 @@ public class LvYouDaoLan extends Fragment {
 	private Handler handler;
 	private final int MESSAGE_WHAT_CHANGED = 100;
 
-	//private Context context;
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//context = this.getContext();
 	}
 
 	@Override
@@ -177,6 +171,7 @@ public class LvYouDaoLan extends Fragment {
 								
 								ImageView image = new ImageView(getContext());
 								String url=joo.getString("contentUrl");
+								Log.d(this.getClass().getName()+" 加载图片URL", url);
 								Glide.with(context).load(url).placeholder(R.drawable.loading).crossFade(1000).centerCrop().into(image);  
 								mItems.add(image);
 							}
