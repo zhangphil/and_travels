@@ -79,8 +79,11 @@ public class StartActivity extends FragmentActivity {
 	private RequestQueue mQueue;
 	private ImageBitmapCache mImageCache = new ImageBitmapCache();
 	private ArrayList<String> mImageUrlList = new ArrayList<String>();
-
+	private Handler handle;
+	private final int DOWN_LOAD_IMAGE = 1000;
+	private ArrayList<ImageView> mImageViewList = new ArrayList<ImageView>();
 	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -102,6 +105,17 @@ public class StartActivity extends FragmentActivity {
 		registerReceiver(recv, userLoginfilter);
 		IntentFilter curCityfilter = new IntentFilter(Constants.ACTION_CHINAMOBILE_IOT_ANDTRAVELS_BROADCAST);
 		registerReceiver(recv, curCityfilter);
+		
+		handle = new Handler(){
+			public void handleMessage(Message msg) {
+				super.handleMessage(msg);
+				switch (msg.what) {
+				case DOWN_LOAD_IMAGE:
+					downloadImageFile();
+					break;
+				}
+			};
+		};
 		
 	}
 
@@ -193,17 +207,23 @@ public class StartActivity extends FragmentActivity {
 	
 	public void fetchImageFile(ArrayList<ImageView> imageViews){
 	
+		mImageViewList = imageViews;
+		
 		if(mImageUrlList.isEmpty()){
-			fetchImageSource(mImageUrlList);
+			fetchImageSource();
 		}else{
 			;
 		}
+			
+	}
+	
+	private void downloadImageFile(){
 		
-		/*imageUrlList.add("http://img.my.csdn.net/uploads/201404/13/1397393290_5765.jpeg");
-		imageUrlList.add("http://img3.cache.netease.com/photo/0005/2015-09-15/B3HFSCD30ACR0005.jpg");
-		imageUrlList.add("http://img3.cache.netease.com/photo/0005/2015-09-15/900x600_B3HFRSGH0ACR0005.jpg");
-		imageUrlList.add("http://img2.cache.netease.com/photo/0008/2014-12-08/ACUUN0C85BD20008.jpg");*/
-		
+		/*mImageUrlList.add("http://img.my.csdn.net/uploads/201404/13/1397393290_5765.jpeg");
+		mImageUrlList.add("http://img3.cache.netease.com/photo/0005/2015-09-15/B3HFSCD30ACR0005.jpg");
+		mImageUrlList.add("http://img3.cache.netease.com/photo/0005/2015-09-15/900x600_B3HFRSGH0ACR0005.jpg");
+		mImageUrlList.add("http://img2.cache.netease.com/photo/0008/2014-12-08/ACUUN0C85BD20008.jpg");*/
+		Log.e(LOG_TAG, "首页准备从服务器上加载首页图片了！！！");
 		if(mQueue==null){
 			Log.e(LOG_TAG, "mQueue为空，需要在创建了");
 			mQueue = Volley.newRequestQueue(this);
@@ -220,7 +240,7 @@ public class StartActivity extends FragmentActivity {
 			
 		for(int i = 0; i < mImageUrlList.size();i++){
 			ImageListener listener = null;
-			listener = ImageLoader.getImageListener(imageViews.get(i),0, 0);
+			listener = ImageLoader.getImageListener(mImageViewList.get(i),0, 0);
 
 			if(listener != null){
 				mImageLoader.get(mImageUrlList.get(i), listener); 
@@ -230,9 +250,7 @@ public class StartActivity extends FragmentActivity {
 			}
 			
 		}
-		
 	}
-	
 	public class ImageBitmapCache implements ImageCache {  
 		  
 	    private LruCache<String, Bitmap> mCache;  
@@ -269,7 +287,7 @@ public class StartActivity extends FragmentActivity {
 	/**
 	 * 首页需要从服务器上获取最新推荐的景区图片
 	 */
-	private void fetchImageSource(ArrayList<String> imageUrlList){
+	private void fetchImageSource(){
 		
 		String url = "http://172.16.0.138:8080/AndTravel/content/introductory/";
 		
@@ -286,13 +304,11 @@ public class StartActivity extends FragmentActivity {
 			        		for(int i = 0; i < contentArray.length(); i++){	
 		        				String imageUrl = contentArray.get(i).toString();
 		        				Log.e(LOG_TAG, "从服务器获取到图片的URL：" + imageUrl);
-				        		if(imageUrl.isEmpty()){
-				        			Log.e(LOG_TAG, "从服务器获取到播放音频数据URL为空");
-				        		}else{
-				        			mImageUrlList.add(imageUrl);			
-				        		}
-			        			
+				        		mImageUrlList.add(imageUrl);			
+
 			        		}
+			        		
+			        		handle.sendEmptyMessage(DOWN_LOAD_IMAGE);
 	
 						} else {
 							Toast.makeText(StartActivity.this,"首页从服务器上获取的图片位空！！！", Toast.LENGTH_SHORT).show();
