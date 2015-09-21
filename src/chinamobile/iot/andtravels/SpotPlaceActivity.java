@@ -35,6 +35,7 @@ import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.bumptech.glide.Glide;
 
 import android.content.Context;
 import android.content.Intent;
@@ -91,6 +92,7 @@ public class SpotPlaceActivity extends FragmentActivity {
 
 	private final String CITY = "成都";
 	private final String ADDRESS = "武侯祠";
+	private final String spotId = "";
 
 	private boolean isPlaying = false;
 	private RequestQueue mQueue;
@@ -203,16 +205,13 @@ public class SpotPlaceActivity extends FragmentActivity {
 		mQueue = Volley.newRequestQueue(this);
 	}
 
-	private void fetchImageFile(){
-		
-	}
 	private void collectTravelHttpRequest(){
 		String url = "http://172.16.0.138:8080/AndTravel/userinfo/upload/like";
 
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("uid", "lesliefang");
-		params.put("areaid", "lesliefang");
-		params.put("pictureurl", "xiaojun");
+		params.put("areaid", spotId);
+		params.put("pictureurl", mTravelImageUrl);
 		SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd");       
 		String time = sDateFormat.format(new java.util.Date());
 		params.put("date",time );
@@ -476,7 +475,7 @@ public class SpotPlaceActivity extends FragmentActivity {
 	/**
 	 * 首页需要从服务器上获取最新推荐的景区图片
 	 */
-	private void fetchImageSource(){
+	private void fetchImageSource(final ArrayList<ImageView> mItems){
 		
 		String url = "http://172.16.0.138:8080/AndTravel/spot/getallspot/";
 	
@@ -490,8 +489,17 @@ public class SpotPlaceActivity extends FragmentActivity {
 			        		for(int i = 0; i < contentArray.length(); i++){	
 		        				String imageUrl = contentArray.get(i).toString();
 		        				Log.e(LOG_TAG, "从服务器获取到图片的URL：" + imageUrl);
-				        		//mImageUrlList.add(imageUrl);			
-
+		        				if(i==0){
+		        					mTravelImageUrl = imageUrl;
+		        				}else{
+		        					/*把景区的第一张图存起来，用于存储评论、收藏景区图片*/
+		        				}
+		        				
+		        				ImageView image = new ImageView(SpotPlaceActivity.this);
+		        				image.setScaleType(ScaleType.FIT_XY);
+		        				Glide.with(SpotPlaceActivity.this).load(imageUrl).placeholder(R.drawable.loading).crossFade(1000).centerCrop().into(image);  
+		        				mItems.add(image);
+		        				
 			        		}
 			        		
 			        		//handle.sendEmptyMessage(DOWN_LOAD_IMAGE);
@@ -524,19 +532,11 @@ public class SpotPlaceActivity extends FragmentActivity {
 		public MyPagerAdapter(Context context) {
 			this.context = context;
 
-			int[] res = { R.drawable.wuhouci1, R.drawable.wuhouci2, R.drawable.wuhouci3 };
+			//int[] res = { R.drawable.wuhouci1, R.drawable.wuhouci2, R.drawable.wuhouci3 };
 
 			mItems = new ArrayList<ImageView>();
-			mImageLoader = new ImageLoader(mQueue, mImageCache);
-			for (int i = 0; i < 3; i++) {
-				ImageView image = new ImageView(context);
-				ImageListener listener = null;
-				listener = ImageLoader.getImageListener(image,0, 0);
-				//mImageLoader.get(mImageUrlList.get(i), listener); 
-				image.setImageResource(res[i]);
-				image.setScaleType(ScaleType.FIT_XY);
-				mItems.add(image);
-			}
+			fetchImageSource(mItems);
+			
 		}
 
 		@Override

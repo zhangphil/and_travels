@@ -15,6 +15,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.android.volley.toolbox.ImageLoader.ImageCache;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
+import com.bumptech.glide.Glide;
 
 import android.app.Activity;
 import android.content.Context;
@@ -224,7 +225,7 @@ public class GeneralFragment extends Fragment {
 				listener = ImageLoader.getImageListener(listItemView.showImage,0, 0);
 				mImageLoader.get(listViewItems.get(position).get("imageUrl"), listener); 
 				
-				//listItemView.showImage.setImageUrl((String)listViewItems.get(position).get("imageUrl"), ImageCacheManager.getInstance().getImageLoader());
+				Glide.with(context).load(listViewItems.get(position).get("imageUrl")).placeholder(R.drawable.loading).crossFade(1000).centerCrop().into(listItemView.showImage);  
 				//listItemView.showImage.setBackgroundResource((Integer) listItems.get(position).get("showImage"));
 				listItemView.travelName.setText((String)listViewItems.get(position).get("name"));
 				listItemView.time.setText((String) listViewItems.get(position).get("time"));
