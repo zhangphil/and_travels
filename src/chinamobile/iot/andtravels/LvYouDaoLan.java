@@ -18,6 +18,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -32,7 +34,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import chinamobile.iot.andtravels.utils.Utils;
-
 
 public class LvYouDaoLan extends Fragment {
 
@@ -62,7 +63,7 @@ public class LvYouDaoLan extends Fragment {
 		});
 
 		mViewPager = (ViewPager) view.findViewById(R.id.viewpager_head);
-		mPagerAdapter = new MyFragmentPagerAdapter(this.getContext());
+		mPagerAdapter = new MyFragmentPagerAdapter(this.getFragmentManager());
 		mViewPager.setAdapter(mPagerAdapter);
 		mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
@@ -133,13 +134,33 @@ public class LvYouDaoLan extends Fragment {
 		handler.sendEmptyMessage(MESSAGE_WHAT_CHANGED);
 	}
 
-	private class MyFragmentPagerAdapter extends PagerAdapter {
+	private class ImageFragment extends Fragment {
 
-		private ArrayList<ImageView> mItems = null;
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			super.onCreateView(inflater, container, savedInstanceState);
 
-		public MyFragmentPagerAdapter(final Context context) {
-			mItems=new ArrayList<ImageView>();
-			
+			Bundle b = this.getArguments();
+			String url = b.getString("URL");
+
+			View view = inflater.inflate(R.layout.image_layout, null);
+			ImageView image = (ImageView) view.findViewById(R.id.image);
+			Glide.with(getContext()).load(url).placeholder(R.drawable.loading).centerCrop().crossFade().into(image);
+
+			return view;
+		}
+	}
+
+	private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
+
+		// private ArrayList<View> mItems = null;
+		private ArrayList<String> mURLs = null;
+
+		public MyFragmentPagerAdapter(FragmentManager fm) {
+			super(fm);
+
+			mURLs = new ArrayList<String>();
+
 			String url = "http://172.16.0.138:8080/AndTravel/area/getallarea/成都";
 			AsyncHttpClient client = new AsyncHttpClient();
 			client.get(url, null, new JsonHttpResponseHandler() {
@@ -168,57 +189,38 @@ public class LvYouDaoLan extends Fragment {
 							JSONArray ja = new JSONArray(s);
 							for (int i = 0; i < ja.length(); i++) {
 								JSONObject joo = ja.getJSONObject(i);
-								
-								ImageView image = new ImageView(getContext());
-								String url=joo.getString("contentUrl");
-								Log.d(this.getClass().getName()+" 加载图片URL", url);
-								Glide.with(context).load(url).placeholder(R.drawable.loading).crossFade(1000).centerCrop().into(image);  
-								mItems.add(image);
+								String url = joo.getString("contentUrl");
+								mURLs.add(url);
 							}
 						}
 
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
-
 				}
 			});
-
-			
-//			int[] res = { R.drawable.ic_launcher, R.drawable.ic_launcher, R.drawable.ic_launcher };
-//			for (int i = 0; i < 3; i++) {
-//				ImageView image = new ImageView(getContext());
-//				image.setImageResource(res[i]);
-//				image.setScaleType(ScaleType.FIT_XY);
-//				mItems.add(image);
-//			}
-		}
-
-		@Override
-		public ImageView instantiateItem(View container, int position) {
-			((ViewPager) container).addView(mItems.get(position));
-			return mItems.get(position);
-		}
-
-		@Override
-		public void destroyItem(ViewGroup container, int position, Object object) {
-			((ViewPager) container).removeView((View) object);
-		}
-
-		@Override
-		public int getCount() {
-			return mItems.size();
-		}
-
-		@Override
-		public boolean isViewFromObject(View arg0, Object arg1) {
-			return arg0 == arg1;
 		}
 
 		@Override
 		public void notifyDataSetChanged() {
 			super.notifyDataSetChanged();
 			handler.sendEmptyMessage(MESSAGE_WHAT_CHANGED);
+		}
+
+		@Override
+		public Fragment getItem(int pos) {
+			Bundle b = new Bundle();
+			b.putString("URL", mURLs.get(pos));
+
+			Fragment f = new ImageFragment();
+			f.setArguments(b);
+
+			return f;
+		}
+
+		@Override
+		public int getCount() {
+			return mURLs.size();
 		}
 	}
 
