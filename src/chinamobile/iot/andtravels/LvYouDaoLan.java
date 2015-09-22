@@ -20,7 +20,6 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -43,10 +42,10 @@ public class LvYouDaoLan extends Fragment {
 	private Handler handler;
 	private final int MESSAGE_WHAT_CHANGED = 100;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-	}
+//	@Override
+//	public void onCreate(Bundle savedInstanceState) {
+//		super.onCreate(savedInstanceState);
+//	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -134,17 +133,26 @@ public class LvYouDaoLan extends Fragment {
 		handler.sendEmptyMessage(MESSAGE_WHAT_CHANGED);
 	}
 
+	
 	private class ImageFragment extends Fragment {
+		
+		private	String url = null;
+		
+		@Override
+		public	void	onCreate(Bundle savedInstanceState){
+			super.onCreate(savedInstanceState);
+			
+			Bundle b = this.getArguments();
+			url = b.getString("URL");
+		}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			super.onCreateView(inflater, container, savedInstanceState);
 
-			Bundle b = this.getArguments();
-			String url = b.getString("URL");
-
 			View view = inflater.inflate(R.layout.image_layout, null);
 			ImageView image = (ImageView) view.findViewById(R.id.image);
+			Log.d(this.getClass().getName(), "加载URL:"+url);
 			Glide.with(getContext()).load(url).placeholder(R.drawable.loading).centerCrop().crossFade().into(image);
 
 			return view;
@@ -153,11 +161,13 @@ public class LvYouDaoLan extends Fragment {
 
 	private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
 
-		// private ArrayList<View> mItems = null;
 		private ArrayList<String> mURLs = null;
+		private	FragmentPagerAdapter mFragmentPagerAdapter;
 
 		public MyFragmentPagerAdapter(FragmentManager fm) {
 			super(fm);
+			
+			mFragmentPagerAdapter=this;
 
 			mURLs = new ArrayList<String>();
 
@@ -190,6 +200,8 @@ public class LvYouDaoLan extends Fragment {
 							for (int i = 0; i < ja.length(); i++) {
 								JSONObject joo = ja.getJSONObject(i);
 								String url = joo.getString("contentUrl");
+								
+								Log.d(this.getClass().getName(), "添加URL:"+url);
 								mURLs.add(url);
 							}
 						}
@@ -197,6 +209,8 @@ public class LvYouDaoLan extends Fragment {
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
+					
+					mFragmentPagerAdapter.notifyDataSetChanged();
 				}
 			});
 		}
@@ -209,6 +223,8 @@ public class LvYouDaoLan extends Fragment {
 
 		@Override
 		public Fragment getItem(int pos) {
+			Log.d(this.getClass().getName(), "构建Fragment");
+			
 			Bundle b = new Bundle();
 			b.putString("URL", mURLs.get(pos));
 
@@ -224,6 +240,7 @@ public class LvYouDaoLan extends Fragment {
 		}
 	}
 
+	
 	private class MyArrayAdapter extends ArrayAdapter {
 
 		private LayoutInflater mLayoutInflater;
