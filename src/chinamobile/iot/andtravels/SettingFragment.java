@@ -43,7 +43,7 @@ public class SettingFragment extends Fragment {
 	
 	private Integer[] imgeIDs = { R.drawable.darkhead, R.drawable.darkhead, R.drawable.share1, R.drawable.save,
 			R.drawable.save, R.drawable.save, R.drawable.talk, R.drawable.talk, R.drawable.share1 };
-	private String[] titleNames = { "昵称", "", "我的分享", "我的景点收藏", "", "我的状态收藏", "我的评论", "", "分享App" };
+	private String[] titleNames = { "昵称", "", "我的分享", "我的景点收藏", "", "我的游记收藏", "我的评论", "", "分享App" };
 
 	@Override
 	public void onAttach(Activity activity) {

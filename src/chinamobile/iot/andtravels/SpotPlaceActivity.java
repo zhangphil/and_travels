@@ -1,7 +1,22 @@
 package chinamobile.iot.andtravels;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.android.volley.toolbox.ImageLoader.ImageCache;
+import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
@@ -20,6 +35,7 @@ import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.bumptech.glide.Glide;
 
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +46,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.util.LruCache;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
@@ -52,11 +69,14 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import chinamobile.iot.andtravels.utils.Constants.WuHouCiGeoPoint;
+import chinamobile.iot.andtravels.StartActivity.ImageBitmapCache;
 import chinamobile.iot.andtravels.utils.Utils;
 
 public class SpotPlaceActivity extends FragmentActivity {
 
+	private final String LOG_TAG = "SpotPlaceActivity";
 	private PagerAdapter mPagerAdapter;
 	private ViewPager mViewPager;
 
@@ -72,8 +92,15 @@ public class SpotPlaceActivity extends FragmentActivity {
 
 	private final String CITY = "成都";
 	private final String ADDRESS = "武侯祠";
+	private final String spotId = "";
 
 	private boolean isPlaying = false;
+	private RequestQueue mQueue;
+	
+	private String mTravelImageUrl = null;
+	private ImageBitmapCache mImageCache = new ImageBitmapCache();
+	private ImageLoader mImageLoader;
+	//
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -147,20 +174,74 @@ public class SpotPlaceActivity extends FragmentActivity {
 			}
 		});
 		
+		//增加收藏、评论、点赞的点击事件
+		ImageView travelCollect = (ImageView) containerView.findViewById(R.id.travelCollect);
+		travelCollect.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				
+			}
+		});
 		
-//		more.setOnClickListener(new View.OnClickListener() {
-//			
-//			@Override
-//			public void onClick(View v) {
-//				Toast.makeText(context, "test", Toast.LENGTH_SHORT).show();
-//				
-//				ShareDialog share=new ShareDialog(context);
-//				share.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//				share.show();  
-//			}
-//		});
+		ImageView travelFavorite = (ImageView) containerView.findViewById(R.id.travelFavorite);
+		travelFavorite.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				
+			}
+		});
+		
+		ImageView travelComment = (ImageView) containerView.findViewById(R.id.travelComment);
+		travelComment.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				
+			}
+		});
+		
+		mQueue = Volley.newRequestQueue(this);
 	}
 
+	private void collectTravelHttpRequest(){
+		String url = "http://172.16.0.138:8080/AndTravel/userinfo/upload/like";
+
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("uid", "lesliefang");
+		params.put("areaid", spotId);
+		params.put("pictureurl", mTravelImageUrl);
+		SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd");       
+		String time = sDateFormat.format(new java.util.Date());
+		params.put("date",time );
+		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,url, new JSONObject(params), new Response.Listener<JSONObject>() {
+			@Override
+			public void onResponse(JSONObject response) {
+				Log.d(LOG_TAG, "httpRequest 服务器返回收藏结果！！！！");
+				try {
+					String message = response.getString("message");
+					if (response.getString("code").equals("1")) {
+						Toast.makeText(SpotPlaceActivity.this, message, Toast.LENGTH_SHORT).show();
+					} else {
+						Toast.makeText(SpotPlaceActivity.this, message, Toast.LENGTH_SHORT).show();
+					}
+				} catch (Exception e) {
+					Log.e(LOG_TAG, e.toString());
+				}
+			}
+		}, new Response.ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				Log.e(LOG_TAG, "error = " + error.toString());
+				Log.e(LOG_TAG, "httpRequest 客户收藏景点失败！！！！");
+			}
+		});
+
+		mQueue.add(jsonObjectRequest);
+
+	}
+	
 	private void backImageView() {
 		ImageView backiv = (ImageView) containerView.findViewById(R.id.back_ImageView);
 		backiv.setOnClickListener(new View.OnClickListener() {
@@ -391,6 +472,58 @@ public class SpotPlaceActivity extends FragmentActivity {
 	 * } }); }
 	 */
 
+	/**
+	 * 首页需要从服务器上获取最新推荐的景区图片
+	 */
+	private void fetchImageSource(final ArrayList<ImageView> mItems){
+		
+		String url = "http://172.16.0.138:8080/AndTravel/spot/getallspot/";
+	
+		JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
+			@Override
+			public void onResponse(JSONObject response) {
+				try {
+					if (response.getString("code").equals("1")) {
+			        	JSONArray contentArray = response.getJSONArray("message");
+			        	if(contentArray.length() > 0){
+			        		for(int i = 0; i < contentArray.length(); i++){	
+		        				String imageUrl = contentArray.get(i).toString();
+		        				Log.e(LOG_TAG, "从服务器获取到图片的URL：" + imageUrl);
+		        				if(i==0){
+		        					mTravelImageUrl = imageUrl;
+		        				}else{
+		        					/*把景区的第一张图存起来，用于存储评论、收藏景区图片*/
+		        				}
+		        				
+		        				ImageView image = new ImageView(SpotPlaceActivity.this);
+		        				image.setScaleType(ScaleType.FIT_XY);
+		        				Glide.with(SpotPlaceActivity.this).load(imageUrl).placeholder(R.drawable.loading).crossFade(1000).centerCrop().into(image);  
+		        				mItems.add(image);
+		        				
+			        		}
+			        		
+			        		//handle.sendEmptyMessage(DOWN_LOAD_IMAGE);
+	
+						} else {
+							//Toast.makeText(StartActivity.this,"首页从服务器上获取的图片位空！！！", Toast.LENGTH_SHORT).show();
+						}
+					}
+				} catch (Exception e) {
+					Log.e(LOG_TAG, e.toString());
+				}
+			}
+		}, new Response.ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				Log.e(LOG_TAG, "error = " + error.toString());
+				Log.e(LOG_TAG, "Login Activity 没有从服务器上获取到首页图片！！！！");
+			}
+		});
+
+		mQueue.add(jsonObjectRequest);
+			
+	}
+	
 	private class MyPagerAdapter extends PagerAdapter {
 
 		private ArrayList<ImageView> mItems = null;
@@ -399,16 +532,11 @@ public class SpotPlaceActivity extends FragmentActivity {
 		public MyPagerAdapter(Context context) {
 			this.context = context;
 
-			int[] res = { R.drawable.wuhouci1, R.drawable.wuhouci2, R.drawable.wuhouci3 };
+			//int[] res = { R.drawable.wuhouci1, R.drawable.wuhouci2, R.drawable.wuhouci3 };
 
 			mItems = new ArrayList<ImageView>();
-
-			for (int i = 0; i < 3; i++) {
-				ImageView image = new ImageView(context);
-				image.setImageResource(res[i]);
-				image.setScaleType(ScaleType.FIT_XY);
-				mItems.add(image);
-			}
+			fetchImageSource(mItems);
+			
 		}
 
 		@Override
@@ -713,4 +841,30 @@ public class SpotPlaceActivity extends FragmentActivity {
 		
 		return	false;
 	}
+	
+	public class ImageBitmapCache implements ImageCache {  
+		  
+	    private LruCache<String, Bitmap> mCache;  
+	  
+	    public ImageBitmapCache() {  
+	        int maxSize = 1 * 1024 * 1024;  
+	        mCache = new LruCache<String, Bitmap>(maxSize) {  
+	            @Override  
+	            protected int sizeOf(String key, Bitmap bitmap) {  
+	                return bitmap.getRowBytes() * bitmap.getHeight();  
+	            }  
+	        };  
+	    }  
+	  
+	    @Override  
+	    public Bitmap getBitmap(String url) {  
+	        return mCache.get(url);  
+	    }  
+	  
+	    @Override  
+	    public void putBitmap(String url, Bitmap bitmap) { 
+	        mCache.put(url, bitmap);  
+	    }  
+	  
+	} 
 }
