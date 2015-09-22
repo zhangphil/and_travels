@@ -37,8 +37,10 @@ import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.bumptech.glide.Glide;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -72,6 +74,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import chinamobile.iot.andtravels.utils.Constants.WuHouCiGeoPoint;
 import chinamobile.iot.andtravels.StartActivity.ImageBitmapCache;
+import chinamobile.iot.andtravels.StartActivity.UserLoginReceiver;
+import chinamobile.iot.andtravels.utils.Constants;
 import chinamobile.iot.andtravels.utils.Utils;
 
 public class SpotPlaceActivity extends FragmentActivity {
@@ -92,7 +96,7 @@ public class SpotPlaceActivity extends FragmentActivity {
 
 	private final String CITY = "成都";
 	private final String ADDRESS = "武侯祠";
-	private final String spotId = "";
+	private String spotId = "";
 
 	private boolean isPlaying = false;
 	private RequestQueue mQueue;
@@ -100,7 +104,10 @@ public class SpotPlaceActivity extends FragmentActivity {
 	private String mTravelImageUrl = null;
 	private ImageBitmapCache mImageCache = new ImageBitmapCache();
 	private ImageLoader mImageLoader;
-	//
+	
+	public static final String strBroadcastMessage = "chinamobile.iot.andtravels.SetLogin";
+	private UserLoginReceiver recv;
+	private String mStrUserID = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +117,15 @@ public class SpotPlaceActivity extends FragmentActivity {
 
 		containerView = this.getLayoutInflater().inflate(R.layout.spot_place, null);
 		setContentView(containerView);
+		
+		Intent intent = getIntent();
+		Bundle bundle = intent.getExtras();
+		spotId = bundle.getString("placeId");
+		
+		IntentFilter userLoginfilter = new IntentFilter(strBroadcastMessage);
+		recv = new UserLoginReceiver();
+		registerReceiver(recv, userLoginfilter);
+		
 
 		mViewPager = (ViewPager) containerView.findViewById(R.id.viewpager_head);
 		mPagerAdapter = new MyPagerAdapter(this);
@@ -209,7 +225,7 @@ public class SpotPlaceActivity extends FragmentActivity {
 		String url = "http://172.16.0.138:8080/AndTravel/userinfo/upload/like";
 
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("uid", "lesliefang");
+		params.put("uid", mStrUserID);
 		params.put("areaid", spotId);
 		params.put("pictureurl", mTravelImageUrl);
 		SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd");       
@@ -867,4 +883,23 @@ public class SpotPlaceActivity extends FragmentActivity {
 	    }  
 	  
 	} 
+	
+	public class UserLoginReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			String intentAction = intent.getAction();
+			if(intentAction.equals("chinamobile.iot.andtravels.SetLogin")){
+				Log.i(LOG_TAG, "接收到广播：用户已经登录了！！！");
+				mStrUserID = getIntent().getStringExtra("UserID");
+				
+			}else if(intentAction.equals(Constants.ACTION_CHINAMOBILE_IOT_ANDTRAVELS_BROADCAST) ){
+				
+			}else{
+				
+			}
+			
+		}
+	}
 }

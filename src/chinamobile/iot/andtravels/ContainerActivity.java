@@ -19,6 +19,7 @@ public class ContainerActivity extends FragmentActivity {
 	private String TAG_LOG = "ContainerActivity";
 	private int  mCurViewPos = 0;
 	private Fragment newFragment;
+	private int mCityId = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +29,9 @@ public class ContainerActivity extends FragmentActivity {
 		Intent intent = getIntent();
 		Bundle bundle = intent.getExtras();//("curViewPos", mCurViewPos);
 		mCurViewPos = bundle.getInt("curViewPos");
+		mCityId = bundle.getInt("cityId");
 		
-		Log.e(TAG_LOG, "当前显示page is" + mCurViewPos);
+		Log.e(TAG_LOG, "当前显示page is" + mCurViewPos + "当前城市ID：" + mCityId);
 		
 		newFragment = new MyViewPagerTabHost(mCurViewPos);
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

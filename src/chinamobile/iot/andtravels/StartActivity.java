@@ -83,6 +83,8 @@ public class StartActivity extends FragmentActivity {
 	private final int DOWN_LOAD_IMAGE = 1100;
 	private ArrayList<ImageView> mImageViewList = new ArrayList<ImageView>();
 	
+	//打开城市数据库
+	DBHelper dbHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +100,10 @@ public class StartActivity extends FragmentActivity {
 		
 		startBle();
 		
+		//创建城市列表的数据库
+		//dbHelper = new DBHelper(this, "city", null, 1);
+		//dbHelper.onCreate(dbHelper.getWritableDatabase());
+        
 		// 初始化用户登录的广播
 		Log.e(LOG_TAG, "注册广播了哈！！！！");
 		IntentFilter userLoginfilter = new IntentFilter(strBroadcastMessage);
@@ -227,14 +233,12 @@ public class StartActivity extends FragmentActivity {
 		mImageUrlList.add("http://img2.cache.netease.com/photo/0008/2014-12-08/ACUUN0C85BD20008.jpg");*/
 		Log.e(LOG_TAG, "首页准备从服务器上加载首页图片了！！！");
 		if(mQueue==null){
-			Log.e(LOG_TAG, "mQueue为空，需要在创建了");
 			mQueue = Volley.newRequestQueue(this);
 		}else{
 			Log.e(LOG_TAG, "mQueue不为空，不需要在创建了");
 		}
 		
 		if(mImageLoader==null){
-			Log.e(LOG_TAG, "mImageLoader为空，需要在创建了");
 			mImageLoader = new ImageLoader(mQueue, mImageCache);
 		}else{
 			Log.e(LOG_TAG, "mImageLoader不为空，不需要在创建了");
@@ -242,7 +246,7 @@ public class StartActivity extends FragmentActivity {
 			
 		for(int i = 0; i < mImageUrlList.size();i++){
 			ImageListener listener = null;
-			listener = ImageLoader.getImageListener(mImageViewList.get(i),0, 0);
+			listener = ImageLoader.getImageListener(mImageViewList.get(i),R.drawable.loading, 0);
 
 			if(listener != null){
 				mImageLoader.get(mImageUrlList.get(i), listener); 
@@ -269,18 +273,11 @@ public class StartActivity extends FragmentActivity {
 	  
 	    @Override  
 	    public Bitmap getBitmap(String url) {  
-	    	Log.e(LOG_TAG, "从缓存中获取图片资源！！！");
-	    	if( mCache.get(url) == null ){
-	    		Log.e(LOG_TAG, "从缓存中获取图片资源为空！！！！！");
-	    	}else{
-	    		Log.e(LOG_TAG, "从缓存中获取到了图片资源！！！！！");
-	    	}
 	        return mCache.get(url);  
 	    }  
 	  
 	    @Override  
 	    public void putBitmap(String url, Bitmap bitmap) { 
-	    	Log.e(LOG_TAG, "往缓存中添加图片资源！！！");
 	        mCache.put(url, bitmap);  
 	    }  
 	  
@@ -303,7 +300,7 @@ public class StartActivity extends FragmentActivity {
 						//JSONObject message = response.getJSONObject("Value");
 			        	JSONArray contentArray = response.getJSONArray("message");
 			        	if(contentArray.length() > 0){
-			        		for(int i = 0; i < contentArray.length(); i++){	
+			        		for(int i = 0; i < contentArray.length() && i < 4; i++){	
 		        				String imageUrl = contentArray.get(i).toString();
 		        				Log.e(LOG_TAG, "从服务器获取到图片的URL：" + imageUrl);
 				        		mImageUrlList.add(imageUrl);			

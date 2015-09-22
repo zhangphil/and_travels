@@ -41,6 +41,11 @@ public class LvYouDaoLan extends Fragment {
 
 	private Handler handler;
 	private final int MESSAGE_WHAT_CHANGED = 100;
+	
+	private ArrayList<String> mImageUrl = new ArrayList<String>(); //= { R.drawable.wuhouci_small, R.drawable.caotang_samll, R.drawable.kuanzhaixiangzi_small };
+	private ArrayList<String> details = new ArrayList<String>(); //= { "纪念三国时蜀汉丞相诸葛亮的祠堂。", "是目前我国最大、最完整的杜甫文物保护中心。", "走进了最成都、最世界、最古老、最时尚的老成都名片。" };
+	private ArrayList<String> placeNames = new ArrayList<String>(); //= { "武侯祠", "杜甫草堂", "宽窄巷子" };
+	private ArrayList<String> placeId = new ArrayList<String>();
 
 //	@Override
 //	public void onCreate(Bundle savedInstanceState) {
@@ -112,6 +117,8 @@ public class LvYouDaoLan extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent intent = new Intent(mContext, SpotPlaceActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putString("placeId", placeId.get(position));
 				startActivity(intent);
 			}
 		});
@@ -183,6 +190,10 @@ public class LvYouDaoLan extends Fragment {
 						JSONArray ja = (JSONArray) jobj.get("info");
 						for (int i = 0; i < ja.length(); i++) {
 							JSONObject jo = ja.getJSONObject(i);
+							details.add(jo.getString("description")); 
+							placeNames.add(jo.getString("name")); 
+							mImageUrl.add(jo.getString("url"));
+							placeId.add(jo.getString("id"));
 						}
 					} catch (JSONException e) {
 						e.printStackTrace();
@@ -246,10 +257,7 @@ public class LvYouDaoLan extends Fragment {
 		private LayoutInflater mLayoutInflater;
 
 		private String[] distance = { "12.6km", "7.8km", "10.5km" };
-		private int[] res = { R.drawable.wuhouci_small, R.drawable.caotang_samll, R.drawable.kuanzhaixiangzi_small };
-		private String[] details = { "纪念三国时蜀汉丞相诸葛亮的祠堂。", "是目前我国最大、最完整的杜甫文物保护中心。", "走进了最成都、最世界、最古老、最时尚的老成都名片。" };
-		private String[] placeNames = { "武侯祠", "杜甫草堂", "宽窄巷子" };
-
+		
 		public MyArrayAdapter(Context context, int resource) {
 			super(context, resource);
 			mLayoutInflater = LayoutInflater.from(context);
@@ -261,13 +269,15 @@ public class LvYouDaoLan extends Fragment {
 				convertView = mLayoutInflater.inflate(R.layout.lvyoudaolan_item, null);
 
 			ImageView imageViewPlace = (ImageView) convertView.findViewById(R.id.imageViewPlace);
-			imageViewPlace.setImageResource(res[pos]);
+			//imageViewPlace.setImageResource(res[pos]);
+			Glide.with(getContext()).load(mImageUrl.get(pos)).placeholder(R.drawable.loading).centerCrop().crossFade().into(imageViewPlace);
+
 
 			TextView placeName = (TextView) convertView.findViewById(R.id.placeName);
-			placeName.setText(placeNames[pos]);
+			placeName.setText(placeNames.get(pos));
 
 			TextView detail = (TextView) convertView.findViewById(R.id.textViewDetail);
-			detail.setText(details[pos]);
+			detail.setText(details.get(pos));
 
 			TextView distancetv = (TextView) convertView.findViewById(R.id.textViewDistance);
 			distancetv.setText(distance[pos]);

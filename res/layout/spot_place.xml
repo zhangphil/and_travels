@@ -66,6 +66,7 @@
                     android:orientation="vertical" >
 
                     <ImageView
+                        android:id="@+id/travelCollect"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
@@ -89,6 +90,7 @@
                     android:orientation="vertical" >
 
                     <ImageView
+                        android:id="@+id/travelFavorite"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
@@ -112,6 +114,7 @@
                     android:orientation="vertical" >
 
                     <ImageView
+                        android:id="@+id/travelComment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
@@ -192,7 +195,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/imageView1"
-            android:text="宽窄巷子"
+            android:text=""
             android:textColor="#757575"
             android:textSize="13sp"
             android:textStyle="bold" />

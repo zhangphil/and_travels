@@ -96,7 +96,7 @@ public class LoginActivity extends Activity {
 	}
 
 
-	private void login(String strNum,String strPassword){
+	private void login(final String strNum,String strPassword){
 		
 		String url = "http://172.16.0.138:8080/AndTravel/uservalidation/validate/usingplaintext/";
 		url = url + strNum + "/" + strPassword;
@@ -113,6 +113,7 @@ public class LoginActivity extends Activity {
 					if (response.getString("code").equals("1")) {
 						//广播用户已经登录了
 						Intent broadcastIntent = new Intent("chinamobile.iot.andtravels.SetLogin");
+						broadcastIntent.putExtra("UserID", strNum);
 						sendBroadcast(broadcastIntent);
 						
 						Intent intent = new Intent(mActivity, MainActivity.class);
